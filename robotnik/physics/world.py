@@ -88,9 +88,10 @@ class World(object):
             prevSimDateInMs = simDateInMs
 
             deltaRealDelayInMs = self.time.getRealTimeInMs() - prevRealDateInMs
-            if (deltaRealDelayInMs <= deltaSimDelayInMs):
-                sleepTime = deltaSimDelayInMs - deltaRealDelayInMs) / self.speedFactor
-                self.time.sleepTimeInMs((sleepTime)
+
+            if deltaRealDelayInMs <= deltaSimDelayInMs:
+                sleepTime = (deltaSimDelayInMs - deltaRealDelayInMs) / self.speedFactor
+                self.time.sleepTimeInMs(sleepTime)
             else:
                 raise Exception("Real time lost")
             prevRealDateInMs = self.time.getRealTimeInMs()
