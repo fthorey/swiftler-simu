@@ -2,7 +2,10 @@
 # coding: utf-8
 
 from physics.world import World
+from robots.robot import Robot
 
-world = World(1)
+world = World(100)
 
-world.step(5)
+robot1 = Robot('Robot1', 0.021, 0.0885)
+world.addRobot(robot1)
+world.step(10)
