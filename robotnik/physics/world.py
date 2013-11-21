@@ -31,6 +31,7 @@ class World(object):
         """
         """
         self.stepDurationInMs = stepDurationInMs_
+        self.speedFactor = 1
         self.time = Timing()
         self.scheduler = Scheduler(self.time)
 
@@ -46,6 +47,16 @@ class World(object):
         """
         """
         return self.scheduler
+
+    def getSpeedFactor(self, ):
+        """
+        """
+        return self.speedFactor
+
+    def setSpeedFactor(self, speedFactor_):
+        """
+        """
+        self.speedFactor = speedFactor_
 
     def getStepDurationInMs(self, ):
         """
@@ -68,8 +79,10 @@ class World(object):
             prevSimDateInMs = simDateInMs
 
             deltaRealDelayInMs = self.time.getRealTimeInMs() - prevRealDateInMs
-            if (deltaRealDelayInMs < deltaSimDelayInMs):
-                self.time.sleepTimeInMs(deltaSimDelayInMs - deltaRealDelayInMs)
+            if (deltaRealDelayInMs <= deltaSimDelayInMs):
+                self.time.sleepTimeInMs((deltaSimDelayInMs - deltaRealDelayInMs) / self.speedFactor)
+            else:
+                raise Exception("Real time lost")
             prevRealDateInMs = self.time.getRealTimeInMs()
 
     def update(self, ):
