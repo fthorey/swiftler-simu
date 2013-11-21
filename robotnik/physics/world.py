@@ -34,9 +34,18 @@ class World(object):
         self.speedFactor = 1
         self.time = Timing()
         self.scheduler = Scheduler(self.time)
+        self.robots = dict()
 
         updateWorld = self.scheduler.createEvent(UpdateWorld(self), 'UpdateWorld')
         updateWorld.setDelayInMs(self.stepDurationInMs)
+
+    def addRobot(self, robot_):
+        """
+        """
+        if robot_.getName() in self.robots:
+            raise Exception("Can't add a robot with name: " + name_ + ", already exist")
+        else:
+            self.robots[robot_.getName()] = robot_
 
     def getTime(self, ):
         """
@@ -90,6 +99,9 @@ class World(object):
         """
         """
         print 'update world @: ' + str(self.time.getSimTimeInMs()) + 'ms'
+
+        for name, robot in self.robots.iteritems():
+            robot.update(self.stepDurationInMs)
 
         # self.physicsEngine.updateCollision()
         # self.physicsEngine.updatePhysics()
