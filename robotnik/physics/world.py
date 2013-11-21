@@ -2,9 +2,11 @@
 # coding: utf-8
 
 from common import const
-from events.time import Time
+from events.timing import Timing
 from events.event import EventIf
 from events.scheduler import Scheduler
+
+from time import sleep
 
 class UpdateWorld(EventIf):
     """
@@ -29,7 +31,7 @@ class World(object):
         """
         """
         self.stepDurationInMs = stepDurationInMs_
-        self.time = Time()
+        self.time = Timing()
         self.scheduler = Scheduler(self.time)
 
         updateWorld = self.scheduler.createEvent(UpdateWorld(self), 'UpdateWorld')
@@ -54,16 +56,26 @@ class World(object):
         """
         """
         self.scheduler.setEndOfWindowDelay(steps_ * self.stepDurationInMs)
+        prevSimDateInMs = self.time.getSimTimeInMs()
+        prevRealDateInMs = self.time.getRealTimeInMs()
         while (not self.scheduler.checkEvent()):
-            dateInMs = self.scheduler.getNextEventDateInMs()
-            if dateInMs is const.INVALID_DATE:
+            simDateInMs = self.scheduler.getNextEventDateInMs()
+            if simDateInMs is const.INVALID_DATE:
                 raise Exception("No event scheduled")
-            self.time.setTimeInMs(dateInMs)
+
+            self.time.setSimTimeInMs(simDateInMs)
+            deltaSimDelayInMs = simDateInMs - prevSimDateInMs
+            prevSimDateInMs = simDateInMs
+
+            deltaRealDelayInMs = self.time.getRealTimeInMs() - prevRealDateInMs
+            if (deltaRealDelayInMs < deltaSimDelayInMs):
+                self.time.sleepTimeInMs(deltaSimDelayInMs - deltaRealDelayInMs)
+            prevRealDateInMs = self.time.getRealTimeInMs()
 
     def update(self, ):
         """
         """
-        print 'update world @: ' + str(self.time.getTimeInMs()) + 'ms'
+        print 'update world @: ' + str(self.time.getSimTimeInMs()) + 'ms'
 
         # self.physicsEngine.updateCollision()
         # self.physicsEngine.updatePhysics()

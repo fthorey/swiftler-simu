@@ -51,7 +51,7 @@ class Event(object):
     def setDelayInMs(self, delayInMs_):
         """
         """
-        self.dateInMs = self.time.getTimeInMs() + delayInMs_
+        self.dateInMs = self.time.getSimTimeInMs() + delayInMs_
         self.status = const.ACTIVE
         self.scheduler.updateEvent()
 

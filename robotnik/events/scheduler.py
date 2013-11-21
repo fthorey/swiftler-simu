@@ -45,8 +45,8 @@ class Scheduler(object):
     def checkEvent(self, ):
         """
         """
-        if self.currentDateInMs <= self.time.getTimeInMs():
-            while self.currentDateInMs <= self.time.getTimeInMs():
+        if self.currentDateInMs <= self.time.getSimTimeInMs():
+            while self.currentDateInMs <= self.time.getSimTimeInMs():
                 self.triggerCurrentEvent()
         return self.isEow;
 
