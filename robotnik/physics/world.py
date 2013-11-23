@@ -21,23 +21,23 @@ class UpdateWorld(EventIf):
         """
         self.world.update()
         updateWorld = self.world.getScheduler().getEvent('UpdateWorld')
-        updateWorld.setDelayInMs(self.world.getStepDurationInMs())
+        updateWorld.setDelay(self.world.getStepDuration())
 
 class World(object):
     """ World class provides access to all objects withing the simulated environment
     """
 
-    def __init__(self, stepDurationInMs_):
+    def __init__(self, stepDuration_):
         """
         """
-        self.stepDurationInMs = stepDurationInMs_
+        self.stepDuration = stepDuration_
         self.speedFactor = 1
         self.time = Timing()
         self.scheduler = Scheduler(self.time)
         self.robots = dict()
 
         updateWorld = self.scheduler.createEvent(UpdateWorld(self), 'UpdateWorld')
-        updateWorld.setDelayInMs(self.stepDurationInMs)
+        updateWorld.setDelay(self.stepDuration)
 
     def addRobot(self, robot_):
         """
@@ -67,42 +67,51 @@ class World(object):
         """
         self.speedFactor = speedFactor_
 
-    def getStepDurationInMs(self, ):
+    def getStepDuration(self, ):
         """
         """
-        return self.stepDurationInMs
+        return self.stepDuration
 
     def step(self, steps_):
         """
         """
-        self.scheduler.setEndOfWindowDelay(steps_ * self.stepDurationInMs)
-        prevSimDateInMs = self.time.getSimTimeInMs()
-        prevRealDateInMs = self.time.getRealTimeInMs()
+        self.scheduler.setEndOfWindowDelay(steps_ * self.stepDuration)
+        prevSimDate = self.time.getSimTime()
+        prevRealDate = self.time.getRealTime()
+
         while (not self.scheduler.checkEvent()):
-            simDateInMs = self.scheduler.getNextEventDateInMs()
-            if simDateInMs is const.INVALID_DATE:
+            # Go to the next event to trig
+            simDate = self.scheduler.getNextEventDate()
+
+            # CHeck if there are still events scheduled
+            if simDate is const.INVALID_DATE:
                 raise Exception("No event scheduled")
 
-            self.time.setSimTimeInMs(simDateInMs)
-            deltaSimDelayInMs = simDateInMs - prevSimDateInMs
-            prevSimDateInMs = simDateInMs
+            # Update time
+            self.time.setSimTime(simDate)
+            deltaSimDelay = simDate - prevSimDate
+            prevSimDate = simDate
+            deltaRealDelay = self.time.getRealTime() - prevRealDate
 
-            deltaRealDelayInMs = self.time.getRealTimeInMs() - prevRealDateInMs
-
-            if deltaRealDelayInMs <= deltaSimDelayInMs:
-                sleepTime = (deltaSimDelayInMs - deltaRealDelayInMs) / self.speedFactor
-                self.time.sleepTimeInMs(sleepTime)
-            else:
+            # Resynchronise on real time
+            if deltaRealDelay <= deltaSimDelay:
+                sleepTime = (deltaSimDelay - deltaRealDelay) / self.speedFactor
+                self.time.sleepTime(sleepTime)
+            # Don't raise exception when several events trig at the same time
+            elif deltaSimDelay > 1e-10:
                 raise Exception("Real time lost")
-            prevRealDateInMs = self.time.getRealTimeInMs()
+
+            # Update previous real time date
+            prevRealDate = self.time.getRealTime()
 
     def update(self, ):
         """
         """
-        print 'update world @: ' + str(self.time.getSimTimeInMs()) + 'ms'
+        print 'update world @: ' + str(self.time.getSimTime()) + 's'
 
+        # Update robots
         for name, robot in self.robots.iteritems():
-            robot.update(self.stepDurationInMs)
+            robot.update(self.stepDuration)
 
         # self.physicsEngine.updateCollision()
         # self.physicsEngine.updatePhysics()

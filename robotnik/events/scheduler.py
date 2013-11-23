@@ -14,7 +14,7 @@ class Scheduler(object):
         self.time = time_
         self.events = dict()
         self.currentEvent = None
-        self.currentDateInMs = const.INVALID_DATE
+        self.currentDate = const.INVALID_DATE
         self.windowEvent = WindowEvent(self)
         self.isEow = False
 
@@ -35,18 +35,18 @@ class Scheduler(object):
         """
         """
         self.currentEvent = None
-        self.currentDateInMs = const.INVALID_DATE
+        self.currentDate = const.INVALID_DATE
         for name, event in self.events.iteritems():
             if event.getStatus() is const.ACTIVE:
-                if (event.getDateInMs() < self.currentDateInMs):
-                    self.currentDateInMs = event.getDateInMs()
+                if (event.getDate() < self.currentDate):
+                    self.currentDate = event.getDate()
                     self.currentEvent = event
 
     def checkEvent(self, ):
         """
         """
-        if self.currentDateInMs <= self.time.getSimTimeInMs():
-            while self.currentDateInMs <= self.time.getSimTimeInMs():
+        if self.currentDate <= self.time.getSimTime():
+            while self.currentDate <= self.time.getSimTime():
                 self.triggerCurrentEvent()
         return self.isEow;
 
@@ -62,16 +62,21 @@ class Scheduler(object):
         """
         self.isEow = eow_
 
-    def setEndOfWindowDelay(self, delayInMs_):
+    def getEndOfWindow(self, ):
+        """
+        """
+        return self.isEow
+
+    def setEndOfWindowDelay(self, delay_):
         """
         """
         self.isEow = False
-        self.windowEvent.getEvent().setDelayInMs(delayInMs_)
+        self.windowEvent.getEvent().setDelay(delay_)
 
-    def getNextEventDateInMs(self, ):
+    def getNextEventDate(self, ):
         """
         """
-        return self.currentDateInMs
+        return self.currentDate
 
     def getNextEvent(self, ):
         """

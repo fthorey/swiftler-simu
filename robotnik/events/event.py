@@ -24,7 +24,7 @@ class Event(object):
         self.eventIf = eventIf_
         self.name = name_
         self.status = const.NOT_ACTIVE
-        self.dateInMs = const.INVALID_DATE
+        self.date = const.INVALID_DATE
 
     def __str__(self, ):
         """
@@ -45,20 +45,20 @@ class Event(object):
         """
         """
         self.status = const.NOT_ACTIVE
-        self.dateInMs = const.INVALID_DATE
+        self.date = const.INVALID_DATE
         self.scheduler.updateEvent()
 
-    def setDelayInMs(self, delayInMs_):
+    def setDelay(self, delay_):
         """
         """
-        self.dateInMs = self.time.getSimTimeInMs() + delayInMs_
+        self.date = self.time.getSimTime() + delay_
         self.status = const.ACTIVE
         self.scheduler.updateEvent()
 
-    def setDateInMs(self, dateInMs_):
+    def setDate(self, date_):
         """
         """
-        self.dateInMs = dateInMs_
+        self.date = date_
         self.status = const.ACTIVE
         self.scheduler.updateEvent()
 
@@ -72,10 +72,10 @@ class Event(object):
         """
         self.status = status_
 
-    def getDateInMs(self, ):
+    def getDate(self, ):
         """
         """
-        return self.dateInMs
+        return self.date
 
 class EventIf(object):
     """ EventIf interface class allows the user to implement an event trigger function

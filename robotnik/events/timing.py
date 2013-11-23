@@ -8,31 +8,31 @@ class Timing(object):
     def __init__(self, ):
         """
         """
-        self.simTimeInMs = 0
+        self.simTime = 0
 
-    def addSimTimeInMs(self, simTimeInMs_):
+    def addSimTime(self, simTime_):
         """
         """
-        self.simTimeInMs = self.simTimeInMs + simTimeInMs_
+        self.simTime = self.simTime + simTime_
 
-    def setSimTimeInMs(self, simTimeInMs_):
+    def setSimTime(self, simTime_):
         """
         """
-        self.simTimeInMs = simTimeInMs_
+        self.simTime = simTime_
 
-    def getSimTimeInMs(self, ):
+    def getSimTime(self, ):
         """
         """
-        return self.simTimeInMs
+        return self.simTime
 
-    def getRealTimeInMs(self, ):
+    def getRealTime(self, ):
         """
         """
         from time import time
-        return time() * 1e-3
+        return time()
 
-    def sleepTimeInMs(self, sleepTimeInMs_):
+    def sleepTime(self, sleepTime_):
         """
         """
         from time import sleep
-        sleep(sleepTimeInMs_ * 1e-3)
+        sleep(sleepTime_)
