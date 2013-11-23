@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from common.position import Pos2D
 from physics.dynamics.dynamics import DifferentialDrive
 
 class Robot(object):
-    """ RobotCtrl class handles a robot controller
+    """ Robot class handles a robot controller
     """
 
     def __init__(self, name_, wheelRadius_, wheelBaseLength_):
@@ -16,7 +17,9 @@ class Robot(object):
 
         self.dynamics = DifferentialDrive(self.wheelRadius, self.wheelBaseLength)
 
-        self.lefWheelSpeed = 0
+        self.pos = Pos2D(0, 0, 0)
+
+        self.leftWheelSpeed = 0
         self.rightWheelSpeed = 0
 
     def getName(self, ):
@@ -24,7 +27,12 @@ class Robot(object):
         """
         return self.name
 
+    def getPos(self, ):
+        """
+        """
+        return self.pos
+
     def update(self, dt_):
         """
         """
-        pass
+        self.dynamics.apply(self.pos, dt_, self.leftWheelSpeed, self.rightWheelSpeed)
