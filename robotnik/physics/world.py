@@ -11,20 +11,45 @@ from time import sleep
 class UpdateWorld(EventIf):
     """
     """
-    def __init__(self, world_):
+    def __init__(self, worldCtrl_):
         """
         """
-        self.world = world_
+        self.worldCtrl = worldCtrl_
 
     def trigger(self, ):
         """
         """
-        self.world.update()
-        updateWorld = self.world.getScheduler().getEvent('UpdateWorld')
-        updateWorld.setDelay(self.world.getStepDuration())
+        self.worldCtrl.update()
+        updateWorld = self.worldCtrl.getScheduler().getEvent('UpdateWorld')
+        updateWorld.setDelay(self.worldCtrl.getWorldModel().getStepDuration())
 
 class World(object):
-    """ World class provides access to all objects withing the simulated environment
+    """ World class provides access to all objects within the simulated environment
+    """
+
+    def __init__(self, stepDuration_):
+        """
+        """
+        self.worldModel = WorldModel(stepDuration_)
+        self.worldCtrl = WorldCtrl(self.worldModel)
+
+    def setSpeedFactor(self, speedFactor_):
+        """
+        """
+        self.worldModel.setSpeedFactor(speedFactor_)
+
+    def addRobot(self, robot_):
+        """
+        """
+        self.worldModel.addRobot(robot_)
+
+    def step(self, steps_):
+        """
+        """
+        self.worldCtrl.step(steps_)
+
+class WorldModel(object):
+    """ WorldModel class is a container for all objects within the simulated environment
     """
 
     def __init__(self, stepDuration_):
@@ -32,12 +57,7 @@ class World(object):
         """
         self.stepDuration = stepDuration_
         self.speedFactor = 1
-        self.time = Timing()
-        self.scheduler = Scheduler(self.time)
         self.robots = dict()
-
-        updateWorld = self.scheduler.createEvent(UpdateWorld(self), 'UpdateWorld')
-        updateWorld.setDelay(self.stepDuration)
 
     def addRobot(self, robot_):
         """
@@ -47,15 +67,10 @@ class World(object):
         else:
             self.robots[robot_.getName()] = robot_
 
-    def getTime(self, ):
+    def getRobots(self, ):
         """
         """
-        return self.time
-
-    def getScheduler(self, ):
-        """
-        """
-        return self.scheduler
+        return self.robots
 
     def getSpeedFactor(self, ):
         """
@@ -72,10 +87,51 @@ class World(object):
         """
         return self.stepDuration
 
+    def update(self, ):
+        """
+        """
+
+        # Update robots
+        for name, robot in self.robots.iteritems():
+            robot.update(self.stepDuration)
+            print 'robot position: X=' + str(robot.getPos().getX()) + ' Y=' + str(robot.getPos().getY())
+
+        # self.physicsEngine.updateCollision()
+        # self.physicsEngine.updatePhysics()
+
+class WorldCtrl(object):
+    """ WorldCtrl class manages updates within the simulated environment
+    """
+
+    def __init__(self, worldModel_):
+        """
+        """
+        self.time = Timing()
+        self.scheduler = Scheduler(self.time)
+        self.worldModel = worldModel_
+
+        updateWorld = self.scheduler.createEvent(UpdateWorld(self), 'UpdateWorld')
+        updateWorld.setDelay(self.worldModel.getStepDuration())
+
+    def getTime(self, ):
+        """
+        """
+        return self.time
+
+    def getScheduler(self, ):
+        """
+        """
+        return self.scheduler
+
+    def getWorldModel(self, ):
+        """
+        """
+        return self.worldModel
+
     def step(self, steps_):
         """
         """
-        self.scheduler.setEndOfWindowDelay(steps_ * self.stepDuration)
+        self.scheduler.setEndOfWindowDelay(steps_ * self.worldModel.getStepDuration())
         prevSimDate = self.time.getSimTime()
         prevRealDate = self.time.getRealTime()
 
@@ -95,7 +151,7 @@ class World(object):
 
             # Resynchronise on real time
             if deltaRealDelay <= deltaSimDelay:
-                sleepTime = (deltaSimDelay - deltaRealDelay) / self.speedFactor
+                sleepTime = (deltaSimDelay - deltaRealDelay) / self.worldModel.getSpeedFactor()
                 self.time.sleepTime(sleepTime)
             # Don't raise exception when several events trig at the same time
             elif deltaSimDelay > 1e-10:
@@ -108,10 +164,4 @@ class World(object):
         """
         """
         print 'update world @: ' + str(self.time.getSimTime()) + 's'
-
-        # Update robots
-        for name, robot in self.robots.iteritems():
-            robot.update(self.stepDuration)
-
-        # self.physicsEngine.updateCollision()
-        # self.physicsEngine.updatePhysics()
+        self.worldModel.update()
