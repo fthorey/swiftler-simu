@@ -14,7 +14,7 @@ class World(QtGui.QGraphicsScene):
         # Call parent constructor
         super(World, self).__init__(parent)
 
-    def addRobot(self, robot_):
+    def addObject(self, object_):
         """
         """
-        self.addItem(robot_)
+        self.addItem(object_)

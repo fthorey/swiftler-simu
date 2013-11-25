@@ -3,7 +3,8 @@
 
 import sys
 from physics.world import World
-from robots.robot import Robot
+from robots.woggle import Woggle
+from common.shape import *
 from common import const
 
 from PyQt4 import QtGui, QtCore
@@ -35,13 +36,13 @@ class Robotnik(QtGui.QMainWindow):
 
         # Remove aliasing
         view.setRenderHint(QtGui.QPainter.Antialiasing);
-        view.resize(400, 300);
+        view.setCacheMode(QtGui.QGraphicsView.CacheBackground);
 
         # Place the view of the graphic scene in the center
         self.setCentralWidget(view);
 
         # Set the main window size
-        self.setGeometry(300, 300, 250, 250)
+        self.resize(800, 600)
 
         # Center the main window
         self.center()
@@ -55,8 +56,8 @@ class Robotnik(QtGui.QMainWindow):
         # Connect timer trigger signal to world advance method
         timer.timeout.connect(self.world.advance)
 
-        # Get a frame rate of ~30fps
-        timer.start(1000 / 33);
+        # Get a frame rate of ~100fps
+        timer.start(const.stepDuration);
 
     # Center the main window
     def center(self, ):
@@ -67,24 +68,24 @@ class Robotnik(QtGui.QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # Add a robot
-    def addRobot(self, robot_):
+    # Add an object
+    def addObject(self, object_):
         """
         """
-        self.world.addRobot(robot_)
+        self.world.addObject(object_)
 
 if __name__ == '__main__':
     # Create a Qt application
     app = QtGui.QApplication([])
 
-    # Create a robotnik simulator with a step duration of 1s
-    robotnik = Robotnik(1)
+    # Create a robotnik simulator with a step duration of 10ms
+    robotnik = Robotnik(10)
 
     # Create a differential drive robot
-    robot = Robot("Robot1", 0.021, 0.0885)
+    woggle = Woggle("woggle", 0.021, 0.0885)
 
-    # Add the robot to the simulator
-    robotnik.addRobot(robot)
+    # Add the objects to the simulator
+    robotnik.addObject(woggle)
 
     # Exit
     sys.exit(app.exec_())
