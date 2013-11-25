@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# coding: utf-8
+
 class _const:
     class ConstError(TypeError): pass
     def __setattr__(self,name,value):
