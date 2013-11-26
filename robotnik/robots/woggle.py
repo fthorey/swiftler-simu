@@ -35,7 +35,6 @@ class Woggle(Robot):
         # Current angle of the robot (rad)
         self.setRotation(degrees(self.theta))
 
-
     # Set the current left wheel speed
     def setLeftWheelSpeed(self, speed_):
         """
@@ -86,7 +85,6 @@ class Woggle(Robot):
     def paint(self, painter, option, widget):
         """
         """
-
         # Body
         painter.setBrush(QtGui.QColor("light grey"))
         bodyX = (-self.wheelBaseLength/2) * const.m2pix
@@ -99,19 +97,19 @@ class Woggle(Robot):
         wheelW = bodyW / 3
         wheelH = bodyH / 6
         lwheelX = -wheelW/2
-        lwheelY = -bodyH/2 - bodyH/30
+        lwheelY = -bodyH/2 + wheelH/2
         painter.setBrush(QtGui.QColor("black"))
         painter.drawRect(lwheelX, lwheelY, wheelW, wheelH)
 
         # Right wheel
         rwheelX = -wheelW/2
-        rwheelY = bodyH/2 - wheelW/2 + bodyH/30
+        rwheelY = bodyH/2 - wheelH - wheelH/2
         painter.drawRect(rwheelX, rwheelY, wheelW, wheelH)
 
         # Ultrasound sensor
         baseW = bodyW * 0.08
         baseH = bodyW * 0.24
-        baseX = bodyW/2 - baseW/2
+        baseX = bodyW/2 - 2*baseW
         baseY = -baseH/2
         soundW = bodyW * 0.06
         soundH = bodyW * 0.06
