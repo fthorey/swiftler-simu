@@ -65,13 +65,13 @@ class Robotnik(QtGui.QMainWindow):
         self.show()
 
         # Set a timer to handle time
-        # timer = QtCore.QTimer(self)
+        timer = QtCore.QTimer(self)
 
         # Connect timer trigger signal to world advance method
-        # timer.timeout.connect(self.world.advance)
+        timer.timeout.connect(self.world.advance)
 
         # Get a frame rate of ~100fps
-        # timer.start(const.stepDuration);
+        timer.start(const.stepDuration);
 
     # Center the main window
     def center(self, ):
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     app = QtGui.QApplication([])
 
     # Create a robotnik simulator with a step duration of 10ms
-    robotnik = Robotnik(10)
+    robotnik = Robotnik(1000/33)
 
     # Create a differential drive robot
     # Wheel radius = 2.1cm
