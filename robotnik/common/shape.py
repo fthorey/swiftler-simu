@@ -16,10 +16,7 @@ class Shape(QtGui.QGraphicsItem):
         # Name of the shape
         self.name = name_
 
-        # Position of the shape in its own referential
-        self.pos = QtCore.QPointF(0, 0)
-
-        # Angle of the shape in its own referential
+        # Angle of the shape in its parent referential
         self.theta = 0
 
         # Main color of the shape
@@ -30,18 +27,6 @@ class Shape(QtGui.QGraphicsItem):
         """
         """
         return self.name
-
-    # Return the position of the shape
-    def getPos(self, ):
-        """
-        """
-        return self.pos
-
-    # Set the position of the shape
-    def setPos(self, pos_):
-        """
-        """
-        self.pos = pos_
 
     # Return the current theta angle
     def getTheta(self, ):
