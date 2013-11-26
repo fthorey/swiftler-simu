@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from common import const
 from robots.robot import Robot
 from physics.dynamics import DifferentialDrive
 from PyQt4 import QtGui, QtCore
@@ -16,10 +17,10 @@ class Woggle(Robot):
         super(Woggle, self).__init__(name_)
 
         # Radius of the wheels
-        self.wheelRadius = wheelRadius_
+        self.wheelRadius = wheelRadius_ * const.scaleFactor
 
         # Length between each wheel
-        self.wheelBaseLength = wheelBaseLength_
+        self.wheelBaseLength = wheelBaseLength_ * const.scaleFactor
 
         # The Woggle robot follow the differential drive dynamic
         self.setDynamics(DifferentialDrive(self.wheelRadius, self.wheelBaseLength))
@@ -29,6 +30,18 @@ class Woggle(Robot):
 
         # Current speed of the right wheel in its own referential
         self.rightWheelSpeed = 0
+
+    # Set the current left wheel speed
+    def setLeftWheelSpeed(self, speed_):
+        """
+        """
+        self.leftWheelSpeed = speed_
+
+    # Set the current right wheel speed
+    def setRightWheelSpeed(self, speed_):
+        """
+        """
+        self.rightWheelSpeed = speed_
 
     # Return the current left wheel speed
     def getLeftWheelSpeed(self, ):
@@ -42,29 +55,64 @@ class Woggle(Robot):
         """
         return self.rightWheelSpeed
 
-
     # Return an estimate of the area painted by the item
     def boundingRect(self, ):
         """
         """
-        return QtCore.QRectF(0, 0, 110, 110)
+        bodyX = (-self.wheelBaseLength/2) * const.m2pix
+        bodyY = (-self.wheelBaseLength/2) * const.m2pix
+        bodyW = self.wheelBaseLength * const.m2pix
+        bodyH = self.wheelBaseLength * const.m2pix
+        return QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
+
+    # Define the accurate shape of the item
+    def shape(self, ):
+        """
+        """
+        path = QtGui.QPainterPath()
+        bodyX = (-self.wheelBaseLength/2) * const.m2pix
+        bodyY = (-self.wheelBaseLength/2) * const.m2pix
+        bodyW = self.wheelBaseLength * const.m2pix
+        bodyH = self.wheelBaseLength * const.m2pix
+        path.addRect(bodyX, bodyY, bodyW, bodyH);
+        return path;
 
     # Define how to paint the robot
     def paint(self, painter, option, widget):
         """
         """
+
         # Body
         painter.setBrush(QtGui.QColor("light grey"))
-        painter.drawEllipse(-50, -50, 100, 100)
+        bodyX = (-self.wheelBaseLength/2) * const.m2pix
+        bodyY = (-self.wheelBaseLength/2) * const.m2pix
+        bodyW = self.wheelBaseLength * const.m2pix
+        bodyH = self.wheelBaseLength * const.m2pix
+        painter.drawEllipse(bodyX, bodyY, bodyW, bodyH)
 
         # Left wheel
+        wheelW = bodyW / 3
+        wheelH = bodyH / 6
+        lwheelX = -wheelW/2
+        lwheelY = -bodyH/2 - bodyH/30
         painter.setBrush(QtGui.QColor("black"))
-        painter.drawRect(-20, -55, 40, 20)
+        painter.drawRect(lwheelX, lwheelY, wheelW, wheelH)
 
         # Right wheel
-        painter.drawRect(-20, 35, 40, 20)
+        rwheelX = -wheelW/2
+        rwheelY = bodyH/2 - wheelW/2 + bodyH/30
+        painter.drawRect(rwheelX, rwheelY, wheelW, wheelH)
 
         # Ultrasound sensor
-        painter.drawRect(40, -15, 10, 30)
-        painter.drawRect(50, -10, 8, 8)
-        painter.drawRect(50, 2, 8, 8)
+        baseW = bodyW * 0.08
+        baseH = bodyW * 0.24
+        baseX = bodyW/2 - baseW/2
+        baseY = -baseH/2
+        soundW = bodyW * 0.06
+        soundH = bodyW * 0.06
+        soundX = baseX + soundW
+        sound1Y = baseY + (baseH - 2*soundW) / 3
+        sound2Y = sound1Y + soundW + (baseH - 2*soundW) / 3
+        painter.drawRect(baseX, baseY, baseW, baseH)
+        painter.drawRect(soundX, sound1Y, soundW, soundH)
+        painter.drawRect(soundX, sound2Y, soundW, soundH)
