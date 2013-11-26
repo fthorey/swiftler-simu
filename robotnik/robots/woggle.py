@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from math import pi, degrees, radians
 from common import const
 from robots.robot import Robot
 from physics.dynamics import DifferentialDrive
@@ -16,20 +17,24 @@ class Woggle(Robot):
         # Call parent constructor
         super(Woggle, self).__init__(name_)
 
-        # Radius of the wheels
+        # Radius of the wheels (m)
         self.wheelRadius = wheelRadius_ * const.scaleFactor
 
-        # Length between each wheel
+        # Length between each wheel (m)
         self.wheelBaseLength = wheelBaseLength_ * const.scaleFactor
 
         # The Woggle robot follow the differential drive dynamic
         self.setDynamics(DifferentialDrive(self.wheelRadius, self.wheelBaseLength))
 
-        # Current speed of the left wheel in its own referential
-        self.leftWheelSpeed = 0
+        # Current speed of the left wheel in its own referential (rad/s)
+        self.leftWheelSpeed = 4*pi
 
-        # Current speed of the right wheel in its own referential
-        self.rightWheelSpeed = 0
+        # Current speed of the right wheel in its own referential (rad/s)
+        self.rightWheelSpeed = 4*pi
+
+        # Current angle of the robot (rad)
+        self.setRotation(degrees(self.theta))
+
 
     # Set the current left wheel speed
     def setLeftWheelSpeed(self, speed_):
