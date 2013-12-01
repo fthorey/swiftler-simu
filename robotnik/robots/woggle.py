@@ -4,6 +4,7 @@
 from math import pi, degrees, radians
 from common import const
 from robots.robot import Robot
+from controller.supervisor import WoggleSupervisor
 from physics.dynamics import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
@@ -24,7 +25,10 @@ class Woggle(Robot):
         self.wheelBaseLength = wheelBaseLength_ * const.scaleFactor
 
         # The Woggle robot follow the differential drive dynamic
-        self.setDynamics(DifferentialDrive(self.wheelRadius, self.wheelBaseLength))
+        self.setDynamics(DifferentialDrive(self))
+
+        # A supervisor is attached to the Woggle robot
+        self.setSupervisor(WoggleSupervisor(self))
 
         # Current speed of the left wheel in its own referential (rad/s)
         self.leftWheelSpeed = 4*pi
