@@ -39,6 +39,18 @@ class Woggle(Robot):
         # Current angle of the robot (rad)
         self.setRotation(degrees(self.theta))
 
+    # Get the wheel radius
+    def getWheelRadius(self, ):
+        """
+        """
+        return self.wheelRadius
+
+    # Get the wheel base length
+    def getWheelBaseLength(self, ):
+        """
+        """
+        return self.wheelBaseLength
+
     # Set the current left wheel speed
     def setLeftWheelSpeed(self, speed_):
         """
@@ -56,6 +68,13 @@ class Woggle(Robot):
         """
         """
         return self.leftWheelSpeed
+
+    # Set the speed of both wheels
+    def setWheelSpeeds(self, vel_l, vel_r):
+        """
+        """
+        self.leftWheelSpeed = vel_l
+        self.rightWheelSpeed = vel_r
 
     # Return the current left wheel speed
     def getRightWheelSpeed(self, ):
