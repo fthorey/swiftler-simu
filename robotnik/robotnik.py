@@ -64,14 +64,32 @@ class Robotnik(QtGui.QMainWindow):
         # Show the view on screen
         self.show()
 
+        # Current number of steps
+        self.steps = 0
+        self.maxsteps = 0
+
         # Set a timer to handle time
-        timer = QtCore.QTimer(self)
+        self.timer = QtCore.QTimer(self)
 
         # Connect timer trigger signal to world advance method
-        timer.timeout.connect(self.world.advance)
+        self.timer.timeout.connect(self.world.advance)
+        # COnnect timer to step method to check end of time steps
+        self.timer.timeout.connect(self.stop)
 
-        # Get a frame rate of ~100fps
-        timer.start(const.stepDuration);
+    def stop(self, ):
+        """
+        """
+        self.steps = self.steps + 1
+
+        if self.steps == self.maxsteps:
+            self.timer.stop()
+
+    def step(self, steps_):
+        """
+        """
+        self.timer.start(const.stepDuration);
+        self.steps = 0
+        self.maxsteps = steps_
 
     # Center the main window
     def center(self, ):
@@ -93,7 +111,7 @@ if __name__ == '__main__':
     app = QtGui.QApplication([])
 
     # Create a robotnik simulator with a step duration of 10ms
-    robotnik = Robotnik(1000/33)
+    robotnik = Robotnik(10)
 
     # Create a differential drive robot
     # Wheel radius = 2.1cm
@@ -102,6 +120,9 @@ if __name__ == '__main__':
 
     # Add the objects to the simulator
     robotnik.addObject(woggle)
+
+    # Advance the simulation for some steps (1000 * 10ms = 10s)
+    robotnik.step(1000)
 
     # Exit
     sys.exit(app.exec_())
