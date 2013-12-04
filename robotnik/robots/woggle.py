@@ -31,10 +31,10 @@ class Woggle(Robot):
         self.setSupervisor(WoggleSupervisor(self))
 
         # Current speed of the left wheel in its own referential (rad/s)
-        self.leftWheelSpeed = 4*pi
+        self.leftWheelSpeed = 0
 
         # Current speed of the right wheel in its own referential (rad/s)
-        self.rightWheelSpeed = 4*pi
+        self.rightWheelSpeed = 0
 
         # Current angle of the robot (rad)
         self.setRotation(degrees(self.theta))
