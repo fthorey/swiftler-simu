@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from math import atan2, fabs, log, sin, cos
+from math import atan2, fabs, log, sin, cos, degrees, pi
+from common import const
 
 class Controller(object):
     """ Controller class provides a default class for controllers
@@ -15,8 +16,6 @@ class Controller(object):
         """
         """
 
-        return
-
 class GoToGoal(Controller):
     """ GoToGoal class steers the robot towards a goal with a constant velocity using PID
     """
@@ -26,11 +25,11 @@ class GoToGoal(Controller):
         """
         # PID gains
         # Proportional
-        self.Kp = 5;
+        self.Kp = 0.0005
         # Integral
-        self.Ki = 0.01;
+        self.Ki = 0.00001
         # Derivative
-        self.Kd = 0.
+        self.Kd = 0.001
 
         # Accumulated error
         self.E_k = 0;
@@ -47,7 +46,7 @@ class GoToGoal(Controller):
 
         # Get an estimate of the current pos
         x = stateEstimate[0].x()
-        y = stateEstimate[0].x()
+        y = stateEstimate[0].y()
         theta = stateEstimate[1]
 
         # Compute the v,w that will get you to the goal
