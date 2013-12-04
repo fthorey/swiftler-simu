@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import sys
+from math import pi
 from physics.world import World
 from robots.woggle import Woggle
 from common.shape import *
@@ -37,6 +38,7 @@ class Robotnik(QtGui.QMainWindow):
 
         # Create a new world
         self.world = World(self)
+        self.world.setSceneRect(-300, -300, 600, 600);
 
         # Create a view to vizualize the graphic scene
         view = QtGui.QGraphicsView(self.world);
