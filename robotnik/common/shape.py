@@ -16,7 +16,7 @@ class Shape(QtGui.QGraphicsItem):
         # Name of the shape
         self.name = name_
 
-        # Angle of the shape in its parent referential
+        # Angle of the shape in its own referential
         self.theta = 0
 
         # Main color of the shape
