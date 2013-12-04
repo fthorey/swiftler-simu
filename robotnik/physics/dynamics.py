@@ -27,11 +27,7 @@ class DifferentialDrive(object):
         vel_l = self.robot.getLeftWheelSpeed()
         vel_r = self.robot.getRightWheelSpeed()
 
-        # Velocity of the robot (m/s)
-        v = R/2*(vel_l+vel_r)
-
-        # Angular velocity of the robot (rad/s)
-        w = R/L*(vel_l-vel_r)
+        v, w = self.diff2Uni(vel_l, vel_r)
 
         # Delta integration time (s)
         dt = stepDuration_
@@ -50,6 +46,7 @@ class DifferentialDrive(object):
         # Apply new position of the robot
         self.robot.setPos(pos_k.x() + dx, pos_k.y() + dy)
         self.robot.setTheta(theta_k + dtheta)
+
         self.robot.setRotation(degrees(theta_k + dtheta))
 
     def uni2Diff(self, v, w):
@@ -58,7 +55,18 @@ class DifferentialDrive(object):
         R = self.robot.getWheelRadius()
         L = self.robot.getWheelBaseLength()
 
-        vel_l = v/R-(w*L)/(2*R);
-        vel_r = v/R+(w*L)/(2*R);
+        vel_l = v/R+(w*L)/(2*R);
+        vel_r = v/R-(w*L)/(2*R);
 
         return vel_l, vel_r
+
+    def diff2Uni(self, vel_l, vel_r):
+        """
+        """
+        R = self.robot.getWheelRadius()
+        L = self.robot.getWheelBaseLength()
+
+        v = R/2*(vel_l+vel_r)
+        w = R/L*(vel_l-vel_r)
+
+        return v, w
