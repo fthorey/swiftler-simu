@@ -103,10 +103,10 @@ class Robotnik(QtGui.QMainWindow):
         self.move(qr.topLeft())
 
     # Add an object
-    def addObject(self, object_):
+    def addObject(self, object_, position_):
         """
         """
-        self.world.addObject(object_)
+        self.world.addObject(object_, position_)
 
 if __name__ == '__main__':
     # Create a Qt application
