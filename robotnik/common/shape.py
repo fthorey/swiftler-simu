@@ -40,6 +40,7 @@ class Shape(QtGui.QGraphicsItem):
         """
         """
         self.theta = theta_
+        self.setRotation(degrees(self.theta))
 
     # Return an estimate of the area painted by the item
     def boundingRect(self, ):
