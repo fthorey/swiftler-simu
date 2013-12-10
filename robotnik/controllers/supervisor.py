@@ -29,6 +29,8 @@ class Supervisor(object):
         self.goal = QtCore.QPointF(-0.25*const.m2pix*const.scaleFactor,
                                    -0.15*const.m2pix*const.scaleFactor)
 
+        # self.goal = QtCore.QPointF(0, 0)
+
         # Distance from the goal to which the robot stop
         self.stopDist          = 0.005*const.m2pix*const.scaleFactor
 
