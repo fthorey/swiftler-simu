@@ -4,7 +4,8 @@
 from math import pi, degrees, radians
 from common import const
 from robots.robot import Robot
-from controller.supervisor import WoggleSupervisor
+from sensors.proximity import ProximitySensor
+from controllers.supervisor import WoggleSupervisor
 from physics.dynamics import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
@@ -36,8 +37,9 @@ class Woggle(Robot):
         # Current speed of the right wheel in its own referential (rad/s)
         self.rightWheelSpeed = 0
 
-        # Current angle of the robot (rad)
-        self.setRotation(degrees(self.theta))
+        # Add a sharp sensor
+        sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2) * const.m2pix, 0)
+        self.sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
 
     # Get the wheel radius
     def getWheelRadius(self, ):
