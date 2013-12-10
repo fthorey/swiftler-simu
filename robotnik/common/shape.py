@@ -2,16 +2,17 @@
 # coding: utf-8
 
 from PyQt4 import QtGui, QtCore
+from math import degrees
 
 class Shape(QtGui.QGraphicsItem):
     """ Shape class is the basic class for all objects in the simulator
     """
 
-    def __init__(self, name_):
+    def __init__(self, name_, parent=None):
         """
         """
         # Call parent constructor
-        super(Shape, self).__init__()
+        super(Shape, self).__init__(parent)
 
         # Name of the shape
         self.name = name_
