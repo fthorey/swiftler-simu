@@ -121,7 +121,11 @@ if __name__ == '__main__':
     woggle = Woggle("woggle", 0.021, 0.0885)
 
     # Add the objects to the simulator
-    robotnik.addObject(woggle)
+    robotnik.addObject(woggle, QtCore.QPointF(0, 0))
+
+    # Random shape
+    shape = Shape("shape")
+    robotnik.addObject(shape, QtCore.QPointF(-200, -150))
 
     # Advance the simulation for some steps (1000 * 10ms = 10s)
     robotnik.step(1000)
