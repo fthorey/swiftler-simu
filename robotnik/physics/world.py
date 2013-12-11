@@ -18,17 +18,45 @@ class World(QtGui.QGraphicsScene):
         # Physics that rules the world
         self.physics = Physics(self)
 
+        # List of robots currently in the world
+        self.robots = list()
+
+        # List of furniture currently in the world
+        self.furnitures = list()
+
     # Set the physics that rules the world
     def setPhysics(self, physics_):
         """
         """
         self.physics = physics_
 
-    def addObject(self, object_, position_):
+    # Add a furniture to the world
+    def addFurniture(self, furniture_, position_):
         """
         """
-        object_.setPos(position_)
-        self.addItem(object_)
+        furniture_.setPos(position_)
+        self.addItem(furniture_)
+        self.furnitures.append(furniture_)
+
+    # Add a robot to the world
+    def addRobot(self, robot_, position_):
+        """
+        """
+        robot_.setPos(position_)
+        self.addItem(robot_)
+        self.robots.append(robot_)
+
+    # Return a list of all robots in the wolrd
+    def getRobots(self, ):
+        """
+        """
+        return self.robots
+
+    # Return a list of all furnitures in the wolrd
+    def getFurnitures(self, ):
+        """
+        """
+        return self.furnitures
 
     # Action to perform when the scene changes
     def advance(self, ):

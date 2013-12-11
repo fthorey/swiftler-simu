@@ -102,11 +102,17 @@ class Robotnik(QtGui.QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # Add an object
-    def addObject(self, object_, position_):
+    # Add a furniture in the world
+    def addFurniture(self, furniture_, position_):
         """
         """
-        self.world.addObject(object_, position_)
+        self.world.addFurniture(furniture_, position_)
+
+    # Add a robot in the world
+    def addRobot(self, robot_, position_):
+        """
+        """
+        self.world.addRobot(robot_, position_)
 
 if __name__ == '__main__':
     # Create a Qt application
@@ -121,11 +127,11 @@ if __name__ == '__main__':
     woggle = Woggle("woggle", 0.021, 0.0885)
 
     # Add the objects to the simulator
-    robotnik.addObject(woggle, QtCore.QPointF(0, 0))
+    robotnik.addRobot(woggle, QtCore.QPointF(0, 0))
 
     # Random shape
     shape = Shape("shape")
-    robotnik.addObject(shape, QtCore.QPointF(-200, -150))
+    robotnik.addFurniture(shape, QtCore.QPointF(-200, -150))
 
     # Advance the simulation for some steps (1000 * 10ms = 10s)
     robotnik.step(1000)
