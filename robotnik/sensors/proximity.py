@@ -26,13 +26,41 @@ class ProximitySensor(Shape):
         self.spread = pi/4
 
         # Minimum range
-        self.minRange = 0
+        self.minRange = 0.05*const.scaleFactor
 
         # Maximum range
         self.maxRange = 0.08*const.scaleFactor
 
         # Current range =
         self.currRange = self.maxRange
+
+    # Check if current range > minrange
+    def isMinRangeReached(self, ):
+        return self.currRange <= self.minRange
+
+    # Get current beam range
+    def getBeamRange(self, ):
+        """
+        """
+        return self.currRange
+
+    # Set current beam range
+    def setBeamRange(self, range_):
+        """
+        """
+        self.currRange = range_
+
+    # Reduce beam range
+    def reduceBeamRange(self, reduce_):
+        """
+        """
+        self.currRange = self.currRange - reduce_
+
+    # Increase beam range
+    def increaseBeamRange(self, increase_):
+        """
+        """
+        self.currRange = self.currRange + increase_
 
     # Return the left limit of the beam
     def getBeamLeftLimit(self, ):
