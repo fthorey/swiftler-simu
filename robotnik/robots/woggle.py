@@ -140,17 +140,3 @@ class Woggle(Robot):
         rwheelX = -wheelW/2
         rwheelY = bodyH/2 - wheelH - wheelH/2
         painter.drawRect(rwheelX, rwheelY, wheelW, wheelH)
-
-        # Ultrasound sensor
-        baseW = bodyW * 0.08
-        baseH = bodyW * 0.24
-        baseX = bodyW/2 - 2*baseW
-        baseY = -baseH/2
-        soundW = bodyW * 0.06
-        soundH = bodyW * 0.06
-        soundX = baseX + soundW
-        sound1Y = baseY + (baseH - 2*soundW) / 3
-        sound2Y = sound1Y + soundW + (baseH - 2*soundW) / 3
-        painter.drawRect(baseX, baseY, baseW, baseH)
-        painter.drawRect(soundX, sound1Y, soundW, soundH)
-        painter.drawRect(soundX, sound2Y, soundW, soundH)
