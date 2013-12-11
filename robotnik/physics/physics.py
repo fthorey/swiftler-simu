@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from common import const
+from math import cos
 from PyQt4 import QtGui, QtCore
 
 class Physics(object):
@@ -18,11 +19,6 @@ class Physics(object):
     def apply(self, ):
         """
         """
-        # Check all item currently in the scene
-        for item in self.world.items():
-            if self.world.collidingItems(item):
-                print 'hello'
-
         # Detect bodies collision
         self.detectBodyCollision()
 
@@ -38,3 +34,16 @@ class Physics(object):
     def proximitySensorDetection(self, ):
         """
         """
+        # Check all sensors of all robots currently in the scene
+        # Loop over robots
+        for robot in self.world.getRobots():
+            # Loop over sensors
+            for sensor in robot.getProxSensors():
+                # Get all sensors that detect an obstacle
+                if self.world.collidingItems(sensor):
+                    # Reduce the beam of the sensor
+                    sensor.reduceBeamRange(robot.getSpeed() * const.stepDuration * 1e-3)
+                    # Check if the sensor has reached its min beam range
+                    if sensor.isMinRangeReached():
+                        print 'stop'
+                        robot.stop()
