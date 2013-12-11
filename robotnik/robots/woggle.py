@@ -37,9 +37,19 @@ class Woggle(Robot):
         # Current speed of the right wheel in its own referential (rad/s)
         self.rightWheelSpeed = 0
 
+        # List of all proximity sensors of the robot
+        self.proxSensors = list()
+
         # Add a sharp sensor
         sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2) * const.m2pix, 0)
-        self.sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
+        sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
+        self.proxSensors.append(sharp1)
+
+    # Return the list of all proximity sensors
+    def getProxSensors(self, ):
+        """
+        """
+        return self.proxSensors
 
     # Get the wheel radius
     def getWheelRadius(self, ):
