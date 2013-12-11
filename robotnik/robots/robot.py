@@ -22,6 +22,9 @@ class Robot(Shape):
         # Supervisor to run the robot
         self.supervisor = None
 
+        # Is the robot stopped
+        self.stopped = False
+
     # Set the dynamics followed by the robot
     def setDynamics(self, dynamics_):
         """
@@ -45,6 +48,25 @@ class Robot(Shape):
         """
         """
         return self.dynamics
+
+    # Get current speed
+    def getSpeed(self, ):
+        """
+        """
+        v, w = self.dynamics.diff2Uni(self.leftWheelSpeed, self.rightWheelSpeed)
+        return v
+
+    # Stop the robot
+    def stop(self, ):
+        """
+        """
+        self.stopped = True
+
+    # Check if the robot is stopped
+    def isStopped(self, ):
+        """
+        """
+        return self.stopped
 
     # Action to perform when the scene changes
     def advance(self, step_):
