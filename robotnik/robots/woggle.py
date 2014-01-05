@@ -37,6 +37,8 @@ class Woggle(Robot):
         # Current speed of the right wheel in its own referential (rad/s)
         self.rightWheelSpeed = 0
 
+        self.setTheta(pi)
+
         # List of all proximity sensors of the robot
         self.proxSensors = list()
 
