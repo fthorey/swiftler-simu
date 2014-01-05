@@ -7,8 +7,9 @@ from physics.world import World
 from robots.woggle import Woggle
 from common.shape import *
 from common import const
+import ui.icons
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui, QtCore, uic
 
 class Robotnik(QtGui.QMainWindow):
     """ Robotnik class is the main container for the simulator
@@ -18,7 +19,7 @@ class Robotnik(QtGui.QMainWindow):
     const.pix2m = 0.0002645833333333
     const.m2pix = 3779.527559055
 
-    # Distance scale factor
+    # Scale factor
     const.scaleFactor = 1.0/2.5
 
     def __init__(self, stepDuration_):
@@ -27,41 +28,28 @@ class Robotnik(QtGui.QMainWindow):
         # Call parent constructor
         super(Robotnik, self).__init__()
 
-        # Set main window object name
-        self.setObjectName("Robotnik");
-
-        # Set window title
-        self.setWindowTitle("Robotnik");
+        # Load window design
+        uic.loadUi('ui/mainwindow.ui', self)
 
         # Set step duration
         const.stepDuration = stepDuration_
 
-        # Create a new world
-        self.world = World(self)
-        self.world.setSceneRect(-300, -300, 600, 600);
-
-        # Create a view to vizualize the graphic scene
-        view = QtGui.QGraphicsView(self.world);
+        # Get the view
+        view = self.centralWidget.findChild(QtGui.QGraphicsView, 'graphicsView')
 
         # Remove aliasing
         view.setRenderHint(QtGui.QPainter.Antialiasing);
         view.setCacheMode(QtGui.QGraphicsView.CacheBackground);
 
-        # Place the view of the graphic scene in the center
-        self.setCentralWidget(view);
+        # Create a new world
+        self.world = World(self)
+        self.world.setSceneRect(-300, -300, 600, 600);
 
-        # Set the main window size
-        self.resize(1*const.m2pix*const.scaleFactor, 0.5*const.m2pix*const.scaleFactor)
+        # Attach the world to the view
+        view.setScene(self.world)
 
         # Center the main window
         self.center()
-
-        # Get screen geometry
-        screen = QtGui.QDesktopWidget().screenGeometry()
-
-        # Save screen width and height
-        const.screenWidth = screen.width() * const.pix2m
-        const.screenHeight = screen.height() * const.pix2m
 
         # Show the view on screen
         self.show()
