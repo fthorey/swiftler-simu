@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new/myRessources">
+        <file>icons/Folder-Download-icon.png</file>
+        <file>icons/Folder-Upload-icon.png</file>
+    </qresource>
+</RCC>
