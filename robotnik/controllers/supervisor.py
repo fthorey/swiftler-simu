@@ -15,7 +15,6 @@ class Supervisor(object):
     def __init__(self, robot_):
         """
         """
-
         # Robot to be supervised
         self.robot = robot_
 
@@ -26,8 +25,8 @@ class Supervisor(object):
         self.stateEstimate = [self.robot.pos(), self.robot.getTheta()]
 
         # Goal expressed in the scene referential
-        self.goal = QtCore.QPointF(-0.25*const.m2pix*const.scaleFactor,
-                                   -0.15*const.m2pix*const.scaleFactor)
+        self.goal = QtCore.QPointF(0.20*const.m2pix*const.scaleFactor,
+                                   -0.10*const.m2pix*const.scaleFactor)
 
         # Distance from the goal to which the robot stop
         self.stopDist          = 0.005*const.m2pix*const.scaleFactor
