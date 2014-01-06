@@ -25,6 +25,28 @@ class Robot(Shape):
         # Is the robot stopped
         self.stopped = False
 
+        # Initial position
+        self.initPos = QtCore.QPointF(0, 0)
+
+        # Initial theta angle
+        self.initTheta = 0
+
+    # Set the initial position of the robot
+    def setInitialPos(self, pos_, theta_):
+        """
+        """
+        self.initPos = pos_
+        self.initTheta = theta_
+
+        self.setPos(pos_)
+        self.setTheta(theta_)
+
+    # Get the initial position of the robot
+    def getInitialPos(self, ):
+        """
+        """
+        return self.initPos, self.initTheta
+
     # Set the dynamics followed by the robot
     def setDynamics(self, dynamics_):
         """
