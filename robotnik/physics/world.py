@@ -4,6 +4,7 @@
 from common import const
 from PyQt4 import QtGui, QtCore
 from physics import Physics
+from math import pi
 
 class World(QtGui.QGraphicsScene):
     """ World class provides access to all objects within the simulated environment
@@ -42,7 +43,7 @@ class World(QtGui.QGraphicsScene):
     def addRobot(self, robot_, position_):
         """
         """
-        robot_.setPos(position_)
+        robot_.setInitialPos(position_, pi)
         self.addItem(robot_)
         self.robots.append(robot_)
 
