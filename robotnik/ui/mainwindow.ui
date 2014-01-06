@@ -19,8 +19,6 @@
      <widget class="QGraphicsView" name="graphicsView"/>
     </item>
    </layout>
-   <zorder>pushButton_3</zorder>
-   <zorder>graphicsView</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -55,6 +53,10 @@
    </attribute>
    <addaction name="action_Upload"/>
    <addaction name="action_Download"/>
+   <addaction name="separator"/>
+   <addaction name="action_Restart"/>
+   <addaction name="action_Pause"/>
+   <addaction name="action_Play"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Upload">
@@ -79,6 +81,33 @@
    </property>
    <property name="toolTip">
     <string>Download</string>
+   </property>
+  </action>
+  <action name="action_Play">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/Play-Disabled-icon.png</normaloff>:/new/myRessources/icons/Play-Disabled-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Play</string>
+   </property>
+  </action>
+  <action name="action_Pause">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/Pause-Disabled-icon.png</normaloff>:/new/myRessources/icons/Pause-Disabled-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Pause</string>
+   </property>
+  </action>
+  <action name="action_Restart">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/Play-Mode-Repeat-All-Disabled-icon.png</normaloff>:/new/myRessources/icons/Play-Mode-Repeat-All-Disabled-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Restart</string>
    </property>
   </action>
  </widget>
