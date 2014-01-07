@@ -40,12 +40,13 @@ class World(QtGui.QGraphicsScene):
         self.furnitures.append(furniture_)
 
     # Add a robot to the world
-    def addRobot(self, robot_, position_):
+    def addRobot(self, robot_, position_, duration_):
         """
         """
         robot_.setInitialPos(position_, pi)
         self.addItem(robot_)
         self.robots.append(robot_)
+        robot_.updateStepDuration(duration_)
 
     # Return a list of all robots in the wolrd
     def getRobots(self, ):

@@ -22,6 +22,9 @@ class Robotnik(QtGui.QMainWindow):
     # Scale factor
     const.scaleFactor = 1.0/2.5
 
+    # To notify others that the step duration has changed
+    stepChanged = QtCore.pyqtSignal(int)
+
     def __init__(self, stepDuration_):
         """
         """
@@ -32,7 +35,8 @@ class Robotnik(QtGui.QMainWindow):
         uic.loadUi('ui/mainwindow.ui', self)
 
         # Set step duration
-        const.stepDuration = stepDuration_
+        self.stepDuration = stepDuration_
+        self.spinBox.setValue(self.stepDuration)
 
         # Remove aliasing
         self.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing);
@@ -58,6 +62,10 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Pause.triggered.connect(self.pause)
         # Restart
         self.action_Restart.triggered.connect(self.restart)
+        # Step duration
+        self.spinBox.editingFinished.connect(self.updateStepDuration)
+        # Max steps
+        self.spinBox_2.editingFinished.connect(self.updateMaxSteps)
 
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
@@ -68,13 +76,30 @@ class Robotnik(QtGui.QMainWindow):
         self.timer.timeout.connect(self.world.advance)
 
         self.maxSteps = 50
-        self.steps = 0
+        # Update value in associated spin box
+        self.spinBox_2.setValue(self.maxSteps)
+        # Update maximum steps max value
+        self.spinBox_2.setMaximum(1000)
+
+        # Current number of steps
+        self.currentSteps = 0
+
+    def updateMaxSteps(self, ):
+        self.maxSteps = self.spinBox_2.value()
+
+    def updateStepDuration(self, ):
+        """
+        """
+        # Get changed step duration
+        self.stepDuration = self.spinBox.value()
+        # Notify other users that the step duration has changed
+        self.stepChanged.emit(self.stepDuration)
 
     def restart(self, ):
         """
         """
         # Stop the timer
-        self.steps = 0
+        self.currentSteps = 0
         self.timer.stop()
 
         # Put robots at there initial position
@@ -86,16 +111,16 @@ class Robotnik(QtGui.QMainWindow):
     def stop(self, ):
         """
         """
-        self.steps = self.steps + 1
+        self.currentSteps = self.currentSteps + 1
 
-        if self.steps == self.maxSteps:
+        if self.currentSteps == self.maxSteps:
             self.timer.stop()
-            self.steps = 0
+            self.currentSteps = 0
 
     def start(self, ):
         """
         """
-        self.timer.start(const.stepDuration);
+        self.timer.start(self.stepDuration);
 
     def pause(self, ):
         """
@@ -121,7 +146,8 @@ class Robotnik(QtGui.QMainWindow):
     def addRobot(self, robot_, position_):
         """
         """
-        self.world.addRobot(robot_, position_)
+        self.world.addRobot(robot_, position_, self.stepDuration)
+        self.stepChanged.connect(robot_.updateStepDuration)
 
 if __name__ == '__main__':
     # Create a Qt application

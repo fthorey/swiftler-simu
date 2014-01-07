@@ -10,7 +10,7 @@ class Robot(Shape):
     """
 
     # Constructor
-    def __init__(self, name_, ):
+    def __init__(self, name_):
         """
         """
         # Call parent constructor
@@ -30,6 +30,15 @@ class Robot(Shape):
 
         # Initial theta angle
         self.initTheta = 0
+
+        # Duration of a step
+        self.stepDuration = 0
+
+    # Update the step duration
+    def updateStepDuration(self, duration_):
+        """
+        """
+        self.stepDuration = duration_
 
     # Set the initial position of the robot
     def setInitialPos(self, pos_, theta_):
@@ -98,7 +107,7 @@ class Robot(Shape):
             return
 
         # Execute the supervisor
-        self.supervisor.execute(const.stepDuration)
+        self.supervisor.execute(self.stepDuration)
 
         # Update the robot dynamics
-        self.dynamics.update(const.stepDuration)
+        self.dynamics.update(self.stepDuration)
