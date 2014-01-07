@@ -42,7 +42,7 @@ class Physics(object):
                 # Get all sensors that detect an obstacle
                 if self.world.collidingItems(sensor):
                     # Reduce the beam of the sensor
-                    sensor.reduceBeamRange(robot.getSpeed() * const.stepDuration * 1e-3)
+                    # sensor.reduceBeamRange(robot.getSpeed() * const.stepDuration * 1e-3)
                     # Check if the sensor has reached its min beam range
                     if sensor.isMinRangeReached():
                         print 'stop'
