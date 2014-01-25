@@ -13,6 +13,9 @@ class Woggle(Robot):
     """ Woggle class handles a Woggle robot
     """
 
+    # Constructor
+    # Get wheel radius (in m)
+    # Get in-between wheels distance (in m)
     def __init__(self, name_, wheelRadius_, wheelBaseLength_):
         """
         """
@@ -20,10 +23,10 @@ class Woggle(Robot):
         super(Woggle, self).__init__(name_)
 
         # Radius of the wheels (m)
-        self.wheelRadius = wheelRadius_ * const.scaleFactor
+        self.wheelRadius = wheelRadius_
 
         # Length between each wheel (m)
-        self.wheelBaseLength = wheelBaseLength_ * const.scaleFactor
+        self.wheelBaseLength = wheelBaseLength_
 
         # The Woggle robot follow the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
@@ -31,21 +34,19 @@ class Woggle(Robot):
         # A supervisor is attached to the Woggle robot
         self.setSupervisor(WoggleSupervisor(self))
 
-        # Current speed of the left wheel in its own referential (rad/s)
+        # Current speed of the left wheel (rad/s)
         self.leftWheelSpeed = 0
 
-        # Current speed of the right wheel in its own referential (rad/s)
+        # Current speed of the right wheel (rad/s)
         self.rightWheelSpeed = 0
 
-        self.setTheta(pi)
+        # Set default heading angle (in rad)
+        self.setTheta(0)
 
-        # List of all proximity sensors of the robot
-        self.proxSensors = list()
-
-        # Add a sharp sensor
-        sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2) * const.m2pix, 0)
-        sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
-        self.proxSensors.append(sharp1)
+        # # Add a sharp sensor
+        # sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2) * const.m2pix, 0)
+        # sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
+        # self.proxSensors.append(sharp1)
 
     # Return the list of all proximity sensors
     def getProxSensors(self, ):
@@ -53,44 +54,51 @@ class Woggle(Robot):
         """
         return self.proxSensors
 
-    # Get the wheel radius
+    # Get the wheel radius (in m)
     def getWheelRadius(self, ):
         """
         """
         return self.wheelRadius
 
-    # Get the wheel base length
+    # Get the wheel base length (in m)
     def getWheelBaseLength(self, ):
         """
         """
         return self.wheelBaseLength
 
-    # Set the current left wheel speed
+    # Set the current left wheel speed (in m/s)
     def setLeftWheelSpeed(self, speed_):
         """
         """
         self.leftWheelSpeed = speed_
 
-    # Set the current right wheel speed
+    # Set the current right wheel speed (in m/s)
     def setRightWheelSpeed(self, speed_):
         """
         """
         self.rightWheelSpeed = speed_
 
-    # Return the current left wheel speed
+    # Return the current left wheel speed (in m/s)
     def getLeftWheelSpeed(self, ):
         """
         """
         return self.leftWheelSpeed
 
-    # Set the speed of both wheels
+    # Set the speed of both wheels (in m/s)
     def setWheelSpeeds(self, vel_l, vel_r):
         """
         """
         self.leftWheelSpeed = vel_l
         self.rightWheelSpeed = vel_r
 
-    # Return the current left wheel speed
+    # Get current speed (in m/s)
+    def getSpeed(self, ):
+        """
+        """
+        v, w = self.dynamics.diff2Uni(self.leftWheelSpeed, self.rightWheelSpeed)
+        return v
+
+    # Return the current left wheel speed (in m/s)
     def getRightWheelSpeed(self, ):
         """
         """

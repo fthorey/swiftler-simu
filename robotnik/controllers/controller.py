@@ -25,26 +25,26 @@ class GoToGoal(Controller):
         """
         # PID gains
         # Proportional
-        self.Kp = 0.0005
+        self.Kp = 0.005
         # Integral
-        self.Ki = 0.00001
+        self.Ki = 0.0001
         # Derivative
-        self.Kd = 0.001
+        self.Kd = 0.01
 
         # Accumulated error
         self.E_k = 0;
         # error step k-1
         self.e_k_1 = 0;
 
+    # the goal must be expressed in m and the time step in s
     def execute(self, stateEstimate, goal, dt):
         """
         """
-
-        # Retrieve the (relative) goal location
+        # Retrieve the goal location (in m)
         x_g = goal.x()
         y_g = goal.y()
 
-        # Get an estimate of the current pos
+        # Get an estimate of the current pos (in m and rad)
         x = stateEstimate[0].x()
         y = stateEstimate[0].y()
         theta = stateEstimate[1]
@@ -53,13 +53,13 @@ class GoToGoal(Controller):
 
         # 1. Calculate the heading (angle) to the goal
 
-        # Distance between goal and robot in x-direction
+        # Distance between goal and robot in x-direction (in m)
         u_x = x_g - x
 
-        # Distance between goal and robot in y-direction
+        # Distance between goal and robot in y-direction (in m)
         u_y = y_g - y
 
-        # Angle from robot to goal. Use ATAN2
+        # Angle from robot to goal. Use ATAN2 (in rad)
         theta_g = atan2(u_y, u_x)
 
         # 2. Calculate the heading error
@@ -83,7 +83,7 @@ class GoToGoal(Controller):
         # Approximate the derivative using the previous error, e_k_1
         e_D = (e_k - self.e_k_1) / dt
 
-        w = self.Kp*e_P + self.Ki*e_I + self.Kd*e_D
+        w = self.Kp*e_P + self.Ki*e_I + self.Kd*e_D # (in rad/s)
 
         # 4. Save errors for the next time step
         E_k = e_I

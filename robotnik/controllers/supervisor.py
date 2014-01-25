@@ -15,28 +15,28 @@ class Supervisor(object):
     def __init__(self, robot_):
         """
         """
-        # Robot to be supervised
+        # Robot supervised
         self.robot = robot_
 
         # Current controller
         self.controller = GoToGoal()
 
-        # Current estimates of the robot position in the scene referential
+        # Current estimation of the robot position (in m) and angle (in rad)
+        # in the scene referential
         self.stateEstimate = [self.robot.pos(), self.robot.getTheta()]
 
-        # Goal expressed in the scene referential
-        self.goal = QtCore.QPointF(0.20*const.m2pix*const.scaleFactor,
-                                   -0.10*const.m2pix*const.scaleFactor)
+        # Goal expressed in the scene referential (in m)
+        self.goal = QtCore.QPointF(1, 1)
 
-        # Distance from the goal to which the robot stop
-        self.stopDist          = 0.005*const.m2pix*const.scaleFactor
+        # Distance from the goal to which the robot stop (in m)
+        self.stopDist          = 0.05
 
     # Select and execute the current controller
     def execute(self, stepDuration_):
         """
         """
 
-    # Update the current state estimate of the robot position
+    # Update the current estimation of the state of the robot position
     def updateOdometry(self, ):
         """
         """
@@ -45,17 +45,16 @@ class Supervisor(object):
     def isAtGoal(self, ):
         """
         """
-        # Get goal coordinates
+        # Get goal coordinates (in m)
         xg = self.goal.x()
         yg = self.goal.y()
 
-        # Get current robot position coordinates
+        # Get current robot position coordinates (in m)
         x = self.robot.pos().x()
         y = self.robot.pos().y()
-        cDist = sqrt((x-xg)*(x-xg) + (y-yg)*(y-yg))
+        cDist = sqrt((x-xg)*(x-xg) + (y-yg)*(y-yg)) # (in m)
 
         return  cDist < self.stopDist
-
 
 class WoggleSupervisor(Supervisor):
     """ WoggleSupervisor is a class that provides a way to control a Woggle robot
@@ -67,7 +66,8 @@ class WoggleSupervisor(Supervisor):
         # Call parent constructor
         super(WoggleSupervisor, self,).__init__(robot_);
 
-    # select and execute the current controller
+    # Select and execute the current controller
+    # The step duration is in seconds
     def execute(self, stepDuration_):
         """
         """
@@ -79,7 +79,8 @@ class WoggleSupervisor(Supervisor):
         # Execute the controller to obtain parameters to apply to the robot
         v, w = self.controller.execute(self.stateEstimate, self.goal, stepDuration_)
 
-        # Convert speed and angular rotation to angular speed to apply to each robot wheels
+        # Convert speed (in m/s) and angular rotation (in rad/s) to
+        # angular speed to apply to each robot wheels (in rad/s)
         vel_l, vel_r = self.robot.getDynamics().uni2Diff(v, w)
 
         # Apply current speed to wheels
@@ -91,5 +92,5 @@ class WoggleSupervisor(Supervisor):
     def updateOdometry(self, ):
         """
         """
-        # For now, get exact robot position and angle
+        # For now, get exact robot position (in m) and angle (in rad)
         self.stateEstimate = [self.robot.pos(), self.robot.getTheta()]

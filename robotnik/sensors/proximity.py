@@ -16,59 +16,67 @@ class ProximitySensor(Shape):
         """
         super(ProximitySensor, self).__init__(name_, parent_)
 
-        # Location on the parent object
+        # Location on the parent object (in m)
         self.setPos(location_)
 
-        # angle of the beam (rad)
+        # angle of the beam (in rad)
         self.setTheta(beamAngle_)
 
-        # View angle
-        self.spread = pi/4
+        # View angle (in rad)
+        self.spread = pi/12
 
-        # Minimum range
-        self.minRange = 0.05*const.scaleFactor
+        # Minimum range (in m)
+        self.minRange = 0.05
 
-        # Maximum range
-        self.maxRange = 0.08*const.scaleFactor
+        # Maximum range (in m)
+        self.maxRange = 0.08
 
-        # Current range =
+        # Current range (in m)
         self.currRange = self.maxRange
+
+        # Brush color
+        self.brushColor = QtGui.QColor('blue')
+        self.brushColor.setAlpha(50)
+
+        # Pen color
+        self.penColor = QtGui.QColor('blue')
+        self.penColor.setAlpha(128)
 
     # Check if current range > minrange
     def isMinRangeReached(self, ):
         return self.currRange <= self.minRange
 
-    # Get current beam range
+    # Get current beam range (in m)
     def getBeamRange(self, ):
         """
         """
         return self.currRange
 
-    # Set current beam range
+    # Set current beam range (in m)
     def setBeamRange(self, range_):
         """
         """
         self.currRange = range_
 
-    # Reduce beam range
+    # Reduce beam range (in m)
     def reduceBeamRange(self, reduce_):
         """
         """
         self.currRange = self.currRange - reduce_
 
-    # Increase beam range
+    # Increase beam range (in m)
     def increaseBeamRange(self, increase_):
         """
         """
         self.currRange = self.currRange + increase_
 
-    # Return the left limit of the beam
+    # Return the left limit of the beam (in m)
     def getBeamLeftLimit(self, ):
         """
         """
         return QtCore.QPointF(self.currRange, -self.currRange * tan(self.spread/2))
 
-    # Return the right limit of the beam
+    # Return the right limit of the beam (in m)
     def getBeamRightLimit(self, ):
         """
         """
@@ -104,7 +112,8 @@ class ProximitySensor(Shape):
     def paint(self, painter, option, widget):
         """
         """
-        painter.setBrush(QtGui.QColor("red"))
+        painter.setBrush(self.brushColor)
+        painter.setPen(self.penColor)
 
         leftLimit = self.getBeamLeftLimit()
         leftLimit = QtCore.QPointF(leftLimit.x() * const.m2pix, leftLimit.y() * const.m2pix)

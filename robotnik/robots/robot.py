@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from common import const
 from common.shape import Shape
 from PyQt4 import QtGui, QtCore
+from common import const
 
 class Robot(Shape):
     """ Robot class handles a robot
@@ -25,32 +25,40 @@ class Robot(Shape):
         # Is the robot stopped
         self.stopped = False
 
-        # Initial position
+        # Initial position (in m)
         self.initPos = QtCore.QPointF(0, 0)
 
-        # Initial theta angle
+        # Initial heading angle (in rad)
         self.initTheta = 0
 
-        # Duration of a step
+        # Duration of a step (in s)
         self.stepDuration = 0
 
-    # Update the step duration
+        # List of all proximity sensors of the robot
+        self.proxSensors = list()
+
+    # Update the step duration (in s)
     def updateStepDuration(self, duration_):
         """
         """
+        # The step duration is updated in s
         self.stepDuration = duration_
 
-    # Set the initial position of the robot
+    # Set the initial position of the robot (in m & rad)
     def setInitialPos(self, pos_, theta_):
         """
         """
+        # in m
         self.initPos = pos_
+        # in rad
         self.initTheta = theta_
 
+        # setPos and setTheta are in charge
+        # of converting m to pixel
         self.setPos(pos_)
         self.setTheta(theta_)
 
-    # Get the initial position of the robot
+    # Get the initial position of the robot (in m & rad)
     def getInitialPos(self, ):
         """
         """
@@ -61,6 +69,12 @@ class Robot(Shape):
         """
         """
         self.dynamics = dynamics_
+
+    # Get the dynamic of the robot
+    def getDynamics(self, ):
+        """
+        """
+        return self.dynamics
 
     # Set the supervisor that run the robot
     def setSupervisor(self, supervisor_):
@@ -73,19 +87,6 @@ class Robot(Shape):
         """
         """
         return self.supervisor
-
-    # Get the dynamic of the robot
-    def getDynamics(self, ):
-        """
-        """
-        return self.dynamics
-
-    # Get current speed
-    def getSpeed(self, ):
-        """
-        """
-        v, w = self.dynamics.diff2Uni(self.leftWheelSpeed, self.rightWheelSpeed)
-        return v
 
     # Stop the robot
     def stop(self, ):
@@ -103,11 +104,14 @@ class Robot(Shape):
     def advance(self, step_):
         """
         """
-        if (not step_):
+        # Called twice by QGraphicsScene::advance() First, with step_ == 0: about to advance,
+        # and then called with phase == 1, advance effectively
+        # -> Do nothing on the 1st phase but move on 2nd phase
+        if (step_ == 0):
             return
 
-        # Execute the supervisor
+        # Execute the supervisor (duration in s)
         self.supervisor.execute(self.stepDuration)
 
-        # Update the robot dynamics
+        # Update the robot dynamics (duration in s)
         self.dynamics.update(self.stepDuration)

@@ -23,7 +23,7 @@
       <height>51</height>
      </rect>
     </property>
-    <widget class="QSpinBox" name="spinBox">
+    <widget class="QSpinBox" name="stepDurationBox">
      <property name="geometry">
       <rect>
        <x>100</x>
