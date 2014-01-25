@@ -23,9 +23,6 @@ class Robotnik(QtGui.QMainWindow):
     const.pix2m = 0.000264583
     const.m2pix = 3779.5276
 
-    # To notify others that the step duration has changed
-    stepChanged = QtCore.pyqtSignal(int)
-
     def __init__(self, stepDuration_):
         """
         """
@@ -37,8 +34,6 @@ class Robotnik(QtGui.QMainWindow):
 
         # Set step duration (in s)
         self.stepDuration = stepDuration_
-        # Must be converted into ms to get into the box
-        self.stepDurationBox.setValue(self.stepDuration*1e3)
 
         # Remove aliasing
         self.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing);
@@ -49,8 +44,8 @@ class Robotnik(QtGui.QMainWindow):
         self.graphicsView.scale(self.scaleFactor, self.scaleFactor)
 
         # Define world dimensions (in m)
-        self.worldLength = 4;
-        self.worldHeight = 2;
+        self.worldLength = 4; # in m
+        self.worldHeight = 2; # in m
 
         # Create a new world
         self.world = World(self, self.stepDuration, self.worldLength, self.worldHeight)
@@ -73,8 +68,11 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Restart.triggered.connect(self.restart)
         # Step duration
         self.stepDurationBox.editingFinished.connect(self.updateStepDuration)
+        # Must be converted into ms to get into the box
+        self.stepDurationBox.setValue(self.stepDuration*1e3)
+
         # Max steps
-        self.spinBox_2.editingFinished.connect(self.updateMaxSteps)
+        self.stepsNumberBox.editingFinished.connect(self.updateMaxSteps)
 
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
@@ -86,15 +84,15 @@ class Robotnik(QtGui.QMainWindow):
 
         self.maxSteps = 500
         # Update maximum steps max value
-        self.spinBox_2.setMaximum(1000)
+        self.stepsNumberBox.setMaximum(1000)
         # Update value in associated spin box
-        self.spinBox_2.setValue(self.maxSteps)
+        self.stepsNumberBox.setValue(self.maxSteps)
 
         # Current number of steps
         self.currentSteps = 0
 
     def updateMaxSteps(self, ):
-        self.maxSteps = self.spinBox_2.value()
+        self.maxSteps = self.stepsNumberBox.value()
 
     def updateStepDuration(self, ):
         """
@@ -104,8 +102,6 @@ class Robotnik(QtGui.QMainWindow):
         self.stepDuration = self.stepDurationBox.value()*1e-3
         # Update world step duration (in s)
         self.world.updateStepDuration(self.stepDuration)
-        # Notify other users that the step duration has changed
-        self.stepChanged.emit(self.stepDuration)
 
     def restart(self, ):
         """
@@ -133,7 +129,7 @@ class Robotnik(QtGui.QMainWindow):
         """
         """
         # The timer class needs a duration in ms
-        # -> need to convert s into ms
+        # -> Convert s into ms
         self.timer.start(self.stepDuration*1e3);
 
     def pause(self, ):
@@ -161,7 +157,6 @@ class Robotnik(QtGui.QMainWindow):
         """
         """
         self.world.addRobot(robot_, position_, self.stepDuration)
-        self.stepChanged.connect(robot_.updateStepDuration)
 
 if __name__ == '__main__':
     # Create a Qt application

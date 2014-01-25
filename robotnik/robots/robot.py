@@ -53,8 +53,7 @@ class Robot(Shape):
         # in rad
         self.initTheta = theta_
 
-        # setPos and setTheta are in charge
-        # of converting m to pixel
+        # setPos and setTheta are in charge of converting m to pixel
         self.setPos(pos_)
         self.setTheta(theta_)
 

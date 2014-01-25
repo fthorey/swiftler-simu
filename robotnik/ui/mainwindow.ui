@@ -18,26 +18,16 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>-10</y>
+      <y>10</y>
       <width>741</width>
-      <height>51</height>
+      <height>21</height>
      </rect>
     </property>
-    <widget class="QSpinBox" name="stepDurationBox">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>20</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>0</y>
        <width>91</width>
        <height>22</height>
       </rect>
@@ -46,11 +36,11 @@
       <string>Step duration</string>
      </property>
     </widget>
-    <widget class="QSpinBox" name="spinBox_2">
+    <widget class="QSpinBox" name="stepsNumberBox">
      <property name="geometry">
       <rect>
        <x>280</x>
-       <y>20</y>
+       <y>0</y>
        <width>51</width>
        <height>22</height>
       </rect>
@@ -60,13 +50,23 @@
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>20</y>
+       <y>0</y>
        <width>91</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
       <string>Steps number</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="stepDurationBox">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>0</y>
+       <width>54</width>
+       <height>24</height>
+      </rect>
      </property>
     </widget>
    </widget>
@@ -76,7 +76,7 @@
       <x>10</x>
       <y>40</y>
       <width>1271</width>
-      <height>581</height>
+      <height>571</height>
      </rect>
     </property>
    </widget>

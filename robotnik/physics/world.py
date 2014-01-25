@@ -42,8 +42,13 @@ class World(QtGui.QGraphicsScene):
     def updateStepDuration(self, duration_):
         """
         """
+        # Update step duration (in s)
         self.stepDuration = duration_
+        # Update physics step duration (in s)
         self.physics.updateStepDuration(self.stepDuration)
+        # Update robots step duration (in s)
+        for robot in self.robots:
+            robot.updateStepDuration(self.stepDuration)
 
     # Set the physics that rules the world
     def setPhysics(self, physics_):
