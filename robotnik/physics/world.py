@@ -10,7 +10,7 @@ class World(QtGui.QGraphicsScene):
     """ World class provides access to all objects within the simulated environment
     """
 
-    def __init__(self, parent_, stepDuration_, length_, height_):
+    def __init__(self, parent_, stepDuration_, size_):
         """
         """
         # Call parent constructor
@@ -29,14 +29,13 @@ class World(QtGui.QGraphicsScene):
         self.stepDuration = stepDuration_
 
         # Define world dimension (in m)
-        self.length = length_
-        self.height = height_
+        self.size = size_
 
         # Set scene bounding rectangle
         # setSceneRect takes parameters expressed in pixel
         # -> Value in m are converted to pixel
-        self.setSceneRect(-(self.length/2)*const.m2pix, -(self.height/2)*const.m2pix,
-                          (self.length)*const.m2pix, (self.height)*const.m2pix);
+        self.setSceneRect(-(self.size/2)*const.m2pix, -(self.size/2)*const.m2pix,
+                          (self.size)*const.m2pix, (self.size)*const.m2pix);
 
     # Update the step duration (in s)
     def updateStepDuration(self, duration_):

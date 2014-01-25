@@ -70,7 +70,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="WorldView" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -133,6 +133,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>WorldView</class>
+   <extends>QGraphicsView</extends>
+   <header>ui.worldview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>

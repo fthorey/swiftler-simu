@@ -36,19 +36,20 @@ class Robotnik(QtGui.QMainWindow):
         self.stepDuration = stepDuration_
 
         # Remove aliasing
-        self.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing);
+        self.graphicsView.setRenderHints(QtGui.QPainter.Antialiasing |
+                                        QtGui.QPainter.SmoothPixmapTransform);
         self.graphicsView.setCacheMode(QtGui.QGraphicsView.CacheBackground);
+        self.graphicsView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
 
-        # Set scale factor (no unit)
-        self.scaleFactor = 0.5
-        self.graphicsView.scale(self.scaleFactor, self.scaleFactor)
+        # Set default scale factor
+        scaleFactor = 0.4
+        self.graphicsView.scale(scaleFactor, scaleFactor)
 
         # Define world dimensions (in m)
-        self.worldLength = 4; # in m
-        self.worldHeight = 2; # in m
+        self.worldSize = 4; # in m
 
         # Create a new world
-        self.world = World(self, self.stepDuration, self.worldLength, self.worldHeight)
+        self.world = World(self, self.stepDuration, self.worldSize)
 
         # Attach the world to the view
         self.graphicsView.setScene(self.world)
@@ -174,8 +175,6 @@ if __name__ == '__main__':
 
     # Add the objects to the simulator
     robotnik.addRobot(woggle, QtCore.QPointF(0, 0))
-
-    # robotnik.addFurniture(shape, QtCore.QPointF(-400, 200))
 
     # Exit
     sys.exit(app.exec_())
