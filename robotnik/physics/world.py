@@ -57,19 +57,20 @@ class World(QtGui.QGraphicsScene):
 
     # Add a furniture to the world
     # the position is given in m
-    def addFurniture(self, furniture_, position_):
+    def addFurniture(self, furniture_, position_, theta_):
         """
         """
         furniture_.setPos(position_)
+        furniture_.setTheta(theta_)
         self.addItem(furniture_)
         self.furnitures.append(furniture_)
 
     # Add a robot to the world
     # The position is given in m
-    def addRobot(self, robot_, position_, duration_):
+    def addRobot(self, robot_, position_, theta_, duration_):
         """
         """
-        robot_.setInitialPos(position_, pi)
+        robot_.setInitialPos(position_, theta_)
         self.addItem(robot_)
         self.robots.append(robot_)
         robot_.updateStepDuration(duration_)

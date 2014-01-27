@@ -146,16 +146,16 @@ class Robotnik(QtGui.QMainWindow):
         self.move(qr.topLeft())
 
     # Add a furniture in the world
-    def addFurniture(self, furniture_, position_):
+    def addFurniture(self, furniture_, position_, theta_):
         """
         """
-        self.world.addFurniture(furniture_, position_)
+        self.world.addFurniture(furniture_, position_, theta_)
 
     # Add a robot in the world
-    def addRobot(self, robot_, position_):
+    def addRobot(self, robot_, position_, theta_):
         """
         """
-        self.world.addRobot(robot_, position_, self.stepDuration)
+        self.world.addRobot(robot_, position_, theta_, self.stepDuration)
 
 if __name__ == '__main__':
     # Create a Qt application
@@ -170,11 +170,10 @@ if __name__ == '__main__':
     woggle = Woggle("woggle", 0.021, 0.0885)
 
     # Add the objects to the simulator
-    robotnik.addRobot(woggle, QtCore.QPointF(0, 0))
+    robotnik.addRobot(woggle, QtCore.QPointF(0, 0), pi)
 
     shape = Shape("shape")
-    shape.setTheta(pi/3)
-    robotnik.addFurniture(shape, QtCore.QPointF(-0.3, 0))
+    robotnik.addFurniture(shape, QtCore.QPointF(-0.3, 0), pi/3)
 
     # Exit
     sys.exit(app.exec_())
