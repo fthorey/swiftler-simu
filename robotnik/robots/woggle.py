@@ -43,10 +43,13 @@ class Woggle(Robot):
         # Set default heading angle (in rad)
         self.setTheta(0)
 
-        # # Add a sharp sensor
-        # sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2) * const.m2pix, 0)
-        # sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
-        # self.proxSensors.append(sharp1)
+        # Add a sharp sensor
+        # Set where to place this sensor (in m)
+        sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2), 0)
+        # Create the sensor
+        sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
+        # And append it to the list of embedded proximity sensors
+        self.proxSensors.append(sharp1)
 
     # Return the list of all proximity sensors
     def getProxSensors(self, ):
