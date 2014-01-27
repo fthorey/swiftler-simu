@@ -113,9 +113,7 @@ class Robotnik(QtGui.QMainWindow):
 
         # Put robots at there initial position
         for robot in self.world.getRobots():
-            pos, theta = robot.getInitialPos()
-            robot.setPos(pos)
-            robot.setTheta(theta)
+            robot.restart()
 
     def stop(self, ):
         """

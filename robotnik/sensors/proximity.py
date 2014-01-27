@@ -42,6 +42,13 @@ class ProximitySensor(Shape):
         self.penColor = QtGui.QColor('blue')
         self.penColor.setAlpha(128)
 
+    # Restart the sensor to its initial state
+    def restart(self, ):
+        """
+        """
+        self.needReduction = False
+        self.currRange = self.maxRange
+
     # Check if current range > minrange
     def isMinRangeReached(self, ):
         return self.currRange <= self.minRange

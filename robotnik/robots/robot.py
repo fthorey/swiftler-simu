@@ -37,6 +37,19 @@ class Robot(Shape):
         # List of all proximity sensors of the robot
         self.proxSensors = list()
 
+    # Restart from the robot to its initial state
+    def restart(self, ):
+        """
+        """
+        # Set the initial postion (in m)
+        self.setPos(self.initPos)
+        # Set the initial heading angle (in rad)
+        self.setTheta(self.initTheta)
+        self.stopped = False
+        # Restart all sensors
+        for sensor in self.proxSensors:
+            sensor.restart()
+
     # Update the step duration (in s)
     def updateStepDuration(self, duration_):
         """
