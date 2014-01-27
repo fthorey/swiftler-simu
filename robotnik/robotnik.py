@@ -42,7 +42,7 @@ class Robotnik(QtGui.QMainWindow):
         self.graphicsView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
 
         # Set default scale factor
-        scaleFactor = 0.4
+        scaleFactor = 0.2
         self.graphicsView.scale(scaleFactor, scaleFactor)
 
         # Define world dimensions (in m)
@@ -78,12 +78,12 @@ class Robotnik(QtGui.QMainWindow):
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
-        # Connect timer trigger signal to stop
-        # Connect timer trigger signal to world advance
+        # Connect timer trigger signal to stop function
+        # Connect timer trigger signal to world advance function
         self.timer.timeout.connect(self.stop)
         self.timer.timeout.connect(self.world.advance)
 
-        self.maxSteps = 500
+        self.maxSteps = 100
         # Update maximum steps max value
         self.stepsNumberBox.setMaximum(1000)
         # Update value in associated spin box
@@ -169,10 +169,12 @@ if __name__ == '__main__':
     # In-between wheel base length = 8.85cm
     woggle = Woggle("woggle", 0.021, 0.0885)
 
-    shape = Shape("shape")
-
     # Add the objects to the simulator
     robotnik.addRobot(woggle, QtCore.QPointF(0, 0))
+
+    shape = Shape("shape")
+    shape.setTheta(pi/3)
+    robotnik.addFurniture(shape, QtCore.QPointF(-0.3, 0))
 
     # Exit
     sys.exit(app.exec_())
