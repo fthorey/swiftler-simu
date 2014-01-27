@@ -30,16 +30,8 @@ class Physics(object):
     def apply(self, ):
         """
         """
-        # Detect bodies collision
-        self.detectBodyCollision()
-
         # Proximity sensors detection
         self.proximitySensorDetection()
-
-    # Detect body collision
-    def detectBodyCollision(self, ):
-        """
-        """
 
     # Proximity sensors collision
     def proximitySensorDetection(self, ):
