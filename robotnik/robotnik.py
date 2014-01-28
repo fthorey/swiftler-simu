@@ -82,7 +82,7 @@ class Robotnik(QtGui.QMainWindow):
         self.timer.timeout.connect(self.stop)
         self.timer.timeout.connect(self.world.advance)
 
-        self.maxSteps = 100
+        self.maxSteps = 500
         # Update maximum steps max value
         self.stepsNumberBox.setMaximum(1000)
         # Update value in associated spin box
@@ -166,10 +166,11 @@ if __name__ == '__main__':
     # Create a differential drive robot
     # Wheel radius = 2.1cm
     # In-between wheel base length = 8.85cm
-    woggle = Woggle("woggle", 0.021, 0.0885)
+    woggle1 = Woggle("woggle1", 0.021, 0.0885)
+    woggle1.setGoal(QtCore.QPointF(1, -1))
 
     # Add the objects to the simulator
-    robotnik.addRobot(woggle, QtCore.QPointF(0, 0), pi)
+    robotnik.addRobot(woggle1, QtCore.QPointF(0, 0), pi)
 
     obstacle = Shape("obstacle")
     robotnik.addObstacle(obstacle, QtCore.QPointF(-0.3, 0), pi/3)

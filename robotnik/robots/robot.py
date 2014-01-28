@@ -37,6 +37,18 @@ class Robot(Shape):
         # List of all proximity sensors of the robot
         self.proxSensors = list()
 
+    # Set a goal
+    def setGoal(self, goal_):
+        """
+        """
+        self.supervisor.setGoal(goal_)
+
+    # Get a goal
+    def getGoal(self, ):
+        """
+        """
+        return self.supervisor.getGoal()
+
     # Restart from the robot to its initial state
     def restart(self, ):
         """

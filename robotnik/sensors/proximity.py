@@ -35,11 +35,11 @@ class ProximitySensor(Shape):
         self.currRange = self.maxRange
 
         # Brush color
-        self.brushColor = QtGui.QColor('blue')
+        self.brushColor = QtGui.QColor('red')
         self.brushColor.setAlpha(50)
 
         # Pen color
-        self.penColor = QtGui.QColor('blue')
+        self.penColor = QtGui.QColor('red')
         self.penColor.setAlpha(128)
 
     # Restart the sensor to its initial state

@@ -26,10 +26,22 @@ class Supervisor(object):
         self.stateEstimate = [self.robot.pos(), self.robot.getTheta()]
 
         # Goal expressed in the scene referential (in m)
-        self.goal = QtCore.QPointF(-1, 0)
+        self.goal = QtCore.QPointF(0, 0)
 
         # Distance from the goal to which the robot stop (in m)
         self.stopDist          = 0.05
+
+    # Get goal
+    def getGoal(self, ):
+        """
+        """
+        return self.goal
+
+    # Set a goal
+    def setGoal(self, goal_):
+        """
+        """
+        self.goal = goal_
 
     # Select and execute the current controller
     def execute(self, stepDuration_):
