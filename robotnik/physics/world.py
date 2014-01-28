@@ -102,3 +102,23 @@ class World(QtGui.QGraphicsScene):
 
         # Apply physics
         self.physics.apply()
+
+    def drawBackground(self, painter, rect):
+        painter.setWorldMatrixEnabled(True);
+
+        gridSize = 200;
+
+        left = int(rect.left()) - (int(rect.left()) % gridSize);
+        top = int(rect.top()) - (int(rect.top()) % gridSize);
+
+        lines = list()
+        x = left
+        while x < rect.right():
+            lines.append(QtCore.QLineF(x, rect.top(), x, rect.bottom()))
+            x +=gridSize
+        y = top
+        while y < rect.bottom():
+            lines.append(QtCore.QLineF(rect.left(), y, rect.right(), y))
+            y += gridSize
+
+        painter.drawLines(lines)

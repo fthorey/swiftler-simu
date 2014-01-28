@@ -38,7 +38,6 @@ class Robotnik(QtGui.QMainWindow):
         # Remove aliasing
         self.graphicsView.setRenderHints(QtGui.QPainter.Antialiasing |
                                         QtGui.QPainter.SmoothPixmapTransform);
-        self.graphicsView.setCacheMode(QtGui.QGraphicsView.CacheBackground);
         self.graphicsView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
 
         # Set default scale factor
