@@ -4,7 +4,7 @@
 from math import degrees, sqrt
 from robots.robot import Robot
 from controller import GoToGoal
-from common import const
+from utils import const
 
 from PyQt4 import QtCore
 

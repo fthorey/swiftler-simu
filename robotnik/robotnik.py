@@ -3,10 +3,10 @@
 
 import sys
 from math import pi
-from physics.world import World
+from world.world import World
 from robots.woggle import Woggle
-from common.shape import *
-from common import const
+from shape.shape import Shape
+from utils import const
 import ui.icons
 
 # Handle Ctrl-C

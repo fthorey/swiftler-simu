@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from math import atan2, fabs, log, sin, cos, degrees, pi
-from common import const
+from utils import const
 
 class Controller(object):
     """ Controller class provides a default class for controllers

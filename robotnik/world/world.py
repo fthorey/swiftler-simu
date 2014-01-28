@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from common import const
+from utils import const
 from PyQt4 import QtGui, QtCore
 from physics import Physics
 from math import pi

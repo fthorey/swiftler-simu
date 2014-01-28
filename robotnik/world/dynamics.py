@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from common import const
+from utils import const
 from math import cos, sin, pi, degrees, radians
 from PyQt4 import QtGui, QtCore
 

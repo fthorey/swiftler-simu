@@ -2,11 +2,11 @@
 # coding: utf-8
 
 from math import pi, degrees, radians
-from common import const
+from utils import const
 from robots.robot import Robot
 from sensors.proximity import ProximitySensor
 from controllers.supervisor import WoggleSupervisor
-from physics.dynamics import DifferentialDrive
+from world.dynamics import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
 class Woggle(Robot):

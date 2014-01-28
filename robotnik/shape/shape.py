@@ -3,7 +3,7 @@
 
 from PyQt4 import QtGui, QtCore
 from math import degrees
-from common import const
+from utils import const
 
 class Shape(QtGui.QGraphicsItem):
     """ Shape class is the basic class for all objects in the simulator

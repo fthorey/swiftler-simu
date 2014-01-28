@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from common.shape import Shape
+from shape.shape import Shape
 from PyQt4 import QtGui, QtCore
-from common import const
+from utils import const
 
 class Robot(Shape):
     """ Robot class handles a robot
