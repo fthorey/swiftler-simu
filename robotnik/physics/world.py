@@ -22,8 +22,8 @@ class World(QtGui.QGraphicsScene):
         # List of robots currently in the world
         self.robots = list()
 
-        # List of furniture currently in the world
-        self.furnitures = list()
+        # List of obstacle currently in the world
+        self.obstacles = list()
 
         # Duration of a step (in s)
         self.stepDuration = stepDuration_
@@ -55,15 +55,15 @@ class World(QtGui.QGraphicsScene):
         """
         self.physics = physics_
 
-    # Add a furniture to the world
+    # Add a obstacle to the world
     # the position is given in m
-    def addFurniture(self, furniture_, position_, theta_):
+    def addObstacle(self, obstacle_, position_, theta_):
         """
         """
-        furniture_.setPos(position_)
-        furniture_.setTheta(theta_)
-        self.addItem(furniture_)
-        self.furnitures.append(furniture_)
+        obstacle_.setPos(position_)
+        obstacle_.setTheta(theta_)
+        self.addItem(obstacle_)
+        self.obstacles.append(obstacle_)
 
     # Add a robot to the world
     # The position is given in m
@@ -87,11 +87,11 @@ class World(QtGui.QGraphicsScene):
         """
         return self.robots
 
-    # Return a list of all furnitures in the wolrd
-    def getFurnitures(self, ):
+    # Return a list of all obstacles in the wolrd
+    def getObstacles(self, ):
         """
         """
-        return self.furnitures
+        return self.obstacles
 
     # Action to perform when the scene changes
     def advance(self, ):

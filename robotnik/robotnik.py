@@ -145,11 +145,11 @@ class Robotnik(QtGui.QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # Add a furniture in the world
-    def addFurniture(self, furniture_, position_, theta_):
+    # Add a obstacle in the world
+    def addObstacle(self, obstacle_, position_, theta_):
         """
         """
-        self.world.addFurniture(furniture_, position_, theta_)
+        self.world.addObstacle(obstacle_, position_, theta_)
 
     # Add a robot in the world
     def addRobot(self, robot_, position_, theta_):
@@ -172,8 +172,8 @@ if __name__ == '__main__':
     # Add the objects to the simulator
     robotnik.addRobot(woggle, QtCore.QPointF(0, 0), pi)
 
-    shape = Shape("shape")
-    robotnik.addFurniture(shape, QtCore.QPointF(-0.3, 0), pi/3)
+    obstacle = Shape("obstacle")
+    robotnik.addObstacle(obstacle, QtCore.QPointF(-0.3, 0), pi/3)
 
     # Exit
     sys.exit(app.exec_())
