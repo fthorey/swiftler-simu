@@ -34,15 +34,10 @@ class Robotnik(QtGui.QMainWindow):
 
         # Set step duration (in s)
         self.stepDuration = stepDuration_
+        # Must be converted into ms to get into the box
+        self.stepDurationBox.setValue(self.stepDuration*1e3)
 
-        # Remove aliasing
-        self.graphicsView.setRenderHints(QtGui.QPainter.Antialiasing |
-                                        QtGui.QPainter.SmoothPixmapTransform);
-        self.graphicsView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
-
-        # Set default scale factor
-        scaleFactor = 0.2
-        self.graphicsView.scale(scaleFactor, scaleFactor)
+        self.configureView();
 
         # Define world dimensions (in m)
         self.worldSize = 4; # in m
@@ -59,28 +54,11 @@ class Robotnik(QtGui.QMainWindow):
         # Show the view on screen
         self.show()
 
-        # Connect slots
-        # Play
-        self.action_Play.triggered.connect(self.start)
-        # Pause
-        self.action_Pause.triggered.connect(self.pause)
-        # Restart
-        self.action_Restart.triggered.connect(self.restart)
-        # Step duration
-        self.stepDurationBox.editingFinished.connect(self.updateStepDuration)
-        # Must be converted into ms to get into the box
-        self.stepDurationBox.setValue(self.stepDuration*1e3)
-
-        # Max steps
-        self.stepsNumberBox.editingFinished.connect(self.updateMaxSteps)
-
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
-        # Connect timer trigger signal to stop function
-        # Connect timer trigger signal to world advance function
-        self.timer.timeout.connect(self.stop)
-        self.timer.timeout.connect(self.world.advance)
+        # Connect slots
+        self.connectSlots()
 
         self.maxSteps = 500
         # Update maximum steps max value
@@ -90,6 +68,40 @@ class Robotnik(QtGui.QMainWindow):
 
         # Current number of steps
         self.currentSteps = 0
+
+    def configureView(self, ):
+        """
+        """
+        # Remove aliasing
+        self.graphicsView.setRenderHints(QtGui.QPainter.Antialiasing |
+                                        QtGui.QPainter.SmoothPixmapTransform);
+        self.graphicsView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
+
+        # Set default scale factor
+        scaleFactor = 0.2
+        self.graphicsView.scale(scaleFactor, scaleFactor)
+
+
+
+    def connectSlots(self, ):
+        """
+        """
+        # Play
+        self.action_Play.triggered.connect(self.start)
+        # Pause
+        self.action_Pause.triggered.connect(self.pause)
+        # Restart
+        self.action_Restart.triggered.connect(self.restart)
+        # Step duration
+        self.stepDurationBox.editingFinished.connect(self.updateStepDuration)
+        # Max steps
+        self.stepsNumberBox.editingFinished.connect(self.updateMaxSteps)
+
+        # Connect timer trigger signal to stop function
+        # Connect timer trigger signal to world advance function
+        self.timer.timeout.connect(self.stop)
+        self.timer.timeout.connect(self.world.advance)
+
 
     def updateMaxSteps(self, ):
         self.maxSteps = self.stepsNumberBox.value()
