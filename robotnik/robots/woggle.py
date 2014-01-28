@@ -126,7 +126,7 @@ class Woggle(Robot):
         bodyY = (-self.wheelBaseLength/2) * const.m2pix
         bodyW = self.wheelBaseLength * const.m2pix
         bodyH = self.wheelBaseLength * const.m2pix
-        path.addRect(bodyX, bodyY, bodyW, bodyH);
+        path.addEllipse(bodyX, bodyY, bodyW, bodyH);
         return path;
 
     # Define how to paint the robot
