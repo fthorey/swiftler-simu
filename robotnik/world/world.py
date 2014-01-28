@@ -5,8 +5,9 @@ from utils import const
 from PyQt4 import QtGui, QtCore
 from physics import Physics
 from math import pi
+from ui.worldrenderer import WorldRenderer
 
-class World(QtGui.QGraphicsScene):
+class World(WorldRenderer):
     """ World class provides access to all objects within the simulated environment
     """
 
@@ -14,7 +15,7 @@ class World(QtGui.QGraphicsScene):
         """
         """
         # Call parent constructor
-        super(World, self).__init__(parent_)
+        super(World, self).__init__(parent_, size_)
 
         # Physics that rules the world
         self.physics = Physics(self, stepDuration_)
@@ -27,15 +28,6 @@ class World(QtGui.QGraphicsScene):
 
         # Duration of a step (in s)
         self.stepDuration = stepDuration_
-
-        # Define world dimension (in m)
-        self.size = size_
-
-        # Set scene bounding rectangle
-        # setSceneRect takes parameters expressed in pixel
-        # -> Value in m are converted to pixel
-        self.setSceneRect(-(self.size/2)*const.m2pix, -(self.size/2)*const.m2pix,
-                          (self.size)*const.m2pix, (self.size)*const.m2pix);
 
     # Update the step duration (in s)
     def updateStepDuration(self, duration_):
@@ -102,23 +94,3 @@ class World(QtGui.QGraphicsScene):
 
         # Apply physics
         self.physics.apply()
-
-    def drawBackground(self, painter, rect):
-        painter.setWorldMatrixEnabled(True);
-
-        gridSize = 200;
-
-        left = int(rect.left()) - (int(rect.left()) % gridSize);
-        top = int(rect.top()) - (int(rect.top()) % gridSize);
-
-        lines = list()
-        x = left
-        while x < rect.right():
-            lines.append(QtCore.QLineF(x, rect.top(), x, rect.bottom()))
-            x +=gridSize
-        y = top
-        while y < rect.bottom():
-            lines.append(QtCore.QLineF(rect.left(), y, rect.right(), y))
-            y += gridSize
-
-        painter.drawLines(lines)

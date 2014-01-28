@@ -13,8 +13,6 @@ class WorldView(QtGui.QGraphicsView):
         # Call parent constructor
         super(WorldView, self).__init__(parent_)
 
-
-
     def wheelEvent(self, event):
         """
         """
