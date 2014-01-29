@@ -7,6 +7,7 @@ from world.world import World
 from robots.woggle import Woggle
 from shape.shape import Shape
 from utils import const
+from utils.xmlreader import XMLReader
 import ui.icons
 
 # Handle Ctrl-C
@@ -23,7 +24,7 @@ class Robotnik(QtGui.QMainWindow):
     const.pix2m = 0.000264583
     const.m2pix = 3779.5276
 
-    def __init__(self, stepDuration_):
+    def __init__(self, ):
         """
         """
         # Call parent constructor
@@ -32,42 +33,25 @@ class Robotnik(QtGui.QMainWindow):
         # Load window design
         uic.loadUi('ui/mainwindow.ui', self)
 
-        # Set step duration (in s)
-        self.stepDuration = stepDuration_
-        # Must be converted into ms to get into the box
-        self.stepDurationBox.setValue(self.stepDuration*1e3)
-
-        self.configureView();
-
-        # Define world dimensions (in m)
-        self.worldSize = 4; # in m
-
-        # Create a new world
-        self.world = World(self, self.stepDuration, self.worldSize)
-
-        # Attach the world to the view
-        self.graphicsView.setScene(self.world)
-
-        # Center the main window
-        self.center()
-
-        # Show the view on screen
-        self.show()
-
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
-        # Connect slots
+        # Configure
+        self.configureSimu()
+        self.configureView()
+        self.configureWorld()
+        self.configureWindow()
         self.connectSlots()
 
-        self.maxSteps = 500
-        # Update maximum steps max value
-        self.stepsNumberBox.setMaximum(1000)
-        # Update value in associated spin box
-        self.stepsNumberBox.setValue(self.maxSteps)
-
-        # Current number of steps
-        self.currentSteps = 0
+    def configureWorld(self, ):
+        """
+        """
+        # Define world dimensions (in m)
+        self.worldSize = 4; # in m
+        # Create a new world
+        self.world = World(self, self.stepDuration, self.worldSize)
+        # Attach the world to the current view
+        self.graphicsView.setScene(self.world)
 
     def configureView(self, ):
         """
@@ -81,7 +65,30 @@ class Robotnik(QtGui.QMainWindow):
         scaleFactor = 0.2
         self.graphicsView.scale(scaleFactor, scaleFactor)
 
+    def configureWindow(self, ):
+        """
+        """
+        # Center the main window
+        self.center()
+        # Show the view on screen
+        self.show()
 
+    def configureSimu(self, ):
+        """
+        """
+        # The default step duration is set to 10ms
+        self.stepDuration = 10*1e-3
+        # Must be converted into ms to get into the box
+        self.stepDurationBox.setValue(self.stepDuration*1e3)
+
+        self.maxSteps = 500
+        # Update maximum steps max value
+        self.stepsNumberBox.setMaximum(1000)
+        # Update value in associated spin box
+        self.stepsNumberBox.setValue(self.maxSteps)
+
+        # Current number of steps
+        self.currentSteps = 0
 
     def connectSlots(self, ):
         """
@@ -101,7 +108,6 @@ class Robotnik(QtGui.QMainWindow):
         # Connect timer trigger signal to world advance function
         self.timer.timeout.connect(self.stop)
         self.timer.timeout.connect(self.world.advance)
-
 
     def updateMaxSteps(self, ):
         self.maxSteps = self.stepsNumberBox.value()
@@ -172,8 +178,7 @@ if __name__ == '__main__':
     # Create a Qt application
     app = QtGui.QApplication([])
 
-    # Create a robotnik simulator with a default step duration of 10ms
-    robotnik = Robotnik(10*1e-3)
+    robotnik = Robotnik()
 
     # Create a differential drive robot
     # Wheel radius = 2.1cm
