@@ -44,9 +44,21 @@ class Physics(object):
             for sensor in robot.getProxSensors():
 
                 # Get all sensors that detect an obstacle
-                while self.world.collidingItems(sensor):
-                    # Reduce the beam of this sensor of 1 pixel
-                    sensor.reduceBeamRange(const.pix2m)
-                    # Check if the sensor has reached its min beam range
+                if self.world.collidingItems(sensor):
+                    while self.world.collidingItems(sensor):
+                        # Reduce the beam of this sensor of 1 pixel
+                        sensor.reduceBeamRange(const.pix2m)
+                        # Check if the sensor has reached its min beam range
                     if sensor.isMinRangeReached():
                         robot.stop()
+
+                # Otherwise check if they are at their max range or not
+                else:
+                    # sensor.setBeamRange(sensor.getMaxBeamRange())
+                    if sensor.getBeamRange() < sensor.getMaxBeamRange():
+                        while not self.world.collidingItems(sensor):
+                            if not sensor.isMaxRangeReached():
+                                # Increase the beam of this sensor of 1 pixel
+                                sensor.increaseBeamRange(const.pix2m)
+                            else:
+                                break

@@ -42,6 +42,9 @@ class ProximitySensor(Shape):
         self.penColor = QtGui.QColor('red')
         self.penColor.setAlpha(128)
 
+    def getMaxBeamRange(self, ):
+        return self.maxRange
+
     # Restart the sensor to its initial state
     def restart(self, ):
         """
@@ -52,6 +55,9 @@ class ProximitySensor(Shape):
     # Check if current range > minrange
     def isMinRangeReached(self, ):
         return self.currRange <= self.minRange
+
+    def isMaxRangeReached(self, ):
+        return self.currRange >= self.maxRange
 
     # Get current beam range (in m)
     def getBeamRange(self, ):
