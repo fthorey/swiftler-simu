@@ -182,10 +182,10 @@ if __name__ == '__main__':
     woggle1.setGoal(QtCore.QPointF(1, -1))
 
     # Add the objects to the simulator
-    robotnik.addRobot(woggle1, QtCore.QPointF(0, 0), pi)
+    robotnik.addRobot(woggle1, QtCore.QPointF(0.1, 0), pi/2)
 
     obstacle = Shape("obstacle")
-    robotnik.addObstacle(obstacle, QtCore.QPointF(-0.3, 0), pi/3)
+    robotnik.addObstacle(obstacle, QtCore.QPointF(-0.1, 0), pi/2)
 
     # Exit
     sys.exit(app.exec_())

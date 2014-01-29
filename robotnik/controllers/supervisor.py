@@ -3,7 +3,7 @@
 
 from math import degrees, sqrt
 from robots.robot import Robot
-from controller import GoToGoal
+from controller import GoToGoal, Rotate
 from utils import const
 
 from PyQt4 import QtCore
@@ -19,7 +19,7 @@ class Supervisor(object):
         self.robot = robot_
 
         # Current controller
-        self.controller = GoToGoal()
+        self.controller = Rotate()
 
         # Current estimation of the robot position (in m) and angle (in rad)
         # in the scene referential

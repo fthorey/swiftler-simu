@@ -16,6 +16,34 @@ class Controller(object):
         """
         """
 
+class Rotate(Controller):
+    """ Rotate make the robot to rotate
+    """
+
+    def __init__(self, ):
+        """
+        """
+        # PID gains
+        # Proportional
+        self.Kp = 0.005
+        # Integral
+        self.Ki = 0.0001
+        # Derivative
+        self.Kd = 0.01
+
+        # Accumulated error
+        self.E_k = 0;
+        # error step k-1
+        self.e_k_1 = 0;
+
+    # the goal must be expressed in m and the time step in s
+    def execute(self, stateEstimate, goal, dt):
+        """
+        """
+        v = 0.1
+        w = 0.5
+        return v, w
+
 class GoToGoal(Controller):
     """ GoToGoal class steers the robot towards a goal with a constant velocity using PID
     """
