@@ -6,6 +6,7 @@ from PyQt4 import QtGui, QtCore
 from physics import Physics
 from math import pi
 from ui.worldrenderer import WorldRenderer
+from utils.xmlreader import XMLReader
 
 class World(WorldRenderer):
     """ World class provides access to all objects within the simulated environment
@@ -20,6 +21,9 @@ class World(WorldRenderer):
         # Physics that rules the world
         self.physics = Physics(self, stepDuration_)
 
+        # Create a xml reader object to parse world files
+        self.xmlReader = XMLReader('templates/labyrinth_small.xml')
+
         # List of robots currently in the world
         self.robots = list()
 
@@ -28,6 +32,16 @@ class World(WorldRenderer):
 
         # Duration of a step (in s)
         self.stepDuration = stepDuration_
+
+    # Construct the world
+    def autoConstruct(self, ):
+
+        objects = self.xmlReader.parseConfiguration()
+
+        for objs in objects:
+            objsType = objs[0]
+            if objsType is 'robot':
+                pass
 
     # Update the step duration (in s)
     def updateStepDuration(self, duration_):

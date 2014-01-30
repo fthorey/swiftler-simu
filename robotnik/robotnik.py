@@ -7,7 +7,6 @@ from world.world import World
 from robots.woggle import Woggle
 from shape.shape import Shape
 from utils import const
-from utils.xmlreader import XMLReader
 import ui.icons
 
 # Handle Ctrl-C
@@ -52,6 +51,8 @@ class Robotnik(QtGui.QMainWindow):
         self.world = World(self, self.stepDuration, self.worldSize)
         # Attach the world to the current view
         self.graphicsView.setScene(self.world)
+        # Tell the world to auto-construct
+        self.world.autoConstruct()
 
     def configureView(self, ):
         """
@@ -180,17 +181,17 @@ if __name__ == '__main__':
 
     robotnik = Robotnik()
 
-    # Create a differential drive robot
-    # Wheel radius = 2.1cm
-    # In-between wheel base length = 8.85cm
-    woggle1 = Woggle("woggle1", 0.021, 0.0885)
-    woggle1.setGoal(QtCore.QPointF(1, -1))
+    # # Create a differential drive robot
+    # # Wheel radius = 2.1cm
+    # # In-between wheel base length = 8.85cm
+    # woggle1 = Woggle("woggle1", 0.021, 0.0885)
+    # woggle1.setGoal(QtCore.QPointF(1, -1))
 
-    # Add the objects to the simulator
-    robotnik.addRobot(woggle1, QtCore.QPointF(0.1, 0), pi/2)
+    # # Add the objects to the simulator
+    # robotnik.addRobot(woggle1, QtCore.QPointF(0.1, 0), pi/2)
 
-    obstacle = Shape("obstacle")
-    robotnik.addObstacle(obstacle, QtCore.QPointF(-0.1, 0), pi/2)
+    # obstacle = Shape("obstacle")
+    # robotnik.addObstacle(obstacle, QtCore.QPointF(-0.1, 0), pi/2)
 
     # Exit
     sys.exit(app.exec_())
