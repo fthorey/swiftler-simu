@@ -163,35 +163,9 @@ class Robotnik(QtGui.QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # Add a obstacle in the world
-    def addObstacle(self, obstacle_, position_, theta_):
-        """
-        """
-        self.world.addObstacle(obstacle_, position_, theta_)
-
-    # Add a robot in the world
-    def addRobot(self, robot_, position_, theta_):
-        """
-        """
-        self.world.addRobot(robot_, position_, theta_, self.stepDuration)
-
 if __name__ == '__main__':
     # Create a Qt application
     app = QtGui.QApplication([])
-
     robotnik = Robotnik()
-
-    # # Create a differential drive robot
-    # # Wheel radius = 2.1cm
-    # # In-between wheel base length = 8.85cm
-    # woggle1 = Woggle("woggle1", 0.021, 0.0885)
-    # woggle1.setGoal(QtCore.QPointF(1, -1))
-
-    # # Add the objects to the simulator
-    # robotnik.addRobot(woggle1, QtCore.QPointF(0.1, 0), pi/2)
-
-    # obstacle = Shape("obstacle")
-    # robotnik.addObstacle(obstacle, QtCore.QPointF(-0.1, 0), pi/2)
-
     # Exit
     sys.exit(app.exec_())

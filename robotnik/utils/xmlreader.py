@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import xml.etree.ElementTree as ET
+from PyQt4 import QtGui, QtCore
 
 class XMLReader(object):
     """
@@ -93,45 +94,46 @@ class XMLReader(object):
                 raise Exception(
                     '[XMLReader._parse_simulation] Invalid robot (bad value)!')
 
-        # # obstacles
-        # for obstacle in self._root.findall('obstacle'):
-        #     pose = obstacle.find('pose')
-        #     if pose == None:
-        #         raise Exception(
-        #             '[XMLReader._parse_simulation] No pose specified!')
+        # obstacles
+        for obstacle in self._root.findall('obstacle'):
+            pose = obstacle.find('pose')
+            if pose == None:
+                raise Exception(
+                    '[XMLReader._parse_simulation] No pose specified!')
 
-        #     geometry = obstacle.find('geometry')
-        #     if geometry == None:
-        #         raise Exception(
-        #             '[XMLReader._parse_simulation] No geometry specified!')
-        #         try:
-        #             points = []
-        #             for point in geometry.findall('point'):
-        #                 x, y = point.get('x'), point.get('y')
-        #                 if x == None or y == None:
-        #                     raise Exception(
-        #                         '[XMLReader._parse_simulation] Invalid point!')
-        #                     points.append((float(x), float(y)))
+            geometry = obstacle.find('geometry')
+            if geometry == None:
+                raise Exception(
+                    '[XMLReader._parse_simulation] No geometry specified!')
+            try:
+                points = []
+                for point in geometry.findall('point'):
+                    x, y = point.get('x'), point.get('y')
+                    if x == None or y == None:
+                        raise Exception(
+                            '[XMLReader._parse_simulation] Invalid point!')
+                    points.append(QtCore.QPointF(float(x), float(y)))
 
-        #         if len(points) < 3:
-        #             raise Exception(
-        #                 '[XMLReader._parse_simulation] Too few points!')
+                if len(points) < 3:
+                    raise Exception(
+                        '[XMLReader._parse_simulation] Too few points!')
 
-        #         x, y, theta = pose.get('x'), pose.get('y'), pose.get('theta')
-        #         if x == None or y == None or theta == None:
-        #             raise Exception(
-        #                 '[XMLReader._parse_simulation] Invalid pose!')
+                x, y, theta = pose.get('x'), pose.get('y'), pose.get('theta')
 
-        #         color = self.parseColor(obstacle.get('color'))
-        #         simulator_objects.append(('obstacle',
-        #                                   (float(x),
-        #                                    float(y),
-        #                                    float(theta)),
-        #                                   points,
-        #                                   color))
-        #     except ValueError:
-        #         raise Exception(
-        #             '[XMLReader._parse_simulation] Invalid obstacle (bad value)!')
+                if x == None or y == None or theta == None:
+                    raise Exception(
+                        '[XMLReader._parse_simulation] Invalid pose!')
+
+                color = self.parseColor(obstacle.get('color'))
+                simulator_objects.append(('obstacle',
+                                          (float(x),
+                                           float(y),
+                                           float(theta)),
+                                          points,
+                                          color))
+            except ValueError:
+                raise Exception(
+                        '[XMLReader._parse_simulation] Invalid obstacle (bad value)!')
 
         # # background
         # for marker in self._root.findall('marker'):
