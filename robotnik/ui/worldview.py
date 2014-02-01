@@ -13,6 +13,13 @@ class WorldView(QtGui.QGraphicsView):
         # Call parent constructor
         super(WorldView, self).__init__(parent_)
 
+
+    def focusOnWorld(self):
+        """Scale the view to include all of the world (including robots)"""
+        # Set scene bounding rectangle (in pixel)
+        self.scene().setSceneRect(self.scene().itemsBoundingRect())
+        return self.scene().itemsBoundingRect().getCoords()
+
     def wheelEvent(self, event):
         """
         """

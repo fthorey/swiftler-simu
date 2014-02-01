@@ -4,7 +4,7 @@
 from utils import const
 from PyQt4 import QtGui, QtCore
 from physics import Physics
-from math import pi
+from math import pi, degrees
 from ui.worldrenderer import WorldRenderer
 from utils.xmlreader import XMLReader
 from utils import helpers
@@ -13,14 +13,14 @@ class World(WorldRenderer):
     """ World class provides access to all objects within the simulated environment
     """
 
-    def __init__(self, parent_, stepDuration_, size_):
+    def __init__(self, parent_):
         """
         """
         # Call parent constructor
-        super(World, self).__init__(parent_, size_)
+        super(World, self).__init__(parent_)
 
         # Physics that rules the world
-        self.physics = Physics(self, stepDuration_)
+        self.physics = Physics(self)
 
         # Create a xml reader object to parse world files
         self.xmlReader = XMLReader('templates/labyrinth_small.xml')
@@ -30,9 +30,6 @@ class World(WorldRenderer):
 
         # List of obstacle currently in the world
         self.obstacles = list()
-
-        # Duration of a step (in s)
-        self.stepDuration = stepDuration_
 
     # Construct the world
     def autoConstruct(self, ):
@@ -44,9 +41,10 @@ class World(WorldRenderer):
             objsType = objs[0]
             if objsType is 'robot':
                 # Get robot parameters
-                robot_type, supervisor_type, robot_pos, robot_color = objs[1:5]
-                # Get robot position
+                robot_type, supervisor_type, robot_pos, robot_color, robot_dim = objs[1:6]
+                # Get robot position (in m and rad)
                 x, y, theta = robot_pos
+                wR, wBL = robot_dim
                 try:
                     # Get robot class
                     robot_class = helpers.load_by_name(robot_type,'robots')
@@ -54,36 +52,39 @@ class World(WorldRenderer):
                     sup_class = helpers.load_by_name(supervisor_type,'supervisors')
                     # Generate a robot name
                     name = "Robot_{}:_{}".format(len(self.robots), sup_class.__name__)
-                    robot = robot_class(name, 0.021, 0.0885)
+                    robot = robot_class(name, wR, wBL)
+                    # Add the robot to the obstacle list
                     self.addRobot(robot, QtCore.QPointF(x, y), theta)
                 except:
-                    print "[Simulator.construct_world] Robot creation failed!"
+                    print "[world.autoConstruct] Robot creation failed!"
                     raise
             elif objsType is 'obstacle':
+                # Get obstacle parameters
+                # Position are in m and rad
                 obstacle_pos, obstacle_coords, obstacle_color = objs[1:4]
+                # Set a default color
                 if obstacle_color is None:
                     obstacle_color = 0xFF0000
+                # Scale obstacle coords from m to pixel
                 obstacle_coords = [coord*const.m2pix for coord in obstacle_coords]
-                obstacle = self.addPolygon(QtGui.QPolygonF(obstacle_coords))
+                # Get obstacle attribute
+                polygon_ = QtGui.QPolygonF(obstacle_coords)
+                brush_ = QtGui.QBrush(QtGui.QColor(obstacle_color))
+                pen_ = QtGui.QPen(QtCore.Qt.NoPen)
+                # Add the obstacle to the world
+                obstacle = self.addPolygon(polygon_, pen = pen_, brush = brush_)
+                # Get obstacle position (in m)
                 x = obstacle_pos[0]*const.m2pix
                 y = obstacle_pos[1]*const.m2pix
+                theta = obstacle_pos[2]
+                # Position the obstacle
                 obstacle.setPos(QtCore.QPointF(x, y))
-                self.obstacles.appends(obstacle)
+                obstacle.rotate(degrees(theta))
+                # Add the obstacle to obstacles list
+                self.obstacles.append(obstacle)
             else:
-                print "{Simulator.construct_world] Can't recognized the item!"
+                print "{world.autConstruct] Can't recognized the item!"
                 raise
-
-    # Update the step duration (in s)
-    def updateStepDuration(self, duration_):
-        """
-        """
-        # Update step duration (in s)
-        self.stepDuration = duration_
-        # Update physics step duration (in s)
-        self.physics.updateStepDuration(self.stepDuration)
-        # Update robots step duration (in s)
-        for robot in self.robots:
-            robot.updateStepDuration(self.stepDuration)
 
     # Set the physics that rules the world
     def setPhysics(self, physics_):
@@ -109,7 +110,6 @@ class World(WorldRenderer):
         robot_.setInitialPos(position_, theta_)
         self.addItem(robot_)
         self.robots.append(robot_)
-        robot_.updateStepDuration(self.stepDuration)
 
     # Return the current physics of the world
     def getPhysics(self, ):

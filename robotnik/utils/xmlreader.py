@@ -68,61 +68,76 @@ class XMLReader(object):
             supervisor = robot.find('supervisor')
             if supervisor == None:
                 raise Exception(
-                    '[XMLReader._parse_simulation] No supervisor specified!')
+                    '[XMLReader.parseConfiguration] No supervisor specified!')
+
+            dimension = robot.find('dimension')
+            if dimension == None:
+                raise Exception(
+                    '[XMLReader.parseConfiguration] No dimension specified!')
 
             pose = robot.find('pose')
             if pose == None:
                 raise Exception(
-                    '[XMLReader._parse_simulation] No pose specified!')
+                    '[XMLReader.parseConfiguration] No pose specified!')
 
             try:
                 x, y, theta = pose.get('x'), pose.get('y'), pose.get('theta')
                 if x == None or y == None or theta == None:
                     raise Exception(
-                        '[XMLReader._parse_simulation] Invalid pose!')
+                        '[XMLReader.parseConfiguration] Invalid pose!')
 
-                robot_color = self.parseColor(robot.get('color'))
+                if robot_type ==  "Woggle":
+                    wheelRadius = dimension.get('wheelradius')
+                    wheelBaseLength = dimension.get('wheelbaselength')
+                    if wheelRadius == None or wheelBaseLength == None:
+                        raise Exception(
+                            '[XMLReader.parseConfiguration] Invalid dimension!')
 
-                simulator_objects.append(('robot',
-                                          robot_type,
-                                          supervisor.attrib['type'],
-                                          (float(x),
-                                           float(y),
-                                           float(theta)),
-                                          robot_color))
+                    robot_color = self.parseColor(robot.get('color'))
+
+                    simulator_objects.append(('robot',
+                                              robot_type,
+                                              supervisor.attrib['type'],
+                                              (float(x),
+                                               float(y),
+                                               float(theta)),
+                                              robot_color,
+                                              (float(wheelRadius),
+                                               float(wheelBaseLength)
+                                           )))
             except ValueError:
                 raise Exception(
-                    '[XMLReader._parse_simulation] Invalid robot (bad value)!')
+                    '[XMLReader.parseConfiguration] Invalid robot (bad value)!')
 
         # obstacles
         for obstacle in self._root.findall('obstacle'):
             pose = obstacle.find('pose')
             if pose == None:
                 raise Exception(
-                    '[XMLReader._parse_simulation] No pose specified!')
+                    '[XMLReader.parseConfiguration] No pose specified!')
 
             geometry = obstacle.find('geometry')
             if geometry == None:
                 raise Exception(
-                    '[XMLReader._parse_simulation] No geometry specified!')
+                    '[XMLReader.parseConfiguration] No geometry specified!')
             try:
                 points = []
                 for point in geometry.findall('point'):
                     x, y = point.get('x'), point.get('y')
                     if x == None or y == None:
                         raise Exception(
-                            '[XMLReader._parse_simulation] Invalid point!')
+                            '[XMLReader.parseConfiguration] Invalid point!')
                     points.append(QtCore.QPointF(float(x), float(y)))
 
                 if len(points) < 3:
                     raise Exception(
-                        '[XMLReader._parse_simulation] Too few points!')
+                        '[XMLReader.parseConfiguration] Too few points!')
 
                 x, y, theta = pose.get('x'), pose.get('y'), pose.get('theta')
 
                 if x == None or y == None or theta == None:
                     raise Exception(
-                        '[XMLReader._parse_simulation] Invalid pose!')
+                        '[XMLReader.parseConfiguration] Invalid pose!')
 
                 color = self.parseColor(obstacle.get('color'))
                 simulator_objects.append(('obstacle',
@@ -133,46 +148,6 @@ class XMLReader(object):
                                           color))
             except ValueError:
                 raise Exception(
-                        '[XMLReader._parse_simulation] Invalid obstacle (bad value)!')
-
-        # # background
-        # for marker in self._root.findall('marker'):
-        #     pose = marker.find('pose')
-        #     if pose == None:
-        #         raise Exception(
-        #             '[XMLReader._parse_simulation] No pose specified!')
-
-        #     geometry = marker.find('geometry')
-        #     if geometry == None:
-        #         raise Exception(
-        #             '[XMLReader._parse_simulation] No geometry specified!')
-        #         try:
-        #             points = []
-        #             for point in geometry.findall('point'):
-        #                 x, y = point.get('x'), point.get('y')
-        #                 if x == None or y == None:
-        #                     raise Exception(
-        #                         '[XMLReader._parse_simulation] Invalid point!')
-        #                     points.append((float(x), float(y)))
-
-        #         if len(points) < 3:
-        #             raise Exception(
-        #                 '[XMLReader._parse_simulation] Too few points!')
-
-        #         x, y, theta = pose.get('x'), pose.get('y'), pose.get('theta')
-        #         if x == None or y == None or theta == None:
-        #             raise Exception(
-        #                 '[XMLReader._parse_simulation] Invalid pose!')
-
-        #         color = self.parseColor(marker.get('color'))
-        #         simulator_objects.append(('marker',
-        #                                   (float(x),
-        #                                    float(y),
-        #                                    float(theta)),
-        #                                   points,
-        #                                   color))
-        #     except ValueError:
-        #         raise Exception(
-        #             '[XMLReader._parse_simulation] Invalid marker (bad value)!')
+                        '[XMLReader.parseConfiguration] Invalid obstacle (bad value)!')
 
         return simulator_objects

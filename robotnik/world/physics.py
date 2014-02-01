@@ -11,20 +11,11 @@ class Physics(object):
 
     # Constructor
     # The step duration is given in s
-    def __init__(self, world_, stepDuration_):
+    def __init__(self, world_):
         """
         """
         # Set the world on which the physics apply
         self.world = world_
-
-        # Duration of a step (in s)
-        self.stepDuration = stepDuration_
-
-    # Update the step duration (in s)
-    def updateStepDuration(self, duration_):
-        """
-        """
-        self.stepDuration = duration_
 
     # Apply physics at each step
     def apply(self, ):

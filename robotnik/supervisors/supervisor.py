@@ -44,7 +44,7 @@ class Supervisor(object):
         self.goal = goal_
 
     # Select and execute the current controller
-    def execute(self, stepDuration_):
+    def execute(self, ):
         """
         """
 

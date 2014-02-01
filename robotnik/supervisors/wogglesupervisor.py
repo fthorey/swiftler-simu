@@ -7,6 +7,7 @@ from robots.robot import Robot
 from controllers.controller import GoToGoal, Rotate
 from utils import const
 from supervisors.supervisor import Supervisor
+from utils import const
 
 from PyQt4 import QtCore
 
@@ -22,7 +23,7 @@ class WoggleSupervisor(Supervisor):
 
     # Select and execute the current controller
     # The step duration is in seconds
-    def execute(self, stepDuration_):
+    def execute(self, ):
         """
         """
 
@@ -31,7 +32,7 @@ class WoggleSupervisor(Supervisor):
             return
 
         # Execute the controller to obtain parameters to apply to the robot
-        v, w = self.controller.execute(self.stateEstimate, self.goal, stepDuration_)
+        v, w = self.controller.execute(self.stateEstimate, self.goal, const.stepDuration)
 
         # Convert speed (in m/s) and angular rotation (in rad/s) to
         # angular speed to apply to each robot wheels (in rad/s)

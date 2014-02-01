@@ -8,7 +8,7 @@ class WorldRenderer(QtGui.QGraphicsScene):
     """ WorldRenderer class renders the embedded world
     """
 
-    def __init__(self, parent_, size_):
+    def __init__(self, parent_):
         """
         """
         # Call parent constructor
@@ -19,15 +19,6 @@ class WorldRenderer(QtGui.QGraphicsScene):
 
         self.gridPen = QtGui.QPen(QtGui.QColor(0x808080))
         # self.gridPen.setStyle(QtCore.Qt.DotLine)
-
-        # Define world dimension (in m)
-        self.size = size_
-
-        # Set scene bounding rectangle
-        # setSceneRect takes parameters expressed in pixel
-        # -> Value in m are converted to pixel
-        self.setSceneRect(-(self.size/2)*const.m2pix, -(self.size/2)*const.m2pix,
-                          (self.size)*const.m2pix, (self.size)*const.m2pix);
 
     def wheelEvent(self, event):
         """

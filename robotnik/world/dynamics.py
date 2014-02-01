@@ -17,7 +17,7 @@ class DifferentialDrive(object):
         self.robot = robot_
 
     # The step duration is given in s
-    def update(self, dt_):
+    def update(self, ):
         """
         """
 
@@ -33,7 +33,7 @@ class DifferentialDrive(object):
         v, w = self.diff2Uni(vel_l, vel_r)
 
         # Delta integration time (s)
-        dt = dt_
+        dt = const.stepDuration
 
         # Current angle of the robot (rad)
         theta_k = self.robot.getTheta()

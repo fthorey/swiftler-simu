@@ -31,9 +31,6 @@ class Robot(Shape):
         # Initial heading angle (in rad)
         self.initTheta = 0
 
-        # Duration of a step (in s)
-        self.stepDuration = 0
-
         # List of all proximity sensors of the robot
         self.proxSensors = list()
 
@@ -61,13 +58,6 @@ class Robot(Shape):
         # Restart all sensors
         for sensor in self.proxSensors:
             sensor.restart()
-
-    # Update the step duration (in s)
-    def updateStepDuration(self, duration_):
-        """
-        """
-        # The step duration is updated in s
-        self.stepDuration = duration_
 
     # Set the initial position of the robot (in m & rad)
     def setInitialPos(self, pos_, theta_):
@@ -134,8 +124,8 @@ class Robot(Shape):
         if (step_ == 0):
             return
 
-        # Execute the supervisor (duration in s)
-        self.supervisor.execute(self.stepDuration)
+        # Execute the supervisor
+        self.supervisor.execute()
 
-        # Update the robot dynamics (duration in s)
-        self.dynamics.update(self.stepDuration)
+        # Update the robot dynamics
+        self.dynamics.update()
