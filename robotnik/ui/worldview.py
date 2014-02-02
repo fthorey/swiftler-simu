@@ -34,18 +34,19 @@ class WorldView(QtGui.QGraphicsView):
         for robot in self.world().getRobots():
             if robot.isMasterRobot():
                 # Update view
-                self.fitInView(robot.mapRectToParent(robot.boundingRect()), QtCore.Qt.KeepAspectRatio)
+                boundingRect = robot.mapRectToParent(robot.enlargedBoundingRect())
+                self.fitInView(boundingRect, QtCore.Qt.KeepAspectRatio)
                 break
 
     def wheelEvent(self, event):
         """
         """
-        # self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse);
-        scaleFactor = 1.15
-        if event.delta() > 0:
-            self.scale(scaleFactor, scaleFactor)
-        else:
-            self.scale(1.0 / scaleFactor, 1.0 / scaleFactor)
+        # # self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse);
+        # scaleFactor = 1.15
+        # if event.delta() > 0:
+        #     self.scale(scaleFactor, scaleFactor)
+        # else:
+        #     self.scale(1.0 / scaleFactor, 1.0 / scaleFactor)
 
     def resizeEvent(self, event):
         """

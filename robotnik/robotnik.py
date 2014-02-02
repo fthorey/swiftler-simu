@@ -49,6 +49,19 @@ class Robotnik(QtGui.QMainWindow):
     def configureToolBar(self, ):
         """
         """
+        # Add robot zoom slider
+        self.zoom_Slider = QtGui.QSlider(QtCore.Qt.Horizontal,self)
+        self.zoom_Slider.setTickPosition(QtGui.QSlider.NoTicks)
+        self.zoom_Slider.setToolTip("Adjust zoom")
+        self.zoom_Slider.setStatusTip("Zoom in/out on robot")
+        self.zoom_Slider.setMaximumWidth(150)
+        self.zoom_Slider.setRange(-100,100)
+        self.zoom_Slider.setValue(0)
+        self.zoom_Slider.setEnabled(False)
+        self.mainToolBar.addWidget(self.zoom_Slider)
+        self.zoom_Label = QtGui.QLabel(" Zoom: 1.0x ",self)
+        self.zoom_Label.setToolTip("Current zoom factor")
+        self.mainToolBar.addWidget(self.zoom_Label)
 
     def configureSimu(self, ):
         """
@@ -110,6 +123,9 @@ class Robotnik(QtGui.QMainWindow):
         # Connect zoom robot
         self.action_Zoom_Robot.triggered.connect(self.zoomRobot)
 
+        # Connect
+        self.zoom_Slider.valueChanged[int].connect(self.setRobotZoomLevel)
+
     @QtCore.pyqtSlot()
     def restart(self, ):
         """
@@ -151,12 +167,31 @@ class Robotnik(QtGui.QMainWindow):
         self.timer.start(const.stepDuration*1e3);
 
     @QtCore.pyqtSlot()
+    def restart(self, ):
+        """
+        """
+        # Stop the timer
+        self.currentSteps = 0
+        self.timer.stop()
+
+        # Put robots at there initial position
+        for robot in self.world.getRobots():
+            robot.restart()
+
+        # Refocus the view on the master robot
+        if self.world.zoomOnRobot:
+            self.worldView.focusOnRobot()
+
+    @QtCore.pyqtSlot()
     def zoomWorld(self, ):
         """
         """
         # Toggle zoom icons
         self.action_Zoom_World.setChecked(True)
         self.action_Zoom_Robot.setChecked(False)
+
+        # Disable robot zoom slider
+        self.zoom_Slider.setEnabled(False)
 
         # Set focus on world
         self.worldView.focusOnWorld()
@@ -172,7 +207,27 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Zoom_World.setChecked(False)
         self.action_Zoom_Robot.setChecked(True)
 
+        # Enable robot zoom slider
+        self.zoom_Slider.setEnabled(True)
+
         # Set focus on robot
+        self.worldView.focusOnRobot()
+
+        # Trigger a view update
+        self.worldView.update()
+
+    @QtCore.pyqtSlot(int)
+    def setRobotZoomLevel(self, value_):
+        """
+        """
+        zoom = 5.0**(value_/100.0)
+        for robot in self.world.robots:
+            if robot.isMasterRobot():
+                robot.setZoom(zoom)
+
+        self.zoom_Label.setText(" Zoom: %.1fx "%(zoom))
+
+        # Update focus on robot
         self.worldView.focusOnRobot()
 
         # Trigger a view update

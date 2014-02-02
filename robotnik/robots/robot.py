@@ -37,12 +37,24 @@ class Robot(Shape):
         # Is the robot master
         self.isMaster = False
 
+        # Keep the current zoom
+        self.zoom = 1
+
+    def setZoom(self, zoom_):
+        """
+        """
+        self.zoom = zoom_
+
     # Check if the robot is currently the master
     def isMasterRobot(self, ):
+        """
+        """
         return self.isMaster
 
     # Set master
     def setMasterRobot(self, ):
+        """
+        """
         self.isMaster = True
 
     # Set a goal
@@ -124,6 +136,20 @@ class Robot(Shape):
         """
         """
         return self.stopped
+
+    # Return the bounding rect of the robot and all its sensors by a zoom factor
+    # The zoom factor must be between 0% and 100%
+    def enlargedBoundingRect(self):
+        """
+        """
+        zoom = 1.0 / self.zoom
+        rect = self.boundingRect() | self.childrenBoundingRect()
+        dx1 = -rect.width() * zoom
+        dy1 = -rect.height() * zoom
+        dx2 = -dx1
+        dy2 = -dy1
+        rect.adjust(dx1, dy1, dx2, dy2)
+        return rect
 
     # Action to perform when the scene changes
     def advance(self, step_):
