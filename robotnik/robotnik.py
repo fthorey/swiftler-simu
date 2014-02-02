@@ -69,7 +69,7 @@ class Robotnik(QtGui.QMainWindow):
     def configureView(self, ):
         """
         """
-        # Remove aliasing
+        # Remove aliasing and smooth transformations
         self.worldView.setRenderHints(QtGui.QPainter.Antialiasing |
                                         QtGui.QPainter.SmoothPixmapTransform);
         # Enable drag mode on mouse click
@@ -78,9 +78,8 @@ class Robotnik(QtGui.QMainWindow):
         # Attach the world to the current view
         self.worldView.setScene(self.world)
 
-        # # Focus on the world
+        # Focus on the world by default
         self.worldView.focusOnWorld()
-        # self.worldView.focusOnRobot()
 
     def configureWindow(self, ):
         """
@@ -105,10 +104,10 @@ class Robotnik(QtGui.QMainWindow):
         # Connect timer trigger signal to world advance function
         self.timer.timeout.connect(self.world.advance)
 
-        # Zoom world
+        # Connect zoom world
         self.action_Zoom_World.triggered.connect(self.zoomWorld)
 
-        # Zoom robot
+        # Connect zoom robot
         self.action_Zoom_Robot.triggered.connect(self.zoomRobot)
 
     @QtCore.pyqtSlot()
@@ -123,6 +122,7 @@ class Robotnik(QtGui.QMainWindow):
         for robot in self.world.getRobots():
             robot.restart()
 
+        # Refocus the view on the master robot
         if self.world.zoomOnRobot:
             self.worldView.focusOnRobot()
 

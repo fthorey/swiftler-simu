@@ -34,6 +34,17 @@ class Robot(Shape):
         # List of all proximity sensors of the robot
         self.proxSensors = list()
 
+        # Is the robot master
+        self.isMaster = False
+
+    # Check if the robot is currently the master
+    def isMasterRobot(self, ):
+        return self.isMaster
+
+    # Set master
+    def setMasterRobot(self, ):
+        self.isMaster = True
+
     # Set a goal
     def setGoal(self, goal_):
         """

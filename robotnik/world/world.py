@@ -54,6 +54,8 @@ class World(WorldRenderer):
         # Get all objects from xml
         objects = self.xmlReader.parseConfiguration()
 
+        # To check if a master robot has been defined
+        masterRobotSet = False
         for objs in objects:
             objsType = objs[0]
             if objsType is 'robot':
@@ -70,6 +72,10 @@ class World(WorldRenderer):
                     # Generate a robot name
                     name = "Robot_{}:_{}".format(len(self.robots), sup_class.__name__)
                     robot = robot_class(name, wR, wBL)
+                    # Set the 1st robot encountered the master robot
+                    if not masterRobotSet:
+                        robot.setMasterRobot()
+                        masterRobotSet = True
                     # Add the robot to the obstacle list
                     self.addRobot(robot, QtCore.QPointF(x, y), theta)
                 except:
@@ -151,11 +157,15 @@ class World(WorldRenderer):
         """
         """
         # Call parent advance method
+        # -> Call all items currently in the world advance method
         super(World, self).advance()
 
         # Update the view on the robot if necessary
         if self.zoomOnRobot:
-            self.views()[0].focusOnRobot()
+            try:
+                self.views()[0].focusOnRobot()
+            except:
+                pass
 
         # Apply physics
         self.physics.apply()

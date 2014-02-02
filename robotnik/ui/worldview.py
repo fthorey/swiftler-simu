@@ -18,17 +18,24 @@ class WorldView(QtGui.QGraphicsView):
 
     def focusOnWorld(self, ):
         """Scale the view to include all of the world (including robots)"""
+        # Unset the zoom on robot parameter
         self.world().setZoomOnRobot(False)
         # Set scene bounding rectangle (in pixel)
         self.world().setSceneRect(self.world().itemsBoundingRect())
+        # Update the view
         self.fitInView(self.world().sceneRect(), QtCore.Qt.KeepAspectRatio)
 
     def focusOnRobot(self, ):
         """
         """
+        # Set the zoom on robot parameter
         self.world().setZoomOnRobot(True)
-        robot = self.world().getRobots()[0]
-        self.fitInView(robot.mapRectToParent(robot.boundingRect()), QtCore.Qt.KeepAspectRatio)
+        # Search for the master robot
+        for robot in self.world().getRobots():
+            if robot.isMasterRobot():
+                # Update view
+                self.fitInView(robot.mapRectToParent(robot.boundingRect()), QtCore.Qt.KeepAspectRatio)
+                break
 
     def wheelEvent(self, event):
         """
