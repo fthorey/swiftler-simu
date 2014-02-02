@@ -126,7 +126,7 @@ class ProximitySensor(Shape):
         """
         """
         painter.setBrush(self.brushColor)
-        painter.setPen(self.penColor)
+        painter.setPen(QtCore.Qt.NoPen)
 
         leftLimit = self.getBeamLeftLimit()
         leftLimit = QtCore.QPointF(leftLimit.x() * const.m2pix, leftLimit.y() * const.m2pix)

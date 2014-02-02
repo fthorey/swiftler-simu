@@ -14,16 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>1191</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="WorldView" name="worldView">
     <property name="geometry">
      <rect>

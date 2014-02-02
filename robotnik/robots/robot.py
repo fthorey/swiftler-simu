@@ -40,6 +40,11 @@ class Robot(Shape):
         # Keep the current zoom
         self.zoom = 1
 
+    def getProxSensors(self, ):
+        """
+        """
+        return self.proxSensors
+
     def setZoom(self, zoom_):
         """
         """

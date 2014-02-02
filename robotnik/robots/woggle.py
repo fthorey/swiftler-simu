@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from math import pi, degrees, radians
+from math import pi, degrees, radians, cos, sin
 from utils import const
 from robots.robot import Robot
 from sensors.proximity import ProximitySensor
@@ -43,13 +43,75 @@ class Woggle(Robot):
         # Set default heading angle (in rad)
         self.setTheta(0)
 
-        # Add a sharp sensor
-        # Set where to place this sensor (in m)
-        sharp1Pos = QtCore.QPointF((self.wheelBaseLength/2), 0)
-        # Create the sensor
-        sharp1 = ProximitySensor("sharp1", self, sharp1Pos, 0)
+        # Store position for sharps
+        self.sharpPos = dict()
+        self.sharpPos['sharp0'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2, 0),
+                                   'angle': 0}
+
+        self.sharpPos['sharp1'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/3),
+                                                             -self.wheelBaseLength/2 * sin(pi/3)),
+                                   'angle': -pi/3}
+
+        self.sharpPos['sharp2'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/3),
+                                                             self.wheelBaseLength/2 * sin(pi/3)),
+                                   'angle': +pi/3}
+
+        self.sharpPos['sharp3'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/5),
+                                                             -self.wheelBaseLength/2 * sin(pi/5)),
+                                   'angle': -pi/5}
+
+        self.sharpPos['sharp4'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/5),
+                                                             self.wheelBaseLength/2 * sin(pi/5)),
+                                   'angle': +pi/5}
+
+        self.sharpPos['sharp5'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(2*pi/3),
+                                                             -self.wheelBaseLength/2 * sin(2*pi/3)),
+                                   'angle': -2*pi/3}
+
+        self.sharpPos['sharp6'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(2*pi/3),
+                                                             self.wheelBaseLength/2 * sin(2*pi/3)),
+                                   'angle': 2*pi/3}
+
+        self.sharpPos['sharp7'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi),
+                                                             self.wheelBaseLength/2 * sin(pi)),
+                                   'angle': pi}
+
+        # Add sharp sensors
+        sharp0 = ProximitySensor('sharp0', self,
+                                 self.sharpPos['sharp0']['pos'],
+                                 self.sharpPos['sharp0']['angle'])
+        sharp1 = ProximitySensor('sharp1', self,
+                                 self.sharpPos['sharp1']['pos'],
+                                 self.sharpPos['sharp1']['angle'])
+        sharp2 = ProximitySensor('sharp2', self,
+                                 self.sharpPos['sharp2']['pos'],
+                                 self.sharpPos['sharp2']['angle'])
+        sharp3 = ProximitySensor('sharp3', self,
+                                 self.sharpPos['sharp3']['pos'],
+                                 self.sharpPos['sharp3']['angle'])
+        sharp4 = ProximitySensor('sharp4', self,
+                                 self.sharpPos['sharp4']['pos'],
+                                 self.sharpPos['sharp4']['angle'])
+        sharp5 = ProximitySensor('sharp5', self,
+                                 self.sharpPos['sharp5']['pos'],
+                                 self.sharpPos['sharp5']['angle'])
+        sharp6 = ProximitySensor('sharp6', self,
+                                 self.sharpPos['sharp6']['pos'],
+                                 self.sharpPos['sharp6']['angle'])
+        sharp7 = ProximitySensor('sharp7', self,
+                                 self.sharpPos['sharp7']['pos'],
+                                 self.sharpPos['sharp7']['angle'])
+
+
         # And append it to the list of embedded proximity sensors
+        self.proxSensors.append(sharp0)
         self.proxSensors.append(sharp1)
+        self.proxSensors.append(sharp2)
+        self.proxSensors.append(sharp3)
+        self.proxSensors.append(sharp4)
+        self.proxSensors.append(sharp5)
+        self.proxSensors.append(sharp6)
+        self.proxSensors.append(sharp7)
 
     # Return the list of all proximity sensors
     def getProxSensors(self, ):
