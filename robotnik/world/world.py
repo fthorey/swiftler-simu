@@ -34,6 +34,15 @@ class World(WorldRenderer):
         # Store the current state of the zoom (robot or world)
         self.zoomOnRobot = False
 
+        # Store if the robots sensors are displayed
+        self.showRobotSensors = True
+
+    def toggleRobotSensors(self, ):
+        self.showRobotSensors = not self.showRobotSensors
+
+        for robot in self.robots:
+            robot.showProxSensors(self.showRobotSensors)
+
     # Toggle the current state of the zoom
     def setZoomOnRobot(self, zoom_):
         """

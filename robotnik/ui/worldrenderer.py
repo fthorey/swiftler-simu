@@ -18,7 +18,7 @@ class WorldRenderer(QtGui.QGraphicsScene):
         self.gridSize = 0.1*const.m2pix
 
         self.gridPen = QtGui.QPen(QtGui.QColor(0x808080))
-        # self.gridPen.setStyle(QtCore.Qt.DotLine)
+        self.gridPen.setStyle(QtCore.Qt.DotLine)
 
     def wheelEvent(self, event):
         """
@@ -31,7 +31,8 @@ class WorldRenderer(QtGui.QGraphicsScene):
             self.scale(1.0 / scaleFactor, 1.0 / scaleFactor)
 
     def drawBackground(self, painter, rect):
-        pass
+        """
+        """
         # painter.setPen(self.gridPen)
         # painter.setWorldMatrixEnabled(True);
 

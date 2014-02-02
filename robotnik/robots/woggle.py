@@ -113,6 +113,9 @@ class Woggle(Robot):
         self.proxSensors.append(sharp6)
         self.proxSensors.append(sharp7)
 
+        # Show proximity sensors by default
+        self.showProxSensors(True)
+
     # Return the list of all proximity sensors
     def getProxSensors(self, ):
         """

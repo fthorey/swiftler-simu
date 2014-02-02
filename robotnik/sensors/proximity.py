@@ -23,10 +23,10 @@ class ProximitySensor(Shape):
         self.setTheta(beamAngle_)
 
         # View angle (in rad)
-        self.spread = pi/12
+        self.spread = pi/8
 
         # Minimum range (in m)
-        self.minRange = 0.05
+        self.minRange = 0.02
 
         # Maximum range (in m)
         self.maxRange = 0.08
@@ -37,10 +37,21 @@ class ProximitySensor(Shape):
         # Brush color
         self.brushColor = QtGui.QColor('red')
         self.brushColor.setAlpha(50)
+        self.brush = QtGui.QBrush(self.brushColor)
 
         # Pen color
         self.penColor = QtGui.QColor('red')
         self.penColor.setAlpha(128)
+        self.pen = QtGui.QPen(QtCore.Qt.NoPen)
+
+    def show(self, show_):
+        if show_:
+            self.brush = QtGui.QBrush(self.brushColor)
+        else:
+            self.brush = QtGui.QBrush(QtCore.Qt.NoBrush)
+
+        # Trigger an update of the view
+        self.update()
 
     def getMaxBeamRange(self, ):
         return self.maxRange
@@ -125,8 +136,8 @@ class ProximitySensor(Shape):
     def paint(self, painter, option, widget):
         """
         """
-        painter.setBrush(self.brushColor)
-        painter.setPen(QtCore.Qt.NoPen)
+        painter.setBrush(self.brush)
+        painter.setPen(self.pen)
 
         leftLimit = self.getBeamLeftLimit()
         leftLimit = QtCore.QPointF(leftLimit.x() * const.m2pix, leftLimit.y() * const.m2pix)

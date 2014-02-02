@@ -7,5 +7,6 @@
         <file>icons/Pause-Disabled-icon.png</file>
         <file>icons/silk/zoom_in.png</file>
         <file>icons/silk/zoom.png</file>
+        <file>icons/Robot_Sensors.png</file>
     </qresource>
 </RCC>

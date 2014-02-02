@@ -123,8 +123,11 @@ class Robotnik(QtGui.QMainWindow):
         # Connect zoom robot
         self.action_Zoom_Robot.triggered.connect(self.zoomRobot)
 
-        # Connect
+        # Connect robot zoom level slider
         self.zoom_Slider.valueChanged[int].connect(self.setRobotZoomLevel)
+
+        # Connect show sensors robots
+        self.action_Sensors_Robot.triggered.connect(self.showProxSensors)
 
     @QtCore.pyqtSlot()
     def restart(self, ):
@@ -196,9 +199,6 @@ class Robotnik(QtGui.QMainWindow):
         # Set focus on world
         self.worldView.focusOnWorld()
 
-        # Trigger a view update
-        self.worldView.update()
-
     @QtCore.pyqtSlot()
     def zoomRobot(self, ):
         """
@@ -213,9 +213,6 @@ class Robotnik(QtGui.QMainWindow):
         # Set focus on robot
         self.worldView.focusOnRobot()
 
-        # Trigger a view update
-        self.worldView.update()
-
     @QtCore.pyqtSlot(int)
     def setRobotZoomLevel(self, value_):
         """
@@ -229,6 +226,13 @@ class Robotnik(QtGui.QMainWindow):
 
         # Update focus on robot
         self.worldView.focusOnRobot()
+
+    @QtCore.pyqtSlot()
+    def showProxSensors(self, ):
+        """
+        """
+        # Toggle the robot sensors display
+        self.world.toggleRobotSensors()
 
         # Trigger a view update
         self.worldView.update()
