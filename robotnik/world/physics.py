@@ -24,6 +24,20 @@ class Physics(object):
         # Proximity sensors detection
         self.proximitySensorDetection()
 
+    def isSensorColliding(self, sensor):
+        colItems = self.world.collidingItems(sensor)
+
+        for item in colItems:
+            robot = sensor.parentItem()
+            if item is robot:
+                continue
+            elif item in robot.getProxSensors():
+                continue
+            else:
+                return True
+
+        return False
+
     # Proximity sensors collision
     def proximitySensorDetection(self, ):
         """
@@ -35,8 +49,8 @@ class Physics(object):
             for sensor in robot.getProxSensors():
 
                 # Get all sensors that detect an obstacle
-                if self.world.collidingItems(sensor):
-                    while self.world.collidingItems(sensor):
+                if self.isSensorColliding(sensor):
+                    while self.isSensorColliding(sensor):
                         # Reduce the beam of this sensor of 1 pixel
                         sensor.reduceBeamRange(const.pix2m)
                         # Check if the sensor has reached its min beam range
@@ -47,7 +61,7 @@ class Physics(object):
                 else:
                     # sensor.setBeamRange(sensor.getMaxBeamRange())
                     if sensor.getBeamRange() < sensor.getMaxBeamRange():
-                        while not self.world.collidingItems(sensor):
+                        while not self.isSensorColliding(sensor):
                             if not sensor.isMaxRangeReached():
                                 # Increase the beam of this sensor of 1 pixel
                                 sensor.increaseBeamRange(const.pix2m)
