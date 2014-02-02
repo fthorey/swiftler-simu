@@ -5,5 +5,7 @@
         <file>icons/Play-Disabled-icon.png</file>
         <file>icons/Play-Mode-Repeat-All-Disabled-icon.png</file>
         <file>icons/Pause-Disabled-icon.png</file>
+        <file>icons/silk/zoom_in.png</file>
+        <file>icons/silk/zoom.png</file>
     </qresource>
 </RCC>

@@ -19,7 +19,7 @@ class Supervisor(object):
         self.robot = robot_
 
         # Current controller
-        self.controller = Rotate()
+        self.controller = GoToGoal()
 
         # Current estimation of the robot position (in m) and angle (in rad)
         # in the scene referential

@@ -22,8 +22,9 @@ class Robotnik(QtGui.QMainWindow):
     # Conversion factor between pixels and meters
     const.pix2m = 0.000264583
     const.m2pix = 3779.5276
+
     # Step duration of 10ms (min possible for Qt framework)
-    const.stepDuration = 10*1e-3
+    const.stepDuration = 10*1e-3 # in s
 
     def __init__(self, ):
         """
@@ -38,22 +39,22 @@ class Robotnik(QtGui.QMainWindow):
         self.timer = QtCore.QTimer(self)
 
         # Configure
+        self.configureToolBar()
         self.configureSimu()
         self.configureWorld()
         self.configureView()
         self.configureWindow()
         self.connectSlots()
 
+    def configureToolBar(self, ):
+        """
+        """
+
     def configureSimu(self, ):
         """
         """
-
-        self.maxSteps = 500
-        # Update maximum steps max value
-        self.stepsNumberBox.setMaximum(1000)
-        # Update value in associated spin box
-        self.stepsNumberBox.setValue(self.maxSteps)
-
+        # Max steps number
+        self.maxSteps = 1000
         # Current number of steps
         self.currentSteps = 0
 
@@ -77,14 +78,9 @@ class Robotnik(QtGui.QMainWindow):
         # Attach the world to the current view
         self.worldView.setScene(self.world)
 
-        # Set default scale factor
-        scaleFactor = 0.02
-        self.worldView.scale(scaleFactor, scaleFactor)
-
-        # Focus on the world
-        xl, yt, xr, yb = self.worldView.focusOnWorld()
-        # Center on the current world scene
-        self.worldView.centerOn(xl + (xr-xl)/2, yt + (yb-yt)/2)
+        # # Focus on the world
+        self.worldView.focusOnWorld()
+        # self.worldView.focusOnRobot()
 
     def configureWindow(self, ):
         """
@@ -103,17 +99,19 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Pause.triggered.connect(self.pause)
         # Restart
         self.action_Restart.triggered.connect(self.restart)
-        # Max steps
-        self.stepsNumberBox.editingFinished.connect(self.updateMaxSteps)
 
         # Connect timer trigger signal to stop function
-        # Connect timer trigger signal to world advance function
         self.timer.timeout.connect(self.stop)
+        # Connect timer trigger signal to world advance function
         self.timer.timeout.connect(self.world.advance)
 
-    def updateMaxSteps(self, ):
-        self.maxSteps = self.stepsNumberBox.value()
+        # Zoom world
+        self.action_Zoom_World.triggered.connect(self.zoomWorld)
 
+        # Zoom robot
+        self.action_Zoom_Robot.triggered.connect(self.zoomRobot)
+
+    @QtCore.pyqtSlot()
     def restart(self, ):
         """
         """
@@ -125,6 +123,16 @@ class Robotnik(QtGui.QMainWindow):
         for robot in self.world.getRobots():
             robot.restart()
 
+        if self.world.zoomOnRobot:
+            self.worldView.focusOnRobot()
+
+    @QtCore.pyqtSlot()
+    def pause(self, ):
+        """
+        """
+        self.timer.stop()
+
+    @QtCore.pyqtSlot()
     def stop(self, ):
         """
         """
@@ -134,6 +142,7 @@ class Robotnik(QtGui.QMainWindow):
             self.timer.stop()
             self.currentSteps = 0
 
+    @QtCore.pyqtSlot()
     def start(self, ):
         """
         """
@@ -141,10 +150,33 @@ class Robotnik(QtGui.QMainWindow):
         # -> Convert s into ms
         self.timer.start(const.stepDuration*1e3);
 
-    def pause(self, ):
+    @QtCore.pyqtSlot()
+    def zoomWorld(self, ):
         """
         """
-        self.timer.stop()
+        # Toggle zoom icons
+        self.action_Zoom_World.setChecked(True)
+        self.action_Zoom_Robot.setChecked(False)
+
+        # Set focus on world
+        self.worldView.focusOnWorld()
+
+        # Trigger a view update
+        self.worldView.update()
+
+    @QtCore.pyqtSlot()
+    def zoomRobot(self, ):
+        """
+        """
+        # Toggle zoom icons
+        self.action_Zoom_World.setChecked(False)
+        self.action_Zoom_Robot.setChecked(True)
+
+        # Set focus on robot
+        self.worldView.focusOnRobot()
+
+        # Trigger a view update
+        self.worldView.update()
 
     # Center the main window
     def center(self, ):

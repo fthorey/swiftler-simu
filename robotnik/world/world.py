@@ -31,8 +31,25 @@ class World(WorldRenderer):
         # List of obstacle currently in the world
         self.obstacles = list()
 
+        # Store the current state of the zoom (robot or world)
+        self.zoomOnRobot = False
+
+    # Toggle the current state of the zoom
+    def setZoomOnRobot(self, zoom_):
+        """
+        """
+        self.zoomOnRobot = zoom_
+
+    # Get the current state of the zoom
+    def isZoomOnRobot(self, ):
+        """
+        """
+        return self.zoomOnRobot
+
     # Construct the world
     def autoConstruct(self, ):
+        """
+        """
 
         # Get all objects from xml
         objects = self.xmlReader.parseConfiguration()
@@ -135,6 +152,10 @@ class World(WorldRenderer):
         """
         # Call parent advance method
         super(World, self).advance()
+
+        # Update the view on the robot if necessary
+        if self.zoomOnRobot:
+            self.views()[0].focusOnRobot()
 
         # Apply physics
         self.physics.apply()

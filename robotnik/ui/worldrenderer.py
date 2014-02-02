@@ -31,20 +31,21 @@ class WorldRenderer(QtGui.QGraphicsScene):
             self.scale(1.0 / scaleFactor, 1.0 / scaleFactor)
 
     def drawBackground(self, painter, rect):
-        painter.setPen(self.gridPen)
-        painter.setWorldMatrixEnabled(True);
+        pass
+        # painter.setPen(self.gridPen)
+        # painter.setWorldMatrixEnabled(True);
 
-        left = int(rect.left()) - (int(rect.left()) % self.gridSize);
-        top = int(rect.top()) - (int(rect.top()) % self.gridSize);
+        # left = int(rect.left()) - (int(rect.left()) % self.gridSize);
+        # top = int(rect.top()) - (int(rect.top()) % self.gridSize);
 
-        lines = list()
-        x = left
-        while x < rect.right():
-            lines.append(QtCore.QLineF(x, rect.top(), x, rect.bottom()))
-            x += self.gridSize
-        y = top
-        while y < rect.bottom():
-            lines.append(QtCore.QLineF(rect.left(), y, rect.right(), y))
-            y += self.gridSize
+        # lines = list()
+        # x = left
+        # while x < rect.right():
+        #     lines.append(QtCore.QLineF(x, rect.top(), x, rect.bottom()))
+        #     x += self.gridSize
+        # y = top
+        # while y < rect.bottom():
+        #     lines.append(QtCore.QLineF(rect.left(), y, rect.right(), y))
+        #     y += self.gridSize
 
-        painter.drawLines(lines)
+        # painter.drawLines(lines)

@@ -19,41 +19,18 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>741</width>
+      <width>1191</width>
       <height>21</height>
      </rect>
     </property>
-    <widget class="QSpinBox" name="stepsNumberBox">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>0</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>91</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Steps number</string>
-     </property>
-    </widget>
    </widget>
    <widget class="WorldView" name="worldView">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>40</y>
-      <width>901</width>
-      <height>571</height>
+      <x>30</x>
+      <y>10</y>
+      <width>1171</width>
+      <height>621</height>
      </rect>
     </property>
    </widget>
@@ -79,6 +56,10 @@
    <addaction name="action_Restart"/>
    <addaction name="action_Pause"/>
    <addaction name="action_Play"/>
+   <addaction name="separator"/>
+   <addaction name="separator"/>
+   <addaction name="action_Zoom_World"/>
+   <addaction name="action_Zoom_Robot"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Play">
@@ -106,6 +87,39 @@
    </property>
    <property name="text">
     <string>&amp;Restart</string>
+   </property>
+  </action>
+  <action name="action_Zoom_World">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/silk/zoom.png</normaloff>:/new/myRessources/icons/silk/zoom.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Zoom_World</string>
+   </property>
+   <property name="toolTip">
+    <string>Show All</string>
+   </property>
+  </action>
+  <action name="action_Zoom_Robot">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/silk/zoom_in.png</normaloff>:/new/myRessources/icons/silk/zoom_in.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Zoom_Robot</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Robot</string>
    </property>
   </action>
  </widget>
