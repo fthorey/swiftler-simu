@@ -6,7 +6,7 @@ from utils import const
 from robots.robot import Robot
 from sensors.proximity import ProximitySensor
 from supervisors.wogglesupervisor import WoggleSupervisor
-from world.dynamics import DifferentialDrive
+from dynamics.differential import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
 class Woggle(Robot):
