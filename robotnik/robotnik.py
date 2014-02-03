@@ -55,7 +55,7 @@ class Robotnik(QtGui.QMainWindow):
         self.zoom_Slider.setToolTip("Adjust zoom")
         self.zoom_Slider.setStatusTip("Zoom in/out on robot")
         self.zoom_Slider.setMaximumWidth(150)
-        self.zoom_Slider.setRange(-100,100)
+        self.zoom_Slider.setRange(-150,100)
         self.zoom_Slider.setValue(0)
         self.zoom_Slider.setEnabled(False)
         self.mainToolBar.addWidget(self.zoom_Slider)
