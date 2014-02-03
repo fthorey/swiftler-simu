@@ -129,21 +129,8 @@ class Robotnik(QtGui.QMainWindow):
         # Connect show sensors robots
         self.action_Sensors_Robot.triggered.connect(self.showProxSensors)
 
-    @QtCore.pyqtSlot()
-    def restart(self, ):
-        """
-        """
-        # Stop the timer
-        self.currentSteps = 0
-        self.timer.stop()
-
-        # Put robots at there initial position
-        for robot in self.world.getRobots():
-            robot.restart()
-
-        # Refocus the view on the master robot
-        if self.world.zoomOnRobot:
-            self.worldView.focusOnRobot()
+        # Connect show tracks robots
+        self.action_Tracks_Robot.triggered.connect(self.showRobotTracks)
 
     @QtCore.pyqtSlot()
     def pause(self, ):
@@ -184,6 +171,9 @@ class Robotnik(QtGui.QMainWindow):
         # Refocus the view on the master robot
         if self.world.zoomOnRobot:
             self.worldView.focusOnRobot()
+
+        # Remove all current tracks
+        self.world.removeAllTracks()
 
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
@@ -233,6 +223,15 @@ class Robotnik(QtGui.QMainWindow):
         """
         # Toggle the robot sensors display
         self.world.toggleRobotSensors()
+
+        # Trigger a view update
+        self.worldView.update()
+
+    def showRobotTracks(self, ):
+        """
+        """
+        # Toggle the robot tracks display
+        self.world.toggleRobotTracks()
 
         # Trigger a view update
         self.worldView.update()

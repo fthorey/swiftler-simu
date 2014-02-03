@@ -28,7 +28,7 @@ class Woggle(Robot):
         # Length between each wheel (m)
         self.wheelBaseLength = wheelBaseLength_
 
-        # The Woggle robot follow the differential drive dynamic
+        # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
         # A supervisor is attached to the Woggle robot

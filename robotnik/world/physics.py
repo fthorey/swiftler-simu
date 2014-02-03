@@ -5,7 +5,7 @@ from utils import const
 from math import cos
 from PyQt4 import QtGui, QtCore
 
-class Physics(object):
+class Physics(QtCore.QObject):
     """ Physics that rules a world
     """
 
@@ -32,6 +32,8 @@ class Physics(object):
             if item is robot:
                 continue
             elif item in robot.getProxSensors():
+                continue
+            elif item is self.world.getRobotTrack(robot):
                 continue
             else:
                 return True

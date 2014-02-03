@@ -4,6 +4,7 @@
 from shape.shape import Shape
 from PyQt4 import QtGui, QtCore
 from utils import const
+from utils.tracker import Tracker
 
 class Robot(Shape):
     """ Robot class handles a robot
@@ -39,6 +40,11 @@ class Robot(Shape):
 
         # Keep the current zoom
         self.zoom = 1
+
+    def getTracker(self, ):
+        """
+        """
+        return self.tracker
 
     def showProxSensors(self, show_):
         for sensor in self.proxSensors:
@@ -91,6 +97,9 @@ class Robot(Shape):
         for sensor in self.proxSensors:
             sensor.restart()
 
+        # Restart the tracker
+        self.tracker.restart(self.initPos)
+
     # Set the initial position of the robot (in m & rad)
     def setInitialPos(self, pos_, theta_):
         """
@@ -103,6 +112,9 @@ class Robot(Shape):
         # setPos and setTheta are in charge of converting m to pixel
         self.setPos(pos_)
         self.setTheta(theta_)
+
+        # Associate a tracker to store the path (in m)
+        self.tracker = Tracker(pos_)
 
     # Get the initial position of the robot (in m & rad)
     def getInitialPos(self, ):
@@ -174,4 +186,13 @@ class Robot(Shape):
         self.supervisor.execute()
 
         # Update the robot dynamics
-        self.dynamics.update()
+        # Get pos (in m), get theta (in rad)
+        pos, theta = self.dynamics.update()
+
+        # Add the position to the tracker
+        self.tracker.addPosition(pos)
+
+        # Set the new robot position (in pixel)
+        self.setPos(pos)
+        # Set the new robot theta angle (in rad)
+        self.setTheta(theta)

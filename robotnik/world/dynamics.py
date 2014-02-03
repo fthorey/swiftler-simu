@@ -12,7 +12,6 @@ class DifferentialDrive(object):
     def __init__(self, robot_):
         """
         """
-
         # Robot that uses the differential drive
         self.robot = robot_
 
@@ -47,9 +46,8 @@ class DifferentialDrive(object):
         pos = QtCore.QPointF(pos_k.x() + dx, pos_k.y() + dy)
         dtheta = (dt*w) % 2*pi # in rad
 
-        # Apply new position of the robot (in m & rad)
-        self.robot.setPos(pos)
-        self.robot.setTheta(theta_k + dtheta)
+        # Return new positions of the robot (in m & rad)
+        return pos, theta_k + dtheta
 
     # Convert heading velocity and angular velocity (in m/s & rad/s)
     # To left wheel angular velocity and right wheel angular velocity (in rad/s)
