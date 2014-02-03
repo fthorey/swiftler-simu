@@ -50,9 +50,8 @@
    <addaction name="separator"/>
    <addaction name="action_Zoom_World"/>
    <addaction name="action_Zoom_Robot"/>
-   <addaction name="separator"/>
    <addaction name="action_Sensors_Robot"/>
-   <addaction name="separator"/>
+   <addaction name="action_Tracks_Robot"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Play">
@@ -131,6 +130,24 @@
    </property>
    <property name="toolTip">
     <string>Show Sensors</string>
+   </property>
+  </action>
+  <action name="action_Tracks_Robot">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/Robot_Path.png</normaloff>:/new/myRessources/icons/Robot_Path.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Tracks_Robot</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Tracks</string>
    </property>
   </action>
  </widget>
