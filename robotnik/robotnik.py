@@ -20,8 +20,8 @@ class Robotnik(QtGui.QMainWindow):
     """
 
     # Conversion factor between pixels and meters
-    const.pix2m = 0.000264583
     const.m2pix = 3779.5276
+    const.pix2m = 1.0 / const.m2pix
 
     # Step duration of 10ms (min possible for Qt framework)
     const.stepDuration = 10*1e-3 # in s
