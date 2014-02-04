@@ -58,20 +58,6 @@ class World(WorldRenderer):
         """
         self.showTracks = not self.showTracks
 
-        if not self.showTracks:
-            self.removeAllTracks()
-        else:
-            for robot in self.robots:
-                robot.setTrackItem(self.addPath(robot.getTrack()))
-
-    def removeAllTracks(self, ):
-        """
-        """
-        for robot in self.robots:
-            if robot.getTrackItem() is not None:
-                self.removeItem(robot.getTrackItem())
-                robot.removeTrackItem()
-
     def toggleRobotSensors(self, ):
         self.showRobotSensors = not self.showRobotSensors
 
@@ -211,12 +197,30 @@ class World(WorldRenderer):
             except:
                 pass
 
-        if self.showTracks:
-            for robot in self.robots:
-                if robot.getTrackItem() is not None:
-                    self.removeItem(robot.getTrackItem())
-                    robot.removeTrackItem()
-                robot.setTrackItem(self.addPath(robot.getTrack()))
-
         # Apply physics
         self.physics.apply()
+
+    def drawBackground(self, painter, rect):
+        """
+        """
+        painter.setPen(self._gridPen)
+        painter.setWorldMatrixEnabled(True);
+
+        # left = int(rect.left()) - (int(rect.left()) % self._gridSize);
+        # top = int(rect.top()) - (int(rect.top()) % self._gridSize);
+
+        # lines = list()
+        # x = left
+        # while x < rect.right():
+        #     lines.append(QtCore.QLineF(x, rect.top(), x, rect.bottom()))
+        #     x += self._gridSize
+        # y = top
+        # while y < rect.bottom():
+        #     lines.append(QtCore.QLineF(rect.left(), y, rect.right(), y))
+        #     y += self._gridSize
+
+        # painter.drawLines(lines)
+
+        if self.showTracks:
+            for robot in self.robots:
+                painter.drawPath(robot.getTrack())

@@ -175,9 +175,6 @@ class Robotnik(QtGui.QMainWindow):
         if self.world.zoomOnRobot:
             self.worldView.focusOnRobot()
 
-        # Remove all current tracks
-        self.world.removeAllTracks()
-
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
         """

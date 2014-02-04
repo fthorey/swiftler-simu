@@ -62,26 +62,6 @@ class Robot(Shape):
         """
         return self.tracker.getTrack()
 
-    def setTrackItem(self, trackItem_):
-        """
-        """
-        self._trackItem = trackItem_
-
-        # Add the track item to the robot list of items
-        self._items.append(trackItem_)
-
-    def getTrackItem(self, ):
-        """
-        """
-        return self._trackItem
-
-    def removeTrackItem(self, ):
-        """
-        """
-        # Remove the track item from the robot list of items
-        self._items.remove(self._trackItem)
-        self._trackItem = None
-
     def showProxSensors(self, show_):
         for sensor in self._proxSensors:
             sensor.show(show_)
