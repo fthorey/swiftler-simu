@@ -29,7 +29,7 @@ class ProximitySensor(Shape):
         self.minRange = 0.02
 
         # Maximum range (in m)
-        self.maxRange = 0.08
+        self.maxRange = 0.12
 
         # Current range (in m)
         self.currRange = self.maxRange

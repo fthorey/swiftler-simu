@@ -41,7 +41,21 @@ class Robot(Shape):
         # Keep the current zoom
         self.zoom = 1
 
+        # Store track item into the current view
         self.trackItem = None
+
+        # Store all items which belong to the robot
+        self.items = [self, ]
+
+    def addItem(self, item):
+        """
+        """
+        self.items.append(item)
+
+    def getAllItems(self, ):
+        """
+        """
+        return self.items
 
     def getTrack(self, ):
         """
@@ -53,6 +67,9 @@ class Robot(Shape):
         """
         self.trackItem = trackItem_
 
+        # Add the track item to the robot list of items
+        self.items.append(trackItem_)
+
     def getTrackItem(self, ):
         """
         """
@@ -61,8 +78,9 @@ class Robot(Shape):
     def removeTrackItem(self, ):
         """
         """
+        # Remove the track item from the robot list of items
+        self.items.remove(self.trackItem)
         self.trackItem = None
-
 
     def showProxSensors(self, show_):
         for sensor in self.proxSensors:

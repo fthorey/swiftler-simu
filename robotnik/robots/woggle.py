@@ -45,35 +45,37 @@ class Woggle(Robot):
 
         # Store position for sharps
         self.sharpPos = dict()
-        self.sharpPos['sharp0'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2, 0),
+
+        baseLength = self.wheelBaseLength + 0.02
+        self.sharpPos['sharp0'] = {'pos': QtCore.QPointF(baseLength/2, 0),
                                    'angle': 0}
 
-        self.sharpPos['sharp1'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/3),
-                                                             -self.wheelBaseLength/2 * sin(pi/3)),
+        self.sharpPos['sharp1'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/3),
+                                                             -baseLength/2 * sin(pi/3)),
                                    'angle': -pi/3}
 
-        self.sharpPos['sharp2'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/3),
-                                                             self.wheelBaseLength/2 * sin(pi/3)),
+        self.sharpPos['sharp2'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/3),
+                                                             baseLength/2 * sin(pi/3)),
                                    'angle': +pi/3}
 
-        self.sharpPos['sharp3'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/5),
-                                                             -self.wheelBaseLength/2 * sin(pi/5)),
+        self.sharpPos['sharp3'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/5),
+                                                             -baseLength/2 * sin(pi/5)),
                                    'angle': -pi/5}
 
-        self.sharpPos['sharp4'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi/5),
-                                                             self.wheelBaseLength/2 * sin(pi/5)),
+        self.sharpPos['sharp4'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/5),
+                                                             baseLength/2 * sin(pi/5)),
                                    'angle': +pi/5}
 
-        self.sharpPos['sharp5'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(2*pi/3),
-                                                             -self.wheelBaseLength/2 * sin(2*pi/3)),
+        self.sharpPos['sharp5'] = {'pos': QtCore.QPointF(baseLength/2 * cos(2*pi/3),
+                                                             -baseLength/2 * sin(2*pi/3)),
                                    'angle': -2*pi/3}
 
-        self.sharpPos['sharp6'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(2*pi/3),
-                                                             self.wheelBaseLength/2 * sin(2*pi/3)),
+        self.sharpPos['sharp6'] = {'pos': QtCore.QPointF(baseLength/2 * cos(2*pi/3),
+                                                             baseLength/2 * sin(2*pi/3)),
                                    'angle': 2*pi/3}
 
-        self.sharpPos['sharp7'] = {'pos': QtCore.QPointF(self.wheelBaseLength/2 * cos(pi),
-                                                             self.wheelBaseLength/2 * sin(pi)),
+        self.sharpPos['sharp7'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi),
+                                                             baseLength/2 * sin(pi)),
                                    'angle': pi}
 
         # Add sharp sensors
@@ -113,8 +115,23 @@ class Woggle(Robot):
         self.proxSensors.append(sharp6)
         self.proxSensors.append(sharp7)
 
+        # Append all sensors to the robot items list
+        for sensor in self.proxSensors:
+            self.addItem(sensor)
+
         # Show proximity sensors by default
         self.showProxSensors(True)
+
+        # Cache the bounding rect
+        bodyX = (-self.wheelBaseLength/2) * const.m2pix
+        bodyY = (-self.wheelBaseLength/2) * const.m2pix
+        bodyW = self.wheelBaseLength * const.m2pix
+        bodyH = self.wheelBaseLength * const.m2pix
+        self._boundingRect = QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
+
+        # Cache the shape
+        self.shape = QtGui.QPainterPath()
+        self.shape.addEllipse(bodyX, bodyY, bodyW, bodyH);
 
     # Return the list of all proximity sensors
     def getProxSensors(self, ):
@@ -176,23 +193,13 @@ class Woggle(Robot):
     def boundingRect(self, ):
         """
         """
-        bodyX = (-self.wheelBaseLength/2) * const.m2pix
-        bodyY = (-self.wheelBaseLength/2) * const.m2pix
-        bodyW = self.wheelBaseLength * const.m2pix
-        bodyH = self.wheelBaseLength * const.m2pix
-        return QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
+        return self._boundingRect
 
     # Define the accurate shape of the item
     def shape(self, ):
         """
         """
-        path = QtGui.QPainterPath()
-        bodyX = (-self.wheelBaseLength/2) * const.m2pix
-        bodyY = (-self.wheelBaseLength/2) * const.m2pix
-        bodyW = self.wheelBaseLength * const.m2pix
-        bodyH = self.wheelBaseLength * const.m2pix
-        path.addEllipse(bodyX, bodyY, bodyW, bodyH);
-        return path;
+        return self.shape
 
     # Define how to paint the robot
     def paint(self, painter, option, widget):

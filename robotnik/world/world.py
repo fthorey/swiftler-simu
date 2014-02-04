@@ -40,6 +40,19 @@ class World(WorldRenderer):
         # Store if path drawing is needed
         self.showTracks = True
 
+        # store of the ghost mode is activated or not
+        self.isGhostMode = True
+
+    def isGhostModeActivated(self, ):
+        """
+        """
+        return self.isGhostMode
+
+    def toggleGhostMode(self, ):
+        """
+        """
+        self.isGhostMode = not self.isGhostMode
+
     def toggleRobotTracks(self, ):
         """
         """
@@ -202,6 +215,7 @@ class World(WorldRenderer):
             for robot in self.robots:
                 if robot.getTrackItem() is not None:
                     self.removeItem(robot.getTrackItem())
+                    robot.removeTrackItem()
                 robot.setTrackItem(self.addPath(robot.getTrack()))
 
         # Apply physics

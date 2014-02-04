@@ -132,6 +132,9 @@ class Robotnik(QtGui.QMainWindow):
         # Connect show tracks robots
         self.action_Tracks_Robot.triggered.connect(self.showRobotTracks)
 
+        # Connect ghost mode enabling
+        self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
+
     @QtCore.pyqtSlot()
     def pause(self, ):
         """
@@ -227,6 +230,7 @@ class Robotnik(QtGui.QMainWindow):
         # Trigger a view update
         self.worldView.update()
 
+    @QtCore.pyqtSlot()
     def showRobotTracks(self, ):
         """
         """
@@ -235,6 +239,13 @@ class Robotnik(QtGui.QMainWindow):
 
         # Trigger a view update
         self.worldView.update()
+
+    @QtCore.pyqtSlot()
+    def enableGhostMode(self, ):
+        """
+        """
+        # Toggle the ghost mode enabling
+        self.world.toggleGhostMode()
 
     # Center the main window
     def center(self, ):

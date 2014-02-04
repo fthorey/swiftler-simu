@@ -27,19 +27,32 @@ class Physics(QtCore.QObject):
         self.proximitySensorDetection()
 
     def isSensorColliding(self, sensor):
+
+        def isARobot(item):
+            for robot in self.world.getRobots():
+                if item in robot.getAllItems():
+                    return True
+            return False
+
+        # Get all items in collision with the sensor
         colItems = self.world.collidingItems(sensor)
 
         for item in colItems:
-            robot = sensor.parentItem()
-            if item is robot:
-                continue
-            elif item in robot.getProxSensors():
-                continue
-            elif item is robot.getTrackItem():
-                continue
+            # Check if the item is a robot or affiliated
+            if isARobot(item):
+                # If ghost mode activated, continue, else return False
+                if self.world.isGhostModeActivated():
+                    continue
+                else:
+                    myRobot = sensor.parentItem()
+                    if item in myRobot.getAllItems():
+                        continue
+                    return True
+            # If the item is not a robot (or affiliated) return False
             else:
                 return True
 
+        # Return False by default
         return False
 
     # Proximity sensors collision
@@ -49,14 +62,17 @@ class Physics(QtCore.QObject):
         # Check all sensors of all robots currently in the scene
         # Loop over robots
         for robot in self.world.getRobots():
+            # Don't check for collision if the robot is already stopped
+            if robot.isStopped():
+                continue
+
             # Loop over sensors
             for sensor in robot.getProxSensors():
-
                 # Get all sensors that detect an obstacle
                 if self.isSensorColliding(sensor):
                     while self.isSensorColliding(sensor):
-                        # Reduce the beam of this sensor of 1 pixel
-                        sensor.reduceBeamRange(const.pix2m)
+                        # Reduce the beam of this sensor of 10 pixel
+                        sensor.reduceBeamRange(10*const.pix2m)
                         # Check if the sensor has reached its min beam range
                     if sensor.isMinRangeReached():
                         robot.stop()
@@ -67,7 +83,7 @@ class Physics(QtCore.QObject):
                     if sensor.getBeamRange() < sensor.getMaxBeamRange():
                         while not self.isSensorColliding(sensor):
                             if not sensor.isMaxRangeReached():
-                                # Increase the beam of this sensor of 1 pixel
-                                sensor.increaseBeamRange(const.pix2m)
+                                # Increase the beam of this sensor of 10 pixel
+                                sensor.increaseBeamRange(10*const.pix2m)
                             else:
                                 break
