@@ -52,6 +52,7 @@
    <addaction name="action_Zoom_Robot"/>
    <addaction name="action_Sensors_Robot"/>
    <addaction name="action_Tracks_Robot"/>
+   <addaction name="action_Ghost_Mode"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Play">
@@ -148,6 +149,24 @@
    </property>
    <property name="toolTip">
     <string>Show Tracks</string>
+   </property>
+  </action>
+  <action name="action_Ghost_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/silk/ruby.png</normaloff>:/new/myRessources/icons/silk/ruby.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Ghost_Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Ghost Mode</string>
    </property>
   </action>
  </widget>

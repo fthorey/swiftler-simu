@@ -9,5 +9,6 @@
         <file>icons/silk/zoom.png</file>
         <file>icons/Robot_Sensors.png</file>
         <file>icons/Robot_Path.png</file>
+        <file>icons/silk/ruby.png</file>
     </qresource>
 </RCC>
