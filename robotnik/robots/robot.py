@@ -41,10 +41,28 @@ class Robot(Shape):
         # Keep the current zoom
         self.zoom = 1
 
-    def getTracker(self, ):
+        self.trackItem = None
+
+    def getTrack(self, ):
         """
         """
-        return self.tracker
+        return self.tracker.getTrack()
+
+    def setTrackItem(self, trackItem_):
+        """
+        """
+        self.trackItem = trackItem_
+
+    def getTrackItem(self, ):
+        """
+        """
+        return self.trackItem
+
+    def removeTrackItem(self, ):
+        """
+        """
+        self.trackItem = None
+
 
     def showProxSensors(self, show_):
         for sensor in self.proxSensors:

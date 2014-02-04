@@ -14,6 +14,8 @@ class Physics(QtCore.QObject):
     def __init__(self, world_):
         """
         """
+        super(QtCore.QObject, self).__init__()
+
         # Set the world on which the physics apply
         self.world = world_
 
@@ -33,7 +35,7 @@ class Physics(QtCore.QObject):
                 continue
             elif item in robot.getProxSensors():
                 continue
-            elif item is self.world.getRobotTrack(robot):
+            elif item is robot.getTrackItem():
                 continue
             else:
                 return True

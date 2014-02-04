@@ -37,9 +37,6 @@ class World(WorldRenderer):
         # Store if the robots sensors are displayed
         self.showRobotSensors = True
 
-        # Store the tracker path of each robot currently in the scene
-        self.tracks = dict()
-
         # Store if path drawing is needed
         self.showTracks = True
 
@@ -52,24 +49,15 @@ class World(WorldRenderer):
             self.removeAllTracks()
         else:
             for robot in self.robots:
-                self.tracks[robot] = self.addPath(robot.getTracker().getTrack())
+                robot.setTrackItem(self.addPath(robot.getTrack()))
 
     def removeAllTracks(self, ):
         """
         """
-        # Remove all current tracks
-        for track in self.tracks.values():
-            self.removeItem(track)
-
-        self.tracks = dict()
-
-    def getRobotTrack(self, robot_):
-        """
-        """
-        try:
-            return self.tracks[robot_]
-        except:
-            return None
+        for robot in self.robots:
+            if robot.getTrackItem() is not None:
+                self.removeItem(robot.getTrackItem())
+                robot.removeTrackItem()
 
     def toggleRobotSensors(self, ):
         self.showRobotSensors = not self.showRobotSensors
@@ -212,9 +200,9 @@ class World(WorldRenderer):
 
         if self.showTracks:
             for robot in self.robots:
-                if robot in self.tracks.keys():
-                    self.removeItem(self.tracks[robot])
-                self.tracks[robot] = self.addPath(robot.getTracker().getTrack())
+                if robot.getTrackItem() is not None:
+                    self.removeItem(robot.getTrackItem())
+                robot.setTrackItem(self.addPath(robot.getTrack()))
 
         # Apply physics
         self.physics.apply()
