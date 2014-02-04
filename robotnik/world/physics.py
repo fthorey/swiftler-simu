@@ -67,7 +67,7 @@ class Physics(QtCore.QObject):
                 continue
 
             # Loop over sensors
-            for sensor in robot.getProxSensors():
+            for sensor in robot.proxSensors():
                 # Get all sensors that detect an obstacle
                 if self.isSensorColliding(sensor):
                     while self.isSensorColliding(sensor):

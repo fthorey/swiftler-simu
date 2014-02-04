@@ -18,44 +18,44 @@ class Robot(Shape):
         super(Robot, self).__init__(name_)
 
         # Dynamics followed by the robot
-        self.dynamics = None
+        self._dynamics = None
 
         # Supervisor to run the robot
-        self.supervisor = None
+        self._supervisor = None
 
         # Is the robot stopped
-        self.stopped = False
+        self._stopped = False
 
         # Initial position (in m)
-        self.initPos = QtCore.QPointF(0, 0)
+        self._initPos = QtCore.QPointF(0, 0)
 
         # Initial heading angle (in rad)
-        self.initTheta = 0
+        self._initTheta = 0
 
         # List of all proximity sensors of the robot
-        self.proxSensors = list()
+        self._proxSensors = list()
 
         # Is the robot master
-        self.isMaster = False
+        self._isMaster = False
 
         # Keep the current zoom
-        self.zoom = 1
+        self._zoom = 1
 
         # Store track item into the current view
-        self.trackItem = None
+        self._trackItem = None
 
         # Store all items which belong to the robot
-        self.items = [self, ]
+        self._items = [self, ]
 
     def addItem(self, item):
         """
         """
-        self.items.append(item)
+        self._items.append(item)
 
     def getAllItems(self, ):
         """
         """
-        return self.items
+        return self._items
 
     def getTrack(self, ):
         """
@@ -65,85 +65,85 @@ class Robot(Shape):
     def setTrackItem(self, trackItem_):
         """
         """
-        self.trackItem = trackItem_
+        self._trackItem = trackItem_
 
         # Add the track item to the robot list of items
-        self.items.append(trackItem_)
+        self._items.append(trackItem_)
 
     def getTrackItem(self, ):
         """
         """
-        return self.trackItem
+        return self._trackItem
 
     def removeTrackItem(self, ):
         """
         """
         # Remove the track item from the robot list of items
-        self.items.remove(self.trackItem)
-        self.trackItem = None
+        self._items.remove(self._trackItem)
+        self._trackItem = None
 
     def showProxSensors(self, show_):
-        for sensor in self.proxSensors:
+        for sensor in self._proxSensors:
             sensor.show(show_)
 
-    def getProxSensors(self, ):
+    def proxSensors(self, ):
         """
         """
-        return self.proxSensors
+        return self._proxSensors
 
     def setZoom(self, zoom_):
         """
         """
-        self.zoom = zoom_
+        self._zoom = zoom_
 
     # Check if the robot is currently the master
     def isMasterRobot(self, ):
         """
         """
-        return self.isMaster
+        return self._isMaster
 
     # Set master
     def setMasterRobot(self, ):
         """
         """
-        self.isMaster = True
+        self._isMaster = True
 
     # Set a goal
     def setGoal(self, goal_):
         """
         """
-        self.supervisor.setGoal(goal_)
+        self._supervisor.setGoal(goal_)
 
     # Get a goal
     def getGoal(self, ):
         """
         """
-        return self.supervisor.getGoal()
+        return self._supervisor.getGoal()
 
     # Restart from the robot to its initial state
     def restart(self, ):
         """
         """
         # Set the initial postion (in m)
-        self.setPos(self.initPos)
+        self.setPos(self._initPos)
         # Set the initial heading angle (in rad)
-        self.setTheta(self.initTheta)
-        self.stopped = False
+        self.setTheta(self._initTheta)
+        self._stopped = False
         # Restart all sensors
-        for sensor in self.proxSensors:
+        for sensor in self._proxSensors:
             sensor.restart()
 
         # Restart the tracker
-        self.tracker.restart(self.initPos)
+        self.tracker.restart(self._initPos)
 
     # Set the initial position of the robot (in m & rad)
     def setInitialPos(self, pos_, theta_):
         """
         """
         # in m
-        self.initPos = pos_
+        self._initPos = pos_
         # in rad
-        self.initTheta = theta_
+        self._initTheta = theta_
 
         # setPos and setTheta are in charge of converting m to pixel
         self.setPos(pos_)
@@ -156,50 +156,50 @@ class Robot(Shape):
     def getInitialPos(self, ):
         """
         """
-        return self.initPos, self.initTheta
+        return self._initPos, self._initTheta
 
     # Set the dynamics followed by the robot
     def setDynamics(self, dynamics_):
         """
         """
-        self.dynamics = dynamics_
+        self._dynamics = dynamics_
 
     # Get the dynamic of the robot
     def getDynamics(self, ):
         """
         """
-        return self.dynamics
+        return self._dynamics
 
     # Set the supervisor that run the robot
     def setSupervisor(self, supervisor_):
         """
         """
-        self.supervisor = supervisor_
+        self._supervisor = supervisor_
 
     # Get the supervisor of the robot
     def getSupervisor(self, ):
         """
         """
-        return self.supervisor
+        return self._supervisor
 
     # Stop the robot
     def stop(self, ):
         """
         """
-        self.stopped = True
+        self._stopped = True
 
     # Check if the robot is stopped
     def isStopped(self, ):
         """
         """
-        return self.stopped
+        return self._stopped
 
     # Return the bounding rect of the robot and all its sensors by a zoom factor
     # The zoom factor must be between 0% and 100%
     def enlargedBoundingRect(self):
         """
         """
-        zoom = 1.0 / self.zoom
+        zoom = 1.0 / self._zoom
         rect = self.boundingRect() | self.childrenBoundingRect()
         dx1 = -rect.width() * zoom
         dy1 = -rect.height() * zoom
@@ -219,11 +219,11 @@ class Robot(Shape):
             return
 
         # Execute the supervisor
-        self.supervisor.execute()
+        self._supervisor.execute()
 
         # Update the robot dynamics
         # Get pos (in m), get theta (in rad)
-        pos, theta = self.dynamics.update()
+        pos, theta = self._dynamics.update()
 
         # Add the position to the tracker
         self.tracker.addPosition(pos)
