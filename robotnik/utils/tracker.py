@@ -27,7 +27,7 @@ class Tracker(QtCore.QObject):
         return self.track
 
     def scalePosition(self, pos_):
-        return QtCore.QPointF(pos_.x()*const.m2pix, pos_.y()*const.m2pix)
+        return QtCore.QPointF(pos_.x(), pos_.y())
 
     def addPosition(self, pos_):
         """

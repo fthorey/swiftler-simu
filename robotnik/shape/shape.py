@@ -24,21 +24,6 @@ class Shape(QtGui.QGraphicsItem):
         # Main color of the shape
         self.color = QtGui.QColor(0, 0, 0)
 
-    # Get the position of the shape in the world referential
-    # -> In charge of converting position from pixel to m
-    def pos(self, ):
-        """
-        """
-        pos = super(Shape, self).scenePos()
-        return QtCore.QPointF(pos.x()*const.pix2m, pos.y()*const.pix2m)
-
-    # Set the position of the shape in the world referential
-    # -> In charge of converting position from m to pixel
-    def setPos(self, pos_):
-        """
-        """
-        super(Shape, self).setPos(QtCore.QPointF(pos_.x()*const.m2pix, pos_.y()*const.m2pix))
-
     # Return the name of the shape
     def getName(self, ):
         """

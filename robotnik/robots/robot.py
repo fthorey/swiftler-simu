@@ -21,7 +21,8 @@ class Robot(Shape):
         self._dynamics = None
 
         # Supervisor to run the robot
-        self._supervisor = None
+        from supervisors.supervisor import Supervisor
+        self._supervisor = Supervisor(self)
 
         # Is the robot stopped
         self._stopped = False
@@ -47,6 +48,11 @@ class Robot(Shape):
         # Store all items which belong to the robot
         self._items = [self, ]
 
+    def tracker(self, ):
+        """
+        """
+        return self._tracker
+
     def addItem(self, item):
         """
         """
@@ -60,7 +66,7 @@ class Robot(Shape):
     def getTrack(self, ):
         """
         """
-        return self.tracker.getTrack()
+        return self._tracker.getTrack()
 
     def showProxSensors(self, show_):
         for sensor in self._proxSensors:
@@ -114,7 +120,7 @@ class Robot(Shape):
             sensor.restart()
 
         # Restart the tracker
-        self.tracker.restart(self._initPos)
+        self._tracker.restart(self._initPos)
 
     # Set the initial position of the robot (in m & rad)
     def setInitialPos(self, pos_, theta_):
@@ -130,7 +136,12 @@ class Robot(Shape):
         self.setTheta(theta_)
 
         # Associate a tracker to store the path (in m)
-        self.tracker = Tracker(pos_)
+        self._tracker = Tracker(pos_)
+
+        # Set the initial state estimate of the supervisor
+        self._supervisor.setStateEstimate(self._initPos.x(),
+                                          self._initPos.y(),
+                                          self._initTheta)
 
     # Get the initial position of the robot (in m & rad)
     def getInitialPos(self, ):
@@ -198,17 +209,11 @@ class Robot(Shape):
         if (step_ == 0):
             return
 
+        # Update the robot position using dynamic and current command
+        self._dynamics.update(const.stepDuration)
+
         # Execute the supervisor
         self._supervisor.execute()
 
-        # Update the robot dynamics
-        # Get pos (in m), get theta (in rad)
-        pos, theta = self._dynamics.update()
-
-        # Add the position to the tracker
-        self.tracker.addPosition(pos)
-
-        # Set the new robot position (in pixel)
-        self.setPos(pos)
-        # Set the new robot theta angle (in rad)
-        self.setTheta(theta)
+        # self._supervisor.setStateEstimate(self.pos().x(), self.pos().y(), self.getTheta())
+        print

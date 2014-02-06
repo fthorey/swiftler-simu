@@ -119,7 +119,7 @@ class World(WorldRenderer):
                 if obstacle_color is None:
                     obstacle_color = 0xFF0000
                 # Scale obstacle coords from m to pixel
-                obstacle_coords = [coord*const.m2pix for coord in obstacle_coords]
+                obstacle_coords = [coord for coord in obstacle_coords]
                 # Get obstacle attribute
                 polygon_ = QtGui.QPolygonF(obstacle_coords)
                 brush_ = QtGui.QBrush(QtGui.QColor(obstacle_color))
@@ -127,8 +127,8 @@ class World(WorldRenderer):
                 # Add the obstacle to the world
                 obstacle = self.addPolygon(polygon_, pen = pen_, brush = brush_)
                 # Get obstacle position (in m)
-                x = obstacle_pos[0]*const.m2pix
-                y = obstacle_pos[1]*const.m2pix
+                x = obstacle_pos[0]
+                y = obstacle_pos[1]
                 theta = obstacle_pos[2]
                 # Position the obstacle
                 obstacle.setPos(QtCore.QPointF(x, y))

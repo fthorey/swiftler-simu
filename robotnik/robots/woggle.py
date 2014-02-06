@@ -5,6 +5,7 @@ from math import pi, degrees, radians, cos, sin
 from utils import const
 from robots.robot import Robot
 from sensors.proximity import ProximitySensor
+from sensors.wheelencoder import WheelEncoder
 from supervisors.wogglesupervisor import WoggleSupervisor
 from dynamics.differential import DifferentialDrive
 from PyQt4 import QtGui, QtCore
@@ -40,8 +41,17 @@ class Woggle(Robot):
         # Current speed of the right wheel (rad/s)
         self._rightWheelSpeed = 0
 
+        self._leftRevolutions = 0
+        self._rightRevolutions = 0
+
         # Set default heading angle (in rad)
         self.setTheta(0)
+
+        # Add a wheel encoder to each wheel
+        self._leftWheelEncoder = WheelEncoder(2764.8, self._wheelRadius)
+
+        # Add a wheel encoder to each wheel
+        self._rightWheelEncoder = WheelEncoder(2764.8, self._wheelRadius)
 
         # Store position for sharps
         self._sharpPos = dict()
@@ -123,24 +133,52 @@ class Woggle(Robot):
         self.showProxSensors(True)
 
         # Cache the bounding rect
-        bodyX = (-self._wheelBaseLength/2) * const.m2pix
-        bodyY = (-self._wheelBaseLength/2) * const.m2pix
-        bodyW = self._wheelBaseLength * const.m2pix
-        bodyH = self._wheelBaseLength * const.m2pix
+        bodyX = (-self._wheelBaseLength/2)
+        bodyY = (-self._wheelBaseLength/2)
+        bodyW = self._wheelBaseLength
+        bodyH = self._wheelBaseLength
         self._boundingRect = QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
 
         # Cache the shape
         self._shape = QtGui.QPainterPath()
         self._shape.addEllipse(bodyX, bodyY, bodyW, bodyH);
 
+    def leftRevolutions(self, ):
+        """
+        """
+        return self._leftRevolutions
+
+    def rightRevolutions(self, ):
+        return self._rightRevolutions
+
+    def setLeftRevolutions(self, rev_):
+        """
+        """
+        self._leftRevolutions = rev_
+
+    def setRightRevolutions(self, rev_):
+        """
+        """
+        self._rightRevolutions = rev_
+
+    def leftWheelEncoder(self, ):
+        """
+        """
+        return self._leftWheelEncoder
+
+    def rightWheelEncoder(self, ):
+        """
+        """
+        return self._rightWheelEncoder
+
     # Get the wheel radius (in m)
-    def getWheelRadius(self, ):
+    def wheelRadius(self, ):
         """
         """
         return self._wheelRadius
 
     # Get the wheel base length (in m)
-    def getWheelBaseLength(self, ):
+    def wheelBaseLength(self, ):
         """
         """
         return self._wheelBaseLength
@@ -201,11 +239,13 @@ class Woggle(Robot):
         """
         # Body
         painter.setBrush(QtGui.QColor("light grey"))
-        bodyX = (-self._wheelBaseLength/2) * const.m2pix
-        bodyY = (-self._wheelBaseLength/2) * const.m2pix
-        bodyW = self._wheelBaseLength * const.m2pix
-        bodyH = self._wheelBaseLength * const.m2pix
-        painter.drawEllipse(bodyX, bodyY, bodyW, bodyH)
+        bodyX = (-self._wheelBaseLength/2)
+        bodyY = (-self._wheelBaseLength/2)
+        bodyW = self._wheelBaseLength
+        bodyH = self._wheelBaseLength
+
+        rect = QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
+        painter.drawEllipse(rect)
 
         # Left wheel
         wheelW = bodyW / 3
@@ -213,9 +253,11 @@ class Woggle(Robot):
         lwheelX = -wheelW/2
         lwheelY = -bodyH/2 + wheelH/2
         painter.setBrush(QtGui.QColor("black"))
-        painter.drawRect(lwheelX, lwheelY, wheelW, wheelH)
+        rect = QtCore.QRectF(lwheelX, lwheelY, wheelW, wheelH)
+        painter.drawRect(rect)
 
         # Right wheel
         rwheelX = -wheelW/2
         rwheelY = bodyH/2 - wheelH - wheelH/2
-        painter.drawRect(rwheelX, rwheelY, wheelW, wheelH)
+        rect = QtCore.QRectF(rwheelX, rwheelY, wheelW, wheelH)
+        painter.drawRect(rect)

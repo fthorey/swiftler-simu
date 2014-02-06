@@ -1,0 +1,9 @@
+<simulation>
+
+    <robot type="Woggle">
+        <pose theta="0" x="0" y="0"/>
+	<dimension wheelradius="0.021" wheelbaselength="0.0885"/>
+        <supervisor type="WoggleSupervisor"/>
+    </robot>
+
+</simulation>

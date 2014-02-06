@@ -26,7 +26,7 @@ class ProximitySensor(Shape):
         self.spread = pi/8
 
         # Minimum range (in m)
-        self.minRange = 0.02
+        self.minRange = 0.001
 
         # Maximum range (in m)
         self.maxRange = 0.12
@@ -111,9 +111,9 @@ class ProximitySensor(Shape):
         """
         """
         rectX = 0
-        rectY = -self.currRange * tan(self.spread/2) * const.m2pix
-        rectW = self.currRange * const.m2pix
-        rectH = 2 * self.currRange * tan(self.spread/2) * const.m2pix
+        rectY = -self.currRange * tan(self.spread/2)
+        rectW = self.currRange
+        rectH = 2 * self.currRange * tan(self.spread/2)
 
         return QtCore.QRectF(rectX, rectY, rectW, rectH)
 
@@ -124,9 +124,9 @@ class ProximitySensor(Shape):
         path = QtGui.QPainterPath()
 
         leftLimit = self.getBeamLeftLimit()
-        leftLimit = QtCore.QPointF(leftLimit.x() * const.m2pix, leftLimit.y() * const.m2pix)
+        leftLimit = QtCore.QPointF(leftLimit.x() , leftLimit.y())
         rightLimit = self.getBeamRightLimit()
-        rightLimit = QtCore.QPointF(rightLimit.x() * const.m2pix, rightLimit.y() * const.m2pix)
+        rightLimit = QtCore.QPointF(rightLimit.x() , rightLimit.y())
 
         path.addPolygon(QtGui.QPolygonF([QtCore.QPointF(0,0), leftLimit, rightLimit]))
 
@@ -140,9 +140,9 @@ class ProximitySensor(Shape):
         painter.setPen(self.pen)
 
         leftLimit = self.getBeamLeftLimit()
-        leftLimit = QtCore.QPointF(leftLimit.x() * const.m2pix, leftLimit.y() * const.m2pix)
+        leftLimit = QtCore.QPointF(leftLimit.x() , leftLimit.y())
 
         rightLimit = self.getBeamRightLimit()
-        rightLimit = QtCore.QPointF(rightLimit.x() * const.m2pix, rightLimit.y() * const.m2pix)
+        rightLimit = QtCore.QPointF(rightLimit.x() , rightLimit.y())
 
         painter.drawPolygon(QtCore.QPointF(0,0), leftLimit, rightLimit)

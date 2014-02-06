@@ -15,7 +15,7 @@ class WorldRenderer(QtGui.QGraphicsScene):
         super(WorldRenderer, self).__init__(parent_)
 
         # Define a grid size of 10cm
-        self._gridSize = 0.1*const.m2pix
+        self._gridSize = 0.1
 
         self._gridPen = QtGui.QPen(QtGui.QColor(0x808080))
         self._gridPen.setStyle(QtCore.Qt.DotLine)

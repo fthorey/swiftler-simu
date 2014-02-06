@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from math import degrees, sqrt
-from robots.robot import Robot
 from controllers.controller import GoToGoal, Rotate
 from utils import const
 
@@ -21,15 +20,25 @@ class Supervisor(object):
         # Current controller
         self.controller = GoToGoal()
 
-        # Current estimation of the robot position (in m) and angle (in rad)
-        # in the scene referential
-        self.stateEstimate = [self.robot.pos(), self.robot.getTheta()]
-
         # Goal expressed in the scene referential (in m)
-        self.goal = QtCore.QPointF(0, 0)
+        self.goal = QtCore.QPointF(25, 4)
 
         # Distance from the goal to which the robot stop (in m)
         self.stopDist          = 0.05
+
+    def stateEstimate(self, ):
+        """
+        """
+        return self._stateEstimate
+
+    def setStateEstimate(self, x, y, theta):
+        """
+        """
+        # Current estimation of the robot position (in m) and angle (in rad)
+        # in the scene referential
+        self._stateEstimate = {'x': x,
+                              'y': y,
+                              'theta': theta, }
 
     # Get goal
     def getGoal(self, ):
@@ -57,11 +66,13 @@ class Supervisor(object):
     def isAtGoal(self, ):
         """
         """
+
         # Get goal coordinates (in m)
         xg = self.goal.x()
         yg = self.goal.y()
 
         # Get current robot position coordinates (in m)
+        from robots.robot import Robot
         x = self.robot.pos().x()
         y = self.robot.pos().y()
         cDist = sqrt((x-xg)*(x-xg) + (y-yg)*(y-yg)) # (in m)

@@ -23,19 +23,6 @@ class Rotate(Controller):
     def __init__(self, ):
         """
         """
-        # PID gains
-        # Proportional
-        self.Kp = 0.005
-        # Integral
-        self.Ki = 0.0001
-        # Derivative
-        self.Kd = 0.01
-
-        # Accumulated error
-        self.E_k = 0;
-        # error step k-1
-        self.e_k_1 = 0;
-
     # the goal must be expressed in m and the time step in s
     def execute(self, stateEstimate, goal, dt):
         """
@@ -53,9 +40,9 @@ class GoToGoal(Controller):
         """
         # PID gains
         # Proportional
-        self.Kp = 0.005
+        self.Kp = 0.9
         # Integral
-        self.Ki = 0.0001
+        self.Ki = 0.1
         # Derivative
         self.Kd = 0.01
 
@@ -73,9 +60,8 @@ class GoToGoal(Controller):
         y_g = goal.y()
 
         # Get an estimate of the current pos (in m and rad)
-        x = stateEstimate[0].x()
-        y = stateEstimate[0].y()
-        theta = stateEstimate[1]
+        x, y = stateEstimate['x'], stateEstimate['y']
+        theta = stateEstimate['theta']
 
         # Compute the v,w that will get you to the goal
 
@@ -106,6 +92,7 @@ class GoToGoal(Controller):
         # Approximate the integrale using the accumulated error, E_k and the error
         # for this time step
         e_I = self.E_k + e_k*dt
+        e_I = (e_I + pi)%(2*pi) - pi
 
         # Error for the derivative term
         # Approximate the derivative using the previous error, e_k_1
@@ -114,8 +101,8 @@ class GoToGoal(Controller):
         w = self.Kp*e_P + self.Ki*e_I + self.Kd*e_D # (in rad/s)
 
         # 4. Save errors for the next time step
-        E_k = e_I
-        e_k_1 = e_k
+	 self.E_k = e_I
+        self.e_k_1 = e_k
 
         # velocity control
         v =  0.25/(log(fabs(w)+2)+1)

@@ -16,13 +16,13 @@ class DifferentialDrive(object):
         self.robot = robot_
 
     # The step duration is given in s
-    def update(self, ):
+    def update(self, dt_):
         """
         """
 
         # Make shortcuts for wheel radius and base length (m)
-        R = self.robot.getWheelRadius()
-        L = self.robot.getWheelBaseLength()
+        R = self.robot.wheelRadius()
+        L = self.robot.wheelBaseLength()
 
         # Make shortcuts for wheels velocity (rad/s)
         vel_l = self.robot.getLeftWheelSpeed()
@@ -31,44 +31,61 @@ class DifferentialDrive(object):
         # Convert to robot spped and angular velocity (in m and rad/s)
         v, w = self.diff2Uni(vel_l, vel_r)
 
-        # Delta integration time (s)
-        dt = const.stepDuration
-
         # Current angle of the robot (rad)
-        theta_k = self.robot.getTheta()
+        theta = self.robot.getTheta()
 
         # Position of the robot in the scene referential
-        pos_k =  self.robot.pos()
+        x,y =  self.robot.pos().x(), self.robot.pos().y()
 
         # Calculate robot's position and angle increment
-        dx = v*cos(theta_k)*dt # in m
-        dy = v*sin(theta_k)*dt # in m
-        pos = QtCore.QPointF(pos_k.x() + dx, pos_k.y() + dy)
-        dtheta = (dt*w) % 2*pi # in rad
+        if w == 0:
+            dtheta = 0
+            x += v*cos(theta)*dt_
+            y += v*sin(theta)*dt_
+        else:
+            dtheta = w*dt_
+            x += 2*v/w*cos(theta + dtheta/2)*sin(dtheta/2)
+            y += 2*v/w*sin(theta + dtheta/2)*sin(dtheta/2)
+            theta += dtheta
 
-        # Return new positions of the robot (in m & rad)
-        return pos, theta_k + dtheta
+        print 'real pos:', x, y, theta
+
+        l_rev = self.robot.leftRevolutions()
+        r_rev = self.robot.rightRevolutions()
+        self.robot.setLeftRevolutions(l_rev +  vel_l*dt_/2/pi)
+        self.robot.setRightRevolutions(r_rev + vel_r*dt_/2/pi)
+
+        print 'rev:', l_rev +  vel_l*dt_/2/pi, r_rev + vel_r*dt_/2/pi
+
+        self.robot.setPos(QtCore.QPointF(x, y))
+        self.robot.setTheta((theta + pi)%(2*pi) - pi)
+
+        # Add the position to the tracker
+        self.robot.tracker().addPosition(QtCore.QPointF(x, y))
 
     # Convert heading velocity and angular velocity (in m/s & rad/s)
     # To left wheel angular velocity and right wheel angular velocity (in rad/s)
     def uni2Diff(self, v, w):
         """
         """
-        R = self.robot.getWheelRadius() # in m
-        L = self.robot.getWheelBaseLength() # in m
+        R = self.robot.wheelRadius() # in m
+        L = self.robot.wheelBaseLength() # in m
 
-        vel_l = v/R+(w*L)/(2*R); # in rad/s
-        vel_r = v/R-(w*L)/(2*R); # in rad/s
+        summ = 2*v/R
+        diff = L*w/R
 
-        return vel_l, vel_r
+        vl = (summ-diff)/2
+        vr = (summ+diff)/2
+
+        return vl, vr
 
     # Convert left wheel angular velocity and right wheel angular velocity to
     # heading velocity and angular velocity (in m/s & rad/s)
     def diff2Uni(self, vel_l, vel_r):
         """
         """
-        R = self.robot.getWheelRadius() # in m
-        L = self.robot.getWheelBaseLength() # in m
+        R = self.robot.wheelRadius() # in m
+        L = self.robot.wheelBaseLength() # in m
 
         v = R/2*(vel_l+vel_r) # in m/s
         w = R/L*(vel_l-vel_r) # in rad/s
