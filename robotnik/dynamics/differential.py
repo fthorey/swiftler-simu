@@ -32,7 +32,7 @@ class DifferentialDrive(object):
         v, w = self.diff2Uni(vel_l, vel_r)
 
         # Current angle of the robot (rad)
-        theta = self.robot.getTheta()
+        theta = self.robot.getAngle()
 
         # Position of the robot in the scene referential
         x,y =  self.robot.pos().x(), self.robot.pos().y()
@@ -54,7 +54,7 @@ class DifferentialDrive(object):
         self.robot.setRightRevolutions(r_rev + vel_r*dt_/2/pi)
 
         self.robot.setPos(QtCore.QPointF(x, y))
-        self.robot.setTheta((theta + pi)%(2*pi) - pi)
+        self.robot.setAngle((theta + pi)%(2*pi) - pi)
 
         # Add the position to the tracker
         self.robot.tracker().addPosition(QtCore.QPointF(x, y))

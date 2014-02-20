@@ -31,7 +31,7 @@ class Robot(Shape):
         self._initPos = QtCore.QPointF(0, 0)
 
         # Initial heading angle (in rad)
-        self._initTheta = 0
+        self._initAngle = 0
 
         # List of all proximity sensors of the robot
         self._proxSensors = list()
@@ -113,7 +113,7 @@ class Robot(Shape):
         # Set the initial postion (in m)
         self.setPos(self._initPos)
         # Set the initial heading angle (in rad)
-        self.setTheta(self._initTheta)
+        self.setAngle(self._initAngle)
         self._stopped = False
         # Restart all sensors
         for sensor in self._proxSensors:
@@ -123,17 +123,17 @@ class Robot(Shape):
         self._tracker.restart(self._initPos)
 
     # Set the initial position of the robot (in m & rad)
-    def setInitialPos(self, pos_, theta_):
+    def setInitialPos(self, pos_, angle_):
         """
         """
         # in m
         self._initPos = pos_
         # in rad
-        self._initTheta = theta_
+        self._initAngle = angle_
 
-        # setPos and setTheta are in charge of converting m to pixel
+        # setPos and setAngle are in charge of converting m to pixel
         self.setPos(pos_)
-        self.setTheta(theta_)
+        self.setAngle(angle_)
 
         # Associate a tracker to store the path (in m)
         self._tracker = Tracker(pos_)
@@ -141,13 +141,13 @@ class Robot(Shape):
         # Set the initial state estimate of the supervisor
         self._supervisor.setStateEstimate(self._initPos.x(),
                                           self._initPos.y(),
-                                          self._initTheta)
+                                          self._initAngle)
 
     # Get the initial position of the robot (in m & rad)
     def getInitialPos(self, ):
         """
         """
-        return self._initPos, self._initTheta
+        return self._initPos, self._initAngle
 
     # Set the dynamics followed by the robot
     def setDynamics(self, dynamics_):

@@ -147,20 +147,20 @@ class World(WorldRenderer):
 
     # Add a obstacle to the world
     # the position is given in m
-    def addObstacle(self, obstacle_, position_, theta_):
+    def addObstacle(self, obstacle_, position_, angle_):
         """
         """
         obstacle_.setPos(position_)
-        obstacle_.setTheta(theta_)
+        obstacle_.setAngle(angle_)
         self.addItem(obstacle_)
         self.obstacles.append(obstacle_)
 
     # Add a robot to the world
     # The position is given in m
-    def addRobot(self, robot_, position_, theta_):
+    def addRobot(self, robot_, position_, angle_):
         """
         """
-        robot_.setInitialPos(position_, theta_)
+        robot_.setInitialPos(position_, angle_)
         self.addItem(robot_)
         self.robots.append(robot_)
 
