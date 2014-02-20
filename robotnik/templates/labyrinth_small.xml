@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <simulation>
     <robot type="Woggle">
-        <pose theta="1.57079629346" x="0.99999999" y="-5.8000016"/>
+        <pose theta="1.57079629346" x="1.0" y="-5.7000016"/>
 	<dimension wheelradius="0.021" wheelbaselength="0.0885"/>
         <supervisor type="WoggleSupervisor"/>
     </robot>
