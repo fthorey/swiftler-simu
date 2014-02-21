@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from math import pi, degrees, radians, cos, sin
-from utils import const
 from robots.robot import Robot
 from sensors.proximity import ProximitySensor
 from sensors.wheelencoder import WheelEncoder
@@ -41,6 +40,7 @@ class Woggle(Robot):
         # Current speed of the right wheel (rad/s)
         self._rightWheelSpeed = 0
 
+        # Current number of revolution of each wheel
         self._leftRevolutions = 0
         self._rightRevolutions = 0
 
