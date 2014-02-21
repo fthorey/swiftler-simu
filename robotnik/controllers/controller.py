@@ -101,7 +101,7 @@ class GoToGoal(Controller):
         w = self.Kp*e_P + self.Ki*e_I + self.Kd*e_D # (in rad/s)
 
         # 4. Save errors for the next time step
-	 self.E_k = e_I
+        self.E_k = e_I
         self.e_k_1 = e_k
 
         # velocity control
