@@ -87,6 +87,13 @@ class SimObject(QtGui.QGraphicsItem):
         """
         raise NotImplementedError("SimObject.shape")
 
+    def getContactPoints(self, other):
+         """Get a list of contact points with other object.
+         """
+         self_poly = pylygon.Polygon(self.getWorldEnvelope())
+         other_poly = pylygon.Polygon(other.getWorldEnvelope())
+         return self_poly.intersection_points(other_poly)
+
     def paint(self, painter, option, widget):
         """Inherited from QGraphicsItem.
 
