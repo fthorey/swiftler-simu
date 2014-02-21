@@ -35,10 +35,11 @@ class ProximitySensor(SimObject):
         # Maximum range (in m)
         self._rmax = 0.10
 
+        # The current cone of the sensor
         self._pts = self.getCone(self._rmax)
 
         # Cache the envelope of the sensor
-        self._envelope = [(0,0),
+        self._fullcone = [(0,0),
                          (self._rmax*cos(self._phi/2),self._rmax*sin(self._phi/2)),
                          (self._rmax,0),
                          (self._rmax*cos(self._phi/2),-self._rmax*sin(self._phi/2))]
@@ -48,7 +49,7 @@ class ProximitySensor(SimObject):
         self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
 
         # Cache the shape
-        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._fullcone]
         self._shape = QtGui.QPainterPath()
         self._shape.addPolygon(QtGui.QPolygonF(points))
 
@@ -85,7 +86,7 @@ class ProximitySensor(SimObject):
 
     def getEnvelope(self):
         """Return the envelope of the sensor"""
-        return self._envelope
+        return self._fullcone
 
     def boundingRect(self, ):
         """
