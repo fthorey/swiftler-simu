@@ -53,95 +53,55 @@ class Woggle(Robot):
         # Add a wheel encoder to each wheel
         self._rightWheelEncoder = WheelEncoder(2764.8, self._wheelRadius)
 
-        # Store position for sharps
-        self._sharpPos = dict()
-
-        # Add some distance to avoid extra collision detection
-        baseLength = self._wheelBaseLength + 0.02
-        self._sharpPos['sharp0'] = {'pos': QtCore.QPointF(baseLength/2, 0),
-                                   'angle': 0}
-
-        self._sharpPos['sharp1'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/3),
-                                                             -baseLength/2 * sin(pi/3)),
-                                   'angle': -pi/3}
-
-        self._sharpPos['sharp2'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/3),
-                                                             baseLength/2 * sin(pi/3)),
-                                   'angle': +pi/3}
-
-        self._sharpPos['sharp3'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/5),
-                                                             -baseLength/2 * sin(pi/5)),
-                                   'angle': -pi/5}
-
-        self._sharpPos['sharp4'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi/5),
-                                                             baseLength/2 * sin(pi/5)),
-                                   'angle': +pi/5}
-
-        self._sharpPos['sharp5'] = {'pos': QtCore.QPointF(baseLength/2 * cos(2*pi/3),
-                                                             -baseLength/2 * sin(2*pi/3)),
-                                   'angle': -2*pi/3}
-
-        self._sharpPos['sharp6'] = {'pos': QtCore.QPointF(baseLength/2 * cos(2*pi/3),
-                                                             baseLength/2 * sin(2*pi/3)),
-                                   'angle': 2*pi/3}
-
-        self._sharpPos['sharp7'] = {'pos': QtCore.QPointF(baseLength/2 * cos(pi),
-                                                             baseLength/2 * sin(pi)),
-                                   'angle': pi}
-
-        # Add sharp sensors
-        sharp0 = ProximitySensor('sharp0', self,
-                                 self._sharpPos['sharp0']['pos'],
-                                 self._sharpPos['sharp0']['angle'])
-        sharp1 = ProximitySensor('sharp1', self,
-                                 self._sharpPos['sharp1']['pos'],
-                                 self._sharpPos['sharp1']['angle'])
-        sharp2 = ProximitySensor('sharp2', self,
-                                 self._sharpPos['sharp2']['pos'],
-                                 self._sharpPos['sharp2']['angle'])
-        sharp3 = ProximitySensor('sharp3', self,
-                                 self._sharpPos['sharp3']['pos'],
-                                 self._sharpPos['sharp3']['angle'])
-        sharp4 = ProximitySensor('sharp4', self,
-                                 self._sharpPos['sharp4']['pos'],
-                                 self._sharpPos['sharp4']['angle'])
-        sharp5 = ProximitySensor('sharp5', self,
-                                 self._sharpPos['sharp5']['pos'],
-                                 self._sharpPos['sharp5']['angle'])
-        sharp6 = ProximitySensor('sharp6', self,
-                                 self._sharpPos['sharp6']['pos'],
-                                 self._sharpPos['sharp6']['angle'])
-        sharp7 = ProximitySensor('sharp7', self,
-                                 self._sharpPos['sharp7']['pos'],
-                                 self._sharpPos['sharp7']['angle'])
-
-        # And append it to the list of embedded proximity sensors
-        self.proxSensors().append(sharp0)
-        self.proxSensors().append(sharp1)
-        self.proxSensors().append(sharp2)
-        self.proxSensors().append(sharp3)
-        self.proxSensors().append(sharp4)
-        self.proxSensors().append(sharp5)
-        self.proxSensors().append(sharp6)
-        self.proxSensors().append(sharp7)
-
-        # Append all sensors to the robot items list
-        for sensor in self.proxSensors():
-            self.addItem(sensor)
-
-        # Show proximity sensors by default
-        self.showProxSensors(True)
+        # Cache the envelope
+        bl = self._wheelBaseLength/2
+        self._envelope = [[bl * cos(pi/2 + pi/12), bl * sin(pi/2 + pi/12)],
+                          [bl * cos(pi/2 - pi/12), bl * sin(pi/2 - pi/12)],
+                          [bl * cos(pi/3), bl * sin(pi/3)],
+                          [bl * cos(pi/4), bl * sin(pi/4)],
+                          [bl * cos(pi/5), bl * sin(pi/5)],
+                          [bl * cos(pi/12), bl * sin(pi/12)],
+                          [bl * cos(-pi/12), bl * sin(-pi/12)],
+                          [bl * cos(-pi/5), bl * sin(-pi/5)],
+                          [bl * cos(-pi/4), bl * sin(-pi/4)],
+                          [bl * cos(-pi/3), bl * sin(-pi/3)],
+                          [bl * cos(-pi/2 + pi/12), bl * sin(-pi/2 + pi/12)],
+                          [bl * cos(-pi/2 - pi/12), bl * sin(-pi/2 - pi/12)],
+                          [bl * cos(pi + pi/3), bl * sin(pi + pi/3)],
+                          [bl * cos(pi + pi/4), bl * sin(pi + pi/4)],
+                          [bl * cos(pi + pi/5), bl * sin(pi + pi/5)],
+                          [bl * cos(pi + pi/12), bl * sin(pi + pi/12)],
+                          [bl * cos(pi - pi/12), bl * sin(pi - pi/12)],
+                          [bl * cos(pi - pi/5), bl * sin(pi - pi/5)],
+                          [bl * cos(pi - pi/4), bl * sin(pi - pi/4)],
+                          [bl * cos(pi - pi/3), bl * sin(pi - pi/3)]]
 
         # Cache the bounding rect
-        bodyX = (-self._wheelBaseLength/2)
-        bodyY = (-self._wheelBaseLength/2)
-        bodyW = self._wheelBaseLength
-        bodyH = self._wheelBaseLength
-        self._boundingRect = QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
+        xmin, ymin, xmax, ymax = self.getBounds()
+        self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
 
         # Cache the shape
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         self._shape = QtGui.QPainterPath()
-        self._shape.addEllipse(bodyX, bodyY, bodyW, bodyH);
+        self._shape.addPolygon(QtGui.QPolygonF(points))
+
+        # Position of the sharp sensors
+        bl = self._wheelBaseLength/2 + 0.01
+        self._proxSensorsPos = [
+            [QtCore.QPointF(bl*cos(0), sin(0)), 0],
+            [QtCore.QPointF(bl*cos(17*pi/120), bl*sin(17*pi/120)), 17*pi/120],
+            [QtCore.QPointF(bl*cos(-17*pi/120), bl*sin(-17*pi/120)), -17*pi/120],
+            [QtCore.QPointF(bl*cos(-9*pi/24), bl*sin(-9*pi/24)), -9*pi/24],
+            [QtCore.QPointF(bl*cos(9*pi/24), bl*sin(9*pi/24)), 9*pi/24],
+            [QtCore.QPointF(bl*cos(-pi/2-7*pi/24), bl*sin(-pi/2-7*pi/24)), -pi/2-7*pi/24],
+            [QtCore.QPointF(bl*cos(pi/2+7*pi/24), bl*sin(pi/2+7*pi/24)), pi/2+7*pi/24],
+            [QtCore.QPointF(bl*cos(pi), bl*sin(pi)), pi]]
+
+        # Add the sensors to the robot
+        for pos in self._proxSensorsPos:
+            sensor = ProximitySensor(pos)
+            self.proxSensors().append(sensor)
+            sensor.setParentItem(self)
 
     def leftRevolutions(self, ):
         """
@@ -221,13 +181,16 @@ class Woggle(Robot):
         """
         return self._rightWheelSpeed
 
-    # Return an estimate of the area painted by the item
+    def getEnvelope(self, ):
+        """
+        """
+        return self._envelope
+
     def boundingRect(self, ):
         """
         """
         return self._boundingRect
 
-    # Define the accurate shape of the item
     def shape(self, ):
         """
         """
@@ -239,13 +202,13 @@ class Woggle(Robot):
         """
         # Body
         painter.setBrush(QtGui.QColor("light grey"))
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
+        painter.drawPolygon(QtGui.QPolygonF(points))
+
         bodyX = (-self._wheelBaseLength/2)
         bodyY = (-self._wheelBaseLength/2)
         bodyW = self._wheelBaseLength
         bodyH = self._wheelBaseLength
-
-        rect = QtCore.QRectF(bodyX, bodyY, bodyW, bodyH)
-        painter.drawEllipse(rect)
 
         # Left wheel
         wheelW = bodyW / 3

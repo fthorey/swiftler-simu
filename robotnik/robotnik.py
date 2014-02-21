@@ -5,7 +5,6 @@ import sys
 from math import pi
 from world.world import World
 from robots.woggle import Woggle
-from shape.shape import Shape
 from utils import const
 import ui.icons
 

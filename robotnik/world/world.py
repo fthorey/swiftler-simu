@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from utils import const
+from utils.polygon import Polygon
 from PyQt4 import QtGui, QtCore
 from physics import Physics
 from math import pi, degrees
@@ -118,14 +119,12 @@ class World(WorldRenderer):
                 # Set a default color
                 if obstacle_color is None:
                     obstacle_color = 0xFF0000
-                # Scale obstacle coords from m to pixel
-                obstacle_coords = [coord for coord in obstacle_coords]
                 # Get obstacle attribute
-                polygon_ = QtGui.QPolygonF(obstacle_coords)
                 brush_ = QtGui.QBrush(QtGui.QColor(obstacle_color))
                 pen_ = QtGui.QPen(QtCore.Qt.NoPen)
+                obstacle = Polygon(obstacle_coords, brush_, pen_)
                 # Add the obstacle to the world
-                obstacle = self.addPolygon(polygon_, pen = pen_, brush = brush_)
+                self.addItem(obstacle)
                 # Get obstacle position (in m)
                 x = obstacle_pos[0]
                 y = obstacle_pos[1]

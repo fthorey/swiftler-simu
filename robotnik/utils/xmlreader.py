@@ -127,7 +127,7 @@ class XMLReader(object):
                     if x == None or y == None:
                         raise Exception(
                             '[XMLReader.parseConfiguration] Invalid point!')
-                    points.append(QtCore.QPointF(float(x), float(y)))
+                    points.append((float(x), float(y)))
 
                 if len(points) < 3:
                     raise Exception(

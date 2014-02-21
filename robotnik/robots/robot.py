@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from shape.shape import Shape
+from utils.simobject import SimObject
 from PyQt4 import QtGui, QtCore
 from utils import const
 from utils.tracker import Tracker
 
-class Robot(Shape):
+class Robot(SimObject):
     """ Robot class handles a robot
     """
 
