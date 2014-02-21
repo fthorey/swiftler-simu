@@ -107,3 +107,19 @@ class ProximitySensor(SimObject):
 
         points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
         painter.drawPolygon(QtGui.QPolygonF(points))
+
+    def updateDistance(self, simObject = None):
+        """updates all the distances from the reading"""
+        if simObject is None:
+            # reset distance to max
+            self.__distance = 65536
+            self._pts = self.getCone(self._rmax)
+            return True
+        else:
+            distance2obj = self.getDistanceTo(simObject)
+            if distance2obj:
+                if self.__distance > distance2obj:
+                    self._pts = self.getCone(distance2obj)
+                    self.__distance = distance2obj
+                    return True
+        return False
