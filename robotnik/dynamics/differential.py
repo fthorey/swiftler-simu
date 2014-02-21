@@ -48,14 +48,10 @@ class DifferentialDrive(object):
             y += 2*v/w*sin(theta + dtheta/2)*sin(dtheta/2)
             theta += dtheta
 
-        print 'real pos:', x, y, theta
-
         l_rev = self.robot.leftRevolutions()
         r_rev = self.robot.rightRevolutions()
         self.robot.setLeftRevolutions(l_rev +  vel_l*dt_/2/pi)
         self.robot.setRightRevolutions(r_rev + vel_r*dt_/2/pi)
-
-        print 'rev:', l_rev +  vel_l*dt_/2/pi, r_rev + vel_r*dt_/2/pi
 
         self.robot.setPos(QtCore.QPointF(x, y))
         self.robot.setTheta((theta + pi)%(2*pi) - pi)

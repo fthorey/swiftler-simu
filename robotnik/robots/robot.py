@@ -214,6 +214,3 @@ class Robot(Shape):
 
         # Execute the supervisor
         self._supervisor.execute()
-
-        # self._supervisor.setStateEstimate(self.pos().x(), self.pos().y(), self.getTheta())
-        print
