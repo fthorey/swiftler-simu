@@ -167,7 +167,7 @@ class Robotnik(QtGui.QMainWindow):
             robot.restart()
 
         # Refocus the view on the master robot
-        if self.world.zoomOnRobot:
+        if self.world.isZoomOnRobot():
             self.worldView.focusOnRobot()
 
     @QtCore.pyqtSlot()
@@ -203,7 +203,7 @@ class Robotnik(QtGui.QMainWindow):
         """
         """
         zoom = 5.0**(value_/100.0)
-        for robot in self.world.robots:
+        for robot in self.world.getRobots():
             if robot.isMasterRobot():
                 robot.setZoom(zoom)
 

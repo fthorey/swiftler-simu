@@ -21,61 +21,71 @@ class World(WorldRenderer):
         super(World, self).__init__(parent_)
 
         # Physics that rules the world
-        self.physics = Physics(self)
+        self._physics = Physics(self)
 
         # Create a xml reader object to parse world files
-        self.xmlReader = XMLReader('templates/labyrinth_small.xml')
+        self._xmlReader = XMLReader('templates/labyrinth_small.xml')
 
         # List of robots currently in the world
-        self.robots = list()
+        self._robots = list()
 
         # List of obstacle currently in the world
-        self.obstacles = list()
+        self._obstacles = list()
 
         # Store the current state of the zoom (robot or world)
-        self.zoomOnRobot = False
+        self._zoomOnRobot = False
 
         # Store if the robots sensors are displayed
-        self.showRobotSensors = True
+        self._showRobotSensors = True
 
         # Store if path drawing is needed
-        self.showTracks = True
+        self._showTracks = True
 
         # store of the ghost mode is activated or not
-        self.isGhostMode = True
+        self._isGhostMode = True
+
+    def getRobots(self, ):
+        """
+        """
+        return self._robots
+
+    def isZoomOnRobot(self, ):
+        """
+        """
+        return self._zoomOnRObot
 
     def isGhostModeActivated(self, ):
         """
         """
-        return self.isGhostMode
+        return self._isGhostMode
 
     def toggleGhostMode(self, ):
         """
         """
-        self.isGhostMode = not self.isGhostMode
+        self._isGhostMode = not self._isGhostMode
 
     def toggleRobotTracks(self, ):
         """
         """
-        self.showTracks = not self.showTracks
+        self._showTracks = not self._showTracks
 
     def toggleRobotSensors(self, ):
-        self.showRobotSensors = not self.showRobotSensors
+        self._showRobotSensors = not self._showRobotSensors
 
-        for robot in self.robots:
-            robot.showProxSensors(self.showRobotSensors)
+        for robot in self._robots:
+            robot.showProxSensors(self._showRobotSensors)
 
     # Toggle the current state of the zoom
     def setZoomOnRobot(self, zoom_):
         """
         """
-        self.zoomOnRobot = zoom_
+        self._zoomOnRobot = zoom_
 
     # Get the current state of the zoom
     def isZoomOnRobot(self, ):
         """
         """
-        return self.zoomOnRobot
+        return self._zoomOnRobot
 
     # Construct the world
     def autoConstruct(self, ):
@@ -83,7 +93,7 @@ class World(WorldRenderer):
         """
 
         # Get all objects from xml
-        objects = self.xmlReader.parseConfiguration()
+        objects = self._xmlReader.parseConfiguration()
 
         # To check if a master robot has been defined
         masterRobotSet = False
@@ -101,13 +111,13 @@ class World(WorldRenderer):
                     # Get robot supervisor class
                     sup_class = helpers.load_by_name(supervisor_type,'supervisors')
                     # Generate a robot name
-                    name = "Robot_{}:_{}".format(len(self.robots), sup_class.__name__)
+                    name = "Robot_{}:_{}".format(len(self._robots), sup_class.__name__)
                     robot = robot_class(name, wR, wBL)
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:
                         robot.setMasterRobot()
                         masterRobotSet = True
-                    # Add the robot to the obstacle list
+                    # Add the robot to the wo
                     self.addRobot(robot, QtCore.QPointF(x, y), theta)
                 except:
                     print "[world.autoConstruct] Robot creation failed!"
@@ -133,7 +143,7 @@ class World(WorldRenderer):
                 obstacle.setPos(QtCore.QPointF(x, y))
                 obstacle.rotate(degrees(theta))
                 # Add the obstacle to obstacles list
-                self.obstacles.append(obstacle)
+                self._obstacles.append(obstacle)
             else:
                 print "{world.autConstruct] Can't recognized the item!"
                 raise
@@ -142,17 +152,7 @@ class World(WorldRenderer):
     def setPhysics(self, physics_):
         """
         """
-        self.physics = physics_
-
-    # Add a obstacle to the world
-    # the position is given in m
-    def addObstacle(self, obstacle_, position_, angle_):
-        """
-        """
-        obstacle_.setPos(position_)
-        obstacle_.setAngle(angle_)
-        self.addItem(obstacle_)
-        self.obstacles.append(obstacle_)
+        self._physics = physics_
 
     # Add a robot to the world
     # The position is given in m
@@ -161,25 +161,25 @@ class World(WorldRenderer):
         """
         robot_.setInitialPos(position_, angle_)
         self.addItem(robot_)
-        self.robots.append(robot_)
+        self._robots.append(robot_)
 
     # Return the current physics of the world
     def getPhysics(self, ):
         """
         """
-        return self.physics
+        return self._physics
 
     # Return a list of all robots in the world
     def getRobots(self, ):
         """
         """
-        return self.robots
+        return self._robots
 
     # Return a list of all obstacles in the wolrd
     def getObstacles(self, ):
         """
         """
-        return self.obstacles
+        return self._obstacles
 
     # Action to perform when the scene changes
     def advance(self, ):
@@ -190,14 +190,14 @@ class World(WorldRenderer):
         super(World, self).advance()
 
         # Update the view on the robot if necessary
-        if self.zoomOnRobot:
+        if self._zoomOnRobot:
             try:
                 self.views()[0].focusOnRobot()
             except:
                 pass
 
         # Apply physics
-        self.physics.apply()
+        self._physics.apply()
 
     def drawBackground(self, painter, rect):
         """
@@ -220,6 +220,6 @@ class World(WorldRenderer):
 
         # painter.drawLines(lines)
 
-        if self.showTracks:
-            for robot in self.robots:
+        if self._showTracks:
+            for robot in self._robots:
                 painter.drawPath(robot.getTrack())
