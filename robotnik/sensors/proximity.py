@@ -127,17 +127,17 @@ class ProximitySensor(SimObject):
         """updates all the distances from the reading"""
         if simObject is None:
             # reset distance to max
-            self.__distance = 65536
+            self._currDist = self._maxDist
             self._pts = self.getCone(self._rmax)
-            return True
         else:
             distance2obj = self.getDistanceTo(simObject)
             if distance2obj:
-                if self.__distance > distance2obj:
-                    self._pts = self.getCone(distance2obj)
-                    self.__distance = distance2obj
-                    return True
-        return False
+                if self._currDist > distance2obj:
+                    self._currDist = distance2obj
+                    self._pts = self.getCone(self._currDist)
+        # Update bounding rect and shape
+        self.__updateBoundingRect()
+        self.__updateShape()
 
     def getDistanceTo(self, simObject):
         """Gets the distance to another simobject
