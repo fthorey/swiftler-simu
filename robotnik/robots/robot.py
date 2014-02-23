@@ -101,11 +101,19 @@ class Robot(SimObject):
         self.setPos(self._initPos)
         # Set the initial heading angle (in rad)
         self.setAngle(self._initAngle)
+        # Set the initial state estimate of the supervisor
+        self._supervisor.setStateEstimate(self._initPos.x(),
+                                          self._initPos.y(),
+                                          self._initAngle)
+
+        # The robot is not stopped anymore
         self._stopped = False
         # Restart all sensors
         for sensor in self._proxSensors:
             sensor.restart()
 
+        # Restar the supervisor
+        self._supervisor.restart()
         # Restart the tracker
         self._tracker.restart(self._initPos)
 
