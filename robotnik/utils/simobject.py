@@ -62,8 +62,8 @@ class SimObject(QtGui.QGraphicsItem):
         """
 
         if self._worldEnvelope is None or recalculate:
-            temp = [self.mapToScene(p[0], p[1]) for p in self.getEnvelope()]
-            self._worldEnvelope = [[p.x(), p.y()] for p in temp]
+            point = [self.mapToScene(p[0], p[1]) for p in self.getEnvelope()]
+            self._worldEnvelope = [[p.x(), p.y()] for p in point]
 
         return self._worldEnvelope
 
