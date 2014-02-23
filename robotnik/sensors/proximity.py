@@ -14,10 +14,12 @@ class ProximitySensor(SimObject):
 
     count = 0
 
-    def __init__(self, pos_, ):
+    def __init__(self, pos_):
         """
         """
-        super(ProximitySensor, self).__init__('sharp' + str(self.count))
+        super(ProximitySensor, self).__init__('sharp' + str(self.count),
+                                              QtCore.Qt.NoBrush,
+                                              QtCore.Qt.NoPen)
         self.count = self.count + 1
 
         # Location on the parent object (in m)

@@ -16,11 +16,11 @@ class Woggle(Robot):
     # Constructor
     # Get wheel radius (in m)
     # Get in-between wheels distance (in m)
-    def __init__(self, name_, wheelRadius_, wheelBaseLength_):
+    def __init__(self, name_, wheelRadius_, wheelBaseLength_, brush_, color_):
         """
         """
         # Call parent constructor
-        super(Woggle, self).__init__(name_)
+        super(Woggle, self).__init__(name_, brush_, color_)
 
         # Radius of the wheels (m)
         self._wheelRadius = wheelRadius_

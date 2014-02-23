@@ -11,11 +11,11 @@ class Robot(SimObject):
     """
 
     # Constructor
-    def __init__(self, name_):
+    def __init__(self, name_, brush_, color_):
         """
         """
         # Call parent constructor
-        super(Robot, self).__init__(name_)
+        super(Robot, self).__init__(name_, brush_, color_)
 
         # Dynamics followed by the robot
         self._dynamics = None

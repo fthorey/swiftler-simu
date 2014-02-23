@@ -118,7 +118,9 @@ class World(QtGui.QGraphicsScene):
                     sup_class = helpers.load_by_name(supervisor_type,'supervisors')
                     # Generate a robot name
                     name = "Robot_{}:_{}".format(len(self._robots), sup_class.__name__)
-                    robot = robot_class(name, wR, wBL)
+                    brush = QtGui.QBrush(QtGui.QColor(robot_color))
+                    pen = QtGui.QPen(QtCore.Qt.NoPen)
+                    robot = robot_class(name, wR, wBL, brush, pen)
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:
                         robot.setMasterRobot()
@@ -136,9 +138,9 @@ class World(QtGui.QGraphicsScene):
                 if obstacle_color is None:
                     obstacle_color = 0xFF0000
                 # Get obstacle attribute
-                brush_ = QtGui.QBrush(QtGui.QColor(obstacle_color))
-                pen_ = QtGui.QPen(QtCore.Qt.NoPen)
-                obstacle = Polygon(obstacle_coords, brush_, pen_)
+                brush = QtGui.QBrush(QtGui.QColor(obstacle_color))
+                pen = QtGui.QPen(QtCore.Qt.NoPen)
+                obstacle = Polygon(obstacle_coords, brush, pen)
                 # Add the obstacle to the world
                 self.addItem(obstacle)
                 # Get obstacle position (in m)

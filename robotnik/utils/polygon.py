@@ -8,12 +8,8 @@ class Polygon(SimObject):
     count = 0
 
     def __init__(self, envelope, brush_, pen_):
-        SimObject.__init__(self, "polygon" + str(self.count))
+        SimObject.__init__(self, "polygon" + str(self.count), brush_, pen_)
         self.count = self.count + 1
-
-        # Save the brush and the pen
-        self._brush = brush_
-        self._pen = pen_
 
         # Cache the envelope
         self._envelope = envelope
