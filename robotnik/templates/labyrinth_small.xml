@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <simulation>
-    <robot type="Woggle">
+    <robot type="Woggle" color="#4169E1">
         <pose theta="1.57079629346" x="1.0" y="-5.7000016"/>
 	<dimension wheelradius="0.021" wheelbaselength="0.0885"/>
         <supervisor type="WoggleSupervisor"/>
@@ -239,7 +239,7 @@
             <point x="-0.39999837" y="0.0"/>
         </geometry>
     </obstacle>
-    <obstacle color="#ff2f2f">
+    <obstacle color="#4169E1">
         <pose theta="0" x="0.7000162" y="-5.900001"/>
         <geometry>
             <point x="0.0" y="0.0"/>
