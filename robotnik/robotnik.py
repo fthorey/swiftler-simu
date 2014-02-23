@@ -59,33 +59,30 @@ class Robotnik(QtGui.QMainWindow):
     def configureSimu(self, ):
         """Configures the simulation.
         """
-        # Max steps number
-        self.maxSteps = 1000
-        # Current number of steps
-        self.currentSteps = 0
+        self._currentSteps = 0
 
     def configureWorld(self, ):
         """Configures the world.
         """
         # Create a new world
-        self.world = World(self)
+        self._world = World(self)
         # Tell the world to auto-construct
-        self.world.autoConstruct()
+        self._world.autoConstruct()
 
     def configureView(self, ):
         """Configures the view slot.
         """
         # Remove aliasing and smooth transformations
-        self.worldView.setRenderHints(QtGui.QPainter.Antialiasing |
+        self._worldView.setRenderHints(QtGui.QPainter.Antialiasing |
                                         QtGui.QPainter.SmoothPixmapTransform);
         # Enable drag mode on mouse click
-        self.worldView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
+        self._worldView.setDragMode(QtGui.QGraphicsView.ScrollHandDrag);
 
         # Attach the world to the current view
-        self.worldView.setScene(self.world)
+        self._worldView.setScene(self._world)
 
         # Focus on the robot by default
-        self.worldView.focusOnRobot()
+        self._worldView.focusOnRobot()
 
     def configureWindow(self, ):
         """Configures the window.
@@ -98,17 +95,14 @@ class Robotnik(QtGui.QMainWindow):
     def connectSlots(self, ):
         """Connects all slots.
         """
-        # Play
-        self.action_Play.triggered.connect(self.start)
-        # Pause
-        self.action_Pause.triggered.connect(self.pause)
+        # Play/Pause
+        self.action_Play_Pause.triggered.connect(self.startPause)
         # Restart
         self.action_Restart.triggered.connect(self.restart)
 
-        # Connect timer trigger signal to stop function
-        self.timer.timeout.connect(self.stop)
         # Connect timer trigger signal to world advance function
-        self.timer.timeout.connect(self.world.advance)
+        self.timer.timeout.connect(self._world.advance)
+        self.timer.timeout.connect(self.updateTime)
 
         # Connect zoom world
         self.action_Zoom_World.triggered.connect(self.zoomWorld)
@@ -129,44 +123,48 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
 
     @QtCore.pyqtSlot()
-    def pause(self, ):
-        """Pauses the simulation.
-        """
-        self.timer.stop()
+    def updateTime(self, ):
+        self._currentSteps = self._currentSteps + const.stepDuration
 
     @QtCore.pyqtSlot()
-    def stop(self, ):
-        """Stops the simulation.
+    def startPause(self, ):
+        """Starts or pauses the simulation.
         """
-        self.currentSteps = self.currentSteps + 1
-
-        if self.currentSteps == self.maxSteps:
+        if self._world.isRunning():
+            # Stop the timer
             self.timer.stop()
-            self.currentSteps = 0
+            # Change the icon
+            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/Play-Disabled-icon.png"))
+        else:
+            # The timer class needs a duration in ms
+            # -> Convert s into ms
+            self.timer.start(const.stepDuration*1e3)
+            # Change the icon
+            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/Pause-Disabled-icon.png"))
 
-    @QtCore.pyqtSlot()
-    def start(self, ):
-        """Starts the simulation.
-        """
-        # The timer class needs a duration in ms
-        # -> Convert s into ms
-        self.timer.start(const.stepDuration*1e3);
+        self._world.toggleRunning()
 
     @QtCore.pyqtSlot()
     def restart(self, ):
         """Restarts the simulation.
         """
+        # Restart the current number of steps
+        self._currentSteps = 0
         # Stop the timer
-        self.currentSteps = 0
         self.timer.stop()
 
         # Put robots at there initial position
-        for robot in self.world.getRobots():
+        for robot in self._world.getRobots():
             robot.restart()
 
         # Refocus the view on the master robot
-        if self.world.isZoomOnRobot():
-            self.worldView.focusOnRobot()
+        if self._world.isZoomOnRobot():
+            self._worldView.focusOnRobot()
+
+        # Change the play/pause icon
+        self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/Play-Disabled-icon.png"))
+        # Set the world to the not running state
+        self._world.setRunning(False)
 
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
@@ -180,7 +178,7 @@ class Robotnik(QtGui.QMainWindow):
         self.zoom_Slider.setEnabled(False)
 
         # Set focus on world
-        self.worldView.focusOnWorld()
+        self._worldView.focusOnWorld()
 
     @QtCore.pyqtSlot()
     def zoomRobot(self, ):
@@ -194,48 +192,48 @@ class Robotnik(QtGui.QMainWindow):
         self.zoom_Slider.setEnabled(True)
 
         # Set focus on robot
-        self.worldView.focusOnRobot()
+        self._worldView.focusOnRobot()
 
     @QtCore.pyqtSlot(int)
     def setRobotZoomLevel(self, value_):
         """Sets the master robot zoom level.
         """
         zoom = 5.0**(value_/100.0)
-        for robot in self.world.getRobots():
+        for robot in self._world.getRobots():
             if robot.isMasterRobot():
                 robot.setZoom(zoom)
 
         self.zoom_Label.setText(" Zoom: %.1fx "%(zoom))
 
         # Update focus on robot
-        self.worldView.focusOnRobot()
+        self._worldView.focusOnRobot()
 
     @QtCore.pyqtSlot()
     def showProxSensors(self, ):
         """Shows the robots proximity sensors
         """
         # Toggle the robot sensors display
-        self.world.toggleRobotSensors()
+        self._world.toggleRobotSensors()
 
         # Trigger a view update
-        self.worldView.update()
+        self._worldView.update()
 
     @QtCore.pyqtSlot()
     def showRobotTracks(self, ):
         """Shows the robots tracks
         """
         # Toggle the robot tracks display
-        self.world.toggleRobotTracks()
+        self._world.toggleRobotTracks()
 
         # Trigger a view update
-        self.worldView.update()
+        self._worldView.update()
 
     @QtCore.pyqtSlot()
     def enableGhostMode(self, ):
         """Enables the robots ghost mode.
         """
         # Toggle the ghost mode enabling
-        self.world.toggleGhostMode()
+        self._world.toggleGhostMode()
 
     # Center the main window
     def center(self, ):
