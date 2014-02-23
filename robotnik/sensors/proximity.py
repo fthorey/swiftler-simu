@@ -38,11 +38,7 @@ class ProximitySensor(SimObject):
         # The current cone of the sensor
         self._pts = self.getCone(self._rmax)
 
-        # Cache the envelope of the sensor
-        self._fullcone = [(0,0),
-                         (self._rmax*cos(self._phi/2),self._rmax*sin(self._phi/2)),
-                         (self._rmax,0),
-                         (self._rmax*cos(self._phi/2),-self._rmax*sin(self._phi/2))]
+
 
         # Cache the bounding rect
         xmin, ymin, xmax, ymax = self.getBounds()
