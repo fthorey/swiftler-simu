@@ -52,13 +52,16 @@ class ProximitySensor(SimObject):
         # Update current shape
         self.__updateShape()
 
-        # Brush color
-        self._brushColor = QtGui.QColor('red')
-        self._brushColor.setAlpha(50)
-        self._brush = QtGui.QBrush(self._brushColor)
+        # Brush colors
+        self._brushColorNoCol = QtGui.QColor(0xFF5566)
+        self._brushColorNoCol.setAlpha(70)
+        self._brushColorCol = QtGui.QColor(0xFF5566)
+
+        # Set brush
+        self.setBrush(QtGui.QBrush(self._brushColorNoCol))
 
         # Pen color
-        self._pen = QtGui.QPen(QtCore.Qt.NoPen)
+        self.setPen(QtGui.QPen(QtCore.Qt.NoPen))
 
     def __updateBoundingRect(self, ):
         """
@@ -119,13 +122,18 @@ class ProximitySensor(SimObject):
             # reset distance to max
             self._currDist = self._maxDist
             self._envelope = self.getCone(self._rmax)
+            # change brush color
+            self.setBrush(QtGui.QBrush(self._brushColorNoCol))
         else:
             distance2obj = self.getDistanceTo(simObject)
             if distance2obj:
                 if self._currDist > distance2obj:
+                    # Update current distance
                     self._currDist = distance2obj
                     # Update envelope
                     self._envelope = self.getCone(self._currDist)
+                    # Change brush color
+                    self.setBrush(QtGui.QBrush(self._brushColorCol))
         # Update bounding rect and shape
         self.__updateBoundingRect()
         self.__updateShape()
@@ -148,8 +156,8 @@ class ProximitySensor(SimObject):
     def paint(self, painter, option, widget):
         """
         """
-        painter.setBrush(self._brush)
-        painter.setPen(self._pen)
+        painter.setBrush(self.brush())
+        painter.setPen(self.pen())
 
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         painter.drawPolygon(QtGui.QPolygonF(points))
