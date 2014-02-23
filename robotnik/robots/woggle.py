@@ -200,8 +200,9 @@ class Woggle(Robot):
     def paint(self, painter, option, widget):
         """
         """
-        # Body
+        # Paint body (always grey)
         painter.setBrush(QtGui.QColor("light grey"))
+        painter.setPen(QtCore.Qt.SolidLine)
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         painter.drawPolygon(QtGui.QPolygonF(points))
 
@@ -210,16 +211,22 @@ class Woggle(Robot):
         bodyW = self._wheelBaseLength
         bodyH = self._wheelBaseLength
 
-        # Left wheel
+        # Paint identifier
+        painter.setBrush(QtGui.QColor(self.brush()))
+        painter.setPen(self.pen())
+        rect = QtCore.QRectF(-bodyW/8, -bodyH/8, bodyW/4, bodyH/4)
+        painter.drawEllipse(rect)
+
+        # Paint left wheel
         wheelW = bodyW / 3
         wheelH = bodyH / 6
         lwheelX = -wheelW/2
         lwheelY = -bodyH/2 + wheelH/2
-        painter.setBrush(QtGui.QColor("black"))
         rect = QtCore.QRectF(lwheelX, lwheelY, wheelW, wheelH)
+        painter.setBrush(QtGui.QColor("black"))
         painter.drawRect(rect)
 
-        # Right wheel
+        # Paint right wheel
         rwheelX = -wheelW/2
         rwheelY = bodyH/2 - wheelH - wheelH/2
         rect = QtCore.QRectF(rwheelX, rwheelY, wheelW, wheelH)
