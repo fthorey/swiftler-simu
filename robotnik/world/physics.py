@@ -59,28 +59,23 @@ class Physics(QtCore.QObject):
         # Check all sensors of all robots currently in the scene
         # Loop over robots
         for robot in self._world.getRobots():
+
             # Don't check for collision if the robot is already stopped
             if robot.isStopped():
                 continue
 
-            # Loop over sensors
+            # Loop over robot sensors
             for sensor in robot.proxSensors():
-                # Get all sensors that detect an obstacle
-                if self.isSensorColliding(sensor):
-                    while self.isSensorColliding(sensor):
-                        # Reduce the beam of this sensor
-                        sensor.reduceBeamRange(self._sensorReduction)
-                        # Check if the sensor has reached its min beam range
-                    if sensor.isMinRangeReached():
-                        robot.stop()
-
-                # Otherwise check if they are at their max range or not
+                # Get all items in collision with the sensor
+                collItems = self._world.collidingItems(sensor)
+                # Recalculate the envelope of the sensor in the world
+                sensor.getWorldEnvelope(True)
+                # Check for a collision
+                if self.isSensorColliding(sensor, collItems):
+                    # Update the sensor distance
+                    for item in collItems:
+                        sensor.updateDistance(item)
                 else:
-                    # sensor.setBeamRange(sensor.getMaxBeamRange())
-                    if sensor.getBeamRange() < sensor.getMaxBeamRange():
-                        while not self.isSensorColliding(sensor):
-                            if not sensor.isMaxRangeReached():
-                                # Increase the beam of this sensor
-                                sensor.increaseBeamRange(self._sensorReduction)
-                            else:
-                                break
+                    # Reset the sensor to its maximum range if not already
+                    if not sensor.isAtMaxRange():
+                        sensor.updateDistance()
