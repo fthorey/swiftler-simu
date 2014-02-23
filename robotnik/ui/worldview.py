@@ -16,6 +16,9 @@ class WorldView(QtGui.QGraphicsView):
         # Rename scene to world
         self.world = self.scene
 
+        # Invert the world to get a correct frame to work in
+        self.scale(-1, -1)
+
     def focusOnWorld(self, ):
         """Scale the view to include all of the world (including robots).
         """
