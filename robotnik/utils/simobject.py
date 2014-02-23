@@ -28,6 +28,16 @@ class SimObject(QtGui.QGraphicsItem):
         # Cached world envelope (in the scene coordinates system)
         self._worldEnvelope = None
 
+    def setBrush(self, brush_):
+        """Set the brush of the simObject
+        """
+        self._brush = brush_
+
+    def setPen(self, pen_):
+        """Set the pen of the simObject
+        """
+        self._pen = pen_
+
     def brush(self, ):
         """Return the brush of the simObject
         """
