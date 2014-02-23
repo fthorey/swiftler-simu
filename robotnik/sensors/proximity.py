@@ -104,6 +104,10 @@ class ProximitySensor(SimObject):
     def restart(self, ):
         """Restart the sensor to its initial state
         """
+        # Set the envelope to its maximum value
+        self._envelope = self.getCone(self._rmax)
+        # Change brush color
+        self.setBrush(QtGui.QBrush(self._brushColorNoCol))
 
     def getEnvelope(self):
         """Return the envelope of the sensor
