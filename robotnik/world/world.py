@@ -44,8 +44,26 @@ class World(QtGui.QGraphicsScene):
         # Store if path drawing is needed
         self._showTracks = True
 
-        # store of the ghost mode is activated or not
+        # Stores if the ghost mode is activated or not
         self._isGhostMode = True
+
+        # Stores the running state of the world
+        self._isRunning = False
+
+    def setRunning(self, isRunning_):
+        """Set the running state of the world.
+        """
+        self._isRunning = isRunning_
+
+    def toggleRunning(self, ):
+        """Toggles the running state of the world.
+        """
+        self._isRunning = not self._isRunning
+
+    def isRunning(self, ):
+        """Checks if the world is running or not.
+        """
+        return self._isRunning
 
     def getRobots(self, ):
         """Get a list of all robots currently in the world.
