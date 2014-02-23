@@ -40,14 +40,11 @@ class ProximitySensor(SimObject):
 
 
 
-        # Cache the bounding rect
-        xmin, ymin, xmax, ymax = self.getBounds()
-        self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
+        # Update current bounding rect
+        self.__updateBoundingRect()
 
-        # Cache the shape
-        points = [QtCore.QPointF(p[0], p[1]) for p in self._fullcone]
-        self._shape = QtGui.QPainterPath()
-        self._shape.addPolygon(QtGui.QPolygonF(points))
+        # Update current shape
+        self.__updateShape()
 
         # Brush color
         self._brushColor = QtGui.QColor('red')
@@ -58,6 +55,19 @@ class ProximitySensor(SimObject):
         self._penColor = QtGui.QColor('red')
         self._penColor.setAlpha(128)
         self._pen = QtGui.QPen(QtCore.Qt.NoPen)
+
+    def __updateBoundingRect(self, ):
+        """
+        """
+        # Current bounding rect
+        xmin, ymin, xmax, ymax = self.getBounds()
+        self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
+
+    def __updateShape(self, ):
+        # Cache the shape
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
+        self._shape = QtGui.QPainterPath()
+        self._shape.addPolygon(QtGui.QPolygonF(points))
 
     def getCone(self, distance):
         return [(self._rmin*cos(self._phi/2),self._rmin*sin(self._phi/2)),
