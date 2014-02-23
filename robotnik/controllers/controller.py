@@ -15,3 +15,8 @@ class Controller(object):
         :param dt_: Time elapsed (s) since last call to 'execute'
         """
         raise NotImplementedError("Controller.execute")
+
+    def restart(self, ):
+        """Restarts the controller
+        """
+        raise NotImplementedError("Controller.restart")
