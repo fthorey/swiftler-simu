@@ -58,8 +58,6 @@ class ProximitySensor(SimObject):
         self._brush = QtGui.QBrush(self._brushColor)
 
         # Pen color
-        self._penColor = QtGui.QColor('red')
-        self._penColor.setAlpha(128)
         self._pen = QtGui.QPen(QtCore.Qt.NoPen)
 
     def __updateBoundingRect(self, ):
@@ -115,16 +113,6 @@ class ProximitySensor(SimObject):
         """
         return self._shape
 
-    # Define how to paint the shape
-    def paint(self, painter, option, widget):
-        """
-        """
-        painter.setBrush(self._brush)
-        painter.setPen(self._pen)
-
-        points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
-        painter.drawPolygon(QtGui.QPolygonF(points))
-
     def updateDistance(self, simObject = None):
         """updates all the distances from the reading"""
         if simObject is None:
@@ -154,3 +142,13 @@ class ProximitySensor(SimObject):
                     minDist = distance
             else: minDist = distance
         return minDist
+
+    # Define how to paint the shape
+    def paint(self, painter, option, widget):
+        """
+        """
+        painter.setBrush(self._brush)
+        painter.setPen(self._pen)
+
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
+        painter.drawPolygon(QtGui.QPolygonF(points))
