@@ -44,7 +44,7 @@ class ProximitySensor(SimObject):
         self._currDist = self._maxDist
 
         # The current cone of the sensor
-        self._pts = self.getCone(self._rmax)
+        self._envelope = self.getCone(self._rmax)
 
         # Update current bounding rect
         self.__updateBoundingRect()
@@ -69,7 +69,7 @@ class ProximitySensor(SimObject):
 
     def __updateShape(self, ):
         # Cache the shape
-        points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         self._shape = QtGui.QPainterPath()
         self._shape.addPolygon(QtGui.QPolygonF(points))
 
@@ -101,7 +101,7 @@ class ProximitySensor(SimObject):
 
     def getEnvelope(self):
         """Return the envelope of the sensor"""
-        return self._pts
+        return self._envelope
 
     def boundingRect(self, ):
         """
@@ -118,13 +118,14 @@ class ProximitySensor(SimObject):
         if simObject is None:
             # reset distance to max
             self._currDist = self._maxDist
-            self._pts = self.getCone(self._rmax)
+            self._envelope = self.getCone(self._rmax)
         else:
             distance2obj = self.getDistanceTo(simObject)
             if distance2obj:
                 if self._currDist > distance2obj:
                     self._currDist = distance2obj
-                    self._pts = self.getCone(self._currDist)
+                    # Update envelope
+                    self._envelope = self.getCone(self._currDist)
         # Update bounding rect and shape
         self.__updateBoundingRect()
         self.__updateShape()
@@ -150,5 +151,5 @@ class ProximitySensor(SimObject):
         painter.setBrush(self._brush)
         painter.setPen(self._pen)
 
-        points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         painter.drawPolygon(QtGui.QPolygonF(points))
