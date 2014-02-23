@@ -35,14 +35,14 @@ class ProximitySensor(SimObject):
         # Maximum range (in m)
         self._rmax = 0.10
 
-        # The current cone of the sensor
-        self._pts = self.getCone(self._rmax)
         # Maximum detection distance of the sensor (in m)
         self._maxDist = 65536
 
         # Current detection ditance of the sensor (in m)
         self._currDist = self._maxDist
 
+        # The current cone of the sensor
+        self._pts = self.getCone(self._rmax)
 
         # Update current bounding rect
         self.__updateBoundingRect()
@@ -101,7 +101,7 @@ class ProximitySensor(SimObject):
 
     def getEnvelope(self):
         """Return the envelope of the sensor"""
-        return self._fullcone
+        return self._pts
 
     def boundingRect(self, ):
         """
