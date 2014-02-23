@@ -60,6 +60,11 @@ class Supervisor(object):
         """
         raise NotImplementedError("Supervisor.updateOdometry")
 
+    def restart(self, ):
+        """Restart.
+        """
+        raise NotImplementedError("Supervisor.restart")
+
     def isAtGoal(self, ):
         """Check if the robot is nearby enough its goal.
         """

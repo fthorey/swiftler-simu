@@ -33,6 +33,16 @@ class WoggleSupervisor(Supervisor):
         # Distance from the goal to which the robot stop (in m)
         self.setStopDist(0.05)
 
+    def restart(self, ):
+        """Restart.
+        """
+        # Restart the controller
+        self._controller.restart()
+
+        # Restart the wheel encoders ticks
+        self._prevLeftTicks = 0
+        self._prevRightTicks = 0
+
     def controller(self, ):
         """Return the current controller of the robot.
         """
