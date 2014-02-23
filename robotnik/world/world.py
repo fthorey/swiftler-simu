@@ -6,7 +6,6 @@ from utils.polygon import Polygon
 from PyQt4 import QtGui, QtCore
 from physics import Physics
 from math import pi, degrees
-from ui.worldrenderer import WorldRenderer
 from utils.xmlreader import XMLReader
 from utils import helpers
 
@@ -237,4 +236,4 @@ class World(QtGui.QGraphicsScene):
         if self._showTracks:
             for robot in self._robots:
                 painter.setPen(QtGui.QColor(robot.brush()))
-                painter.drawPath(robot.getTrack())
+                painter.drawPath(robot.tracker().getTrack())

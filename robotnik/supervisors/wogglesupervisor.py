@@ -1,77 +1,81 @@
 #!/usr/bin/python
 # coding: utf-8
 
-
 from math import degrees, sqrt, cos, sin, pi
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
-from utils import const
 from supervisors.supervisor import Supervisor
-from utils import const
 
 from PyQt4 import QtCore
 
 class WoggleSupervisor(Supervisor):
-    """ WoggleSupervisor is a class that provides a way to control a Woggle robot
+    """ WoggleSupervisor is a class that provides a way to control a Woggle robot.
+
+    The WoggleSupervisor does not move the robot directly. Instead, the supervisor
+    selects a controller to do the work and uses the controller outputs
+    to generate the robot inputs.
     """
 
     def __init__(self, robot_):
-        """
-        """
         # Call parent constructor
         super(WoggleSupervisor, self,).__init__(robot_);
 
-        # Store old value of wheel encoder ticks
-        self.prevLeftTicks = 0
-        self.prevRightTicks = 0
+        # Set the default controller
+        self.setController(GoToGoal())
 
-    # Select and execute the current controller
-    # The step duration is in seconds
-    def execute(self, ):
-        """
+        # Store old values of wheel encoder ticks
+        self._prevLeftTicks = 0
+        self._prevRightTicks = 0
+
+        # Set the goal (in m)
+        self.setGoal(-5, 1)
+
+        # Distance from the goal to which the robot stop (in m)
+        self.setStopDist(0.05)
+
+    def execute(self, dt_):
+        """Selects and executes a controller.
         """
 
-        if self.isAtGoal() or self.robot.isStopped():
-            self.robot.setWheelSpeeds(0, 0)
+        # Stop the robot if at goal
+        if self.isAtGoal() or self.robot().isStopped():
+            self.robot().setWheelSpeeds(0, 0)
             return
 
-        # Update the estimate of the robot position
+        # 1 -> Update the estimation of the robot state
         self.updateOdometry()
 
-        # Execute the controller to obtain parameters to apply to the robot
-        v, w = self.controller.execute(self._stateEstimate, self.goal, const.stepDuration)
+        # 2 -> Execute the controller to obtain command to apply to the robot
+        v, w = self.controller().execute(self._stateEstimate, self.goal(), dt_)
 
         # Convert speed (in m/s) and angular rotation (in rad/s) to
         # angular speed to apply to each robot wheels (in rad/s)
-        vel_l, vel_r = self.robot.getDynamics().uni2Diff(v, w)
+        vel_l, vel_r = self.robot().getDynamics().uni2Diff(v, w)
 
-        # Apply current speed to wheels
-        self.robot.setWheelSpeeds(vel_l, vel_r)
-
-        # Update the estimate of the robot position
-        self.updateOdometry()
+        # 3 -> Apply current speed to wheels
+        self.robot().setWheelSpeeds(vel_l, vel_r)
 
     def updateOdometry(self, ):
+        """Update the current estimation of the robot state.
         """
-        """
-        ticks_per_rev = self.robot.leftWheelEncoder().ticksPerRev()
-        left_ticks = int(self.robot.leftRevolutions()*ticks_per_rev)
-        right_ticks = int(self.robot.rightRevolutions()*ticks_per_rev)
+        ticks_per_rev = self.robot().leftWheelEncoder().ticksPerRev()
+        left_ticks = int(self.robot().leftRevolutions()*ticks_per_rev)
+        right_ticks = int(self.robot().rightRevolutions()*ticks_per_rev)
 
-        dtl = left_ticks - self.prevLeftTicks
-        dtr = right_ticks - self.prevRightTicks
+        dtl = left_ticks - self._prevLeftTicks
+        dtr = right_ticks - self._prevRightTicks
 
         # Save the wheel encoder ticks for the next estimate
-        self.prevLeftTicks += dtl
-        self.prevRightTicks += dtr
+        self._prevLeftTicks += dtl
+        self._prevRightTicks += dtr
 
         # Get old state estimation (in m and rad)
         x, y  = self._stateEstimate['x'], self._stateEstimate['y']
         theta =self._stateEstimate['theta']
 
         # Get robot parameters (in m)
-        R = self.robot.wheelRadius()
-        L = self.robot.wheelBaseLength()
+        R = self.robot().wheelRadius()
+        L = self.robot().wheelBaseLength()
         m_per_tick = (2*pi*R) / ticks_per_rev
 
         # distance travelled by left wheel

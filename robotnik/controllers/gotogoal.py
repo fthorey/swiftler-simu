@@ -32,8 +32,7 @@ class GoToGoal(Controller):
         :param dt_: Time elapsed since last call to 'execute'
         """
         # Retrieve the goal location (in m)
-        x_g = goal_.x()
-        y_g = goal_.y()
+        x_g, y_g = goal_
 
         # Get an estimate of the current pos (in m and rad)
         x, y = state_['x'], state_['y']
