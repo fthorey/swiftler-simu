@@ -15,15 +15,13 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 from PyQt4 import QtGui, QtCore, uic
 
 class Robotnik(QtGui.QMainWindow):
-    """ Robotnik class is the main container for the simulator
+    """ The Robotnik class is the main container for the simulator.
     """
 
     # Step duration of 10ms (min possible for Qt framework)
     const.stepDuration = 10*1e-3 # in s
 
     def __init__(self, ):
-        """
-        """
         # Call parent constructor
         super(Robotnik, self).__init__()
 
@@ -42,7 +40,7 @@ class Robotnik(QtGui.QMainWindow):
         self.connectSlots()
 
     def configureToolBar(self, ):
-        """
+        """Configures the toolbar.
         """
         # Add robot zoom slider
         self.zoom_Slider = QtGui.QSlider(QtCore.Qt.Horizontal,self)
@@ -59,7 +57,7 @@ class Robotnik(QtGui.QMainWindow):
         self.mainToolBar.addWidget(self.zoom_Label)
 
     def configureSimu(self, ):
-        """
+        """Configures the simulation.
         """
         # Max steps number
         self.maxSteps = 1000
@@ -67,7 +65,7 @@ class Robotnik(QtGui.QMainWindow):
         self.currentSteps = 0
 
     def configureWorld(self, ):
-        """
+        """Configures the world.
         """
         # Create a new world
         self.world = World(self)
@@ -75,7 +73,7 @@ class Robotnik(QtGui.QMainWindow):
         self.world.autoConstruct()
 
     def configureView(self, ):
-        """
+        """Configures the view slot.
         """
         # Remove aliasing and smooth transformations
         self.worldView.setRenderHints(QtGui.QPainter.Antialiasing |
@@ -90,7 +88,7 @@ class Robotnik(QtGui.QMainWindow):
         self.worldView.focusOnWorld()
 
     def configureWindow(self, ):
-        """
+        """Configures the window.
         """
         # Center the main window
         self.center()
@@ -98,7 +96,7 @@ class Robotnik(QtGui.QMainWindow):
         self.show()
 
     def connectSlots(self, ):
-        """
+        """Connects all slots.
         """
         # Play
         self.action_Play.triggered.connect(self.start)
@@ -132,13 +130,13 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def pause(self, ):
-        """
+        """Pauses the simulation.
         """
         self.timer.stop()
 
     @QtCore.pyqtSlot()
     def stop(self, ):
-        """
+        """Stops the simulation.
         """
         self.currentSteps = self.currentSteps + 1
 
@@ -148,7 +146,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def start(self, ):
-        """
+        """Starts the simulation.
         """
         # The timer class needs a duration in ms
         # -> Convert s into ms
@@ -156,7 +154,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def restart(self, ):
-        """
+        """Restarts the simulation.
         """
         # Stop the timer
         self.currentSteps = 0
@@ -172,7 +170,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
-        """
+        """Zooms on the world.
         """
         # Toggle zoom icons
         self.action_Zoom_World.setChecked(True)
@@ -186,7 +184,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def zoomRobot(self, ):
-        """
+        """Zooms on the master robot.
         """
         # Toggle zoom icons
         self.action_Zoom_World.setChecked(False)
@@ -200,7 +198,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot(int)
     def setRobotZoomLevel(self, value_):
-        """
+        """Sets the master robot zoom level.
         """
         zoom = 5.0**(value_/100.0)
         for robot in self.world.getRobots():
@@ -214,7 +212,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def showProxSensors(self, ):
-        """
+        """Shows the robots proximity sensors
         """
         # Toggle the robot sensors display
         self.world.toggleRobotSensors()
@@ -224,7 +222,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def showRobotTracks(self, ):
-        """
+        """Shows the robots tracks
         """
         # Toggle the robot tracks display
         self.world.toggleRobotTracks()
@@ -234,14 +232,14 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def enableGhostMode(self, ):
-        """
+        """Enables the robots ghost mode.
         """
         # Toggle the ghost mode enabling
         self.world.toggleGhostMode()
 
     # Center the main window
     def center(self, ):
-        """
+        """Centers the window on screen.
         """
         qr = self.frameGeometry()
         cp = QtGui.QDesktopWidget().availableGeometry().center()
