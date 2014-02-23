@@ -1,15 +1,11 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from math import pi, ceil
-
 class WheelEncoder(object):
-    """
+    """ The WheelEncoder class represents a generic class for wheel encoders
     """
 
     def __init__(self, ticksPerRev_, wheelRadius_):
-        """
-        """
         # Store Wheel radius
         self._wheelRadius = wheelRadius_
 
@@ -20,26 +16,16 @@ class WheelEncoder(object):
         self._ticks = 0
 
     def ticksPerRev(self, ):
-        """
+        """Return the constant number of ticks that occurs during a single (2*pi) revolution
         """
         return self._ticksPerRev
 
     def ticks(self, ):
-        """
+        """Return the current number of ticks that already occured
         """
         return self._ticks
 
-    # def dist2Ticks(self, distance_):
-    #     """
-    #     """
-    #     return (distance_ * self._ticksPerRev)/ (2*pi)
-
-    # def updateTicks(self, wheelVelocity_, dt_):
-    #     """
-    #     """
-    #     self._ticks = self._ticks + self.dist2Ticks(wheelVelocity_ * dt_)
-
     def resetTicks(self, ):
-        """
+        """Reset the current number of ticks
         """
         self._ticks = 0

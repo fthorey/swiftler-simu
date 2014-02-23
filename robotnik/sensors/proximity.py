@@ -1,25 +1,25 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from utils.rect import Rect
 from utils.simobject import SimObject
 from math import pi, tan, degrees, cos, sin, sqrt
-from utils import const
 
 from PyQt4 import QtGui, QtCore
 
 class ProximitySensor(SimObject):
-    """ ProximitySensor class represents a generic class for proximity sensors
+    """ The ProximitySensor class represents a generic class for proximity sensors
     """
 
+    # Overall number of proximity sensors in the world
     count = 0
 
     def __init__(self, pos_):
-        """
-        """
+
+        # Call parent constructor
         super(ProximitySensor, self).__init__('sharp' + str(self.count),
                                               QtCore.Qt.NoBrush,
                                               QtCore.Qt.NoPen)
+        # Increment by 1 the number of proximity sensors in the world
         self.count = self.count + 1
 
         # Location on the parent object (in m)
@@ -64,24 +64,26 @@ class ProximitySensor(SimObject):
         self.setPen(QtGui.QPen(QtCore.Qt.NoPen))
 
     def __updateBoundingRect(self, ):
+        """Update the bounding rectangle of the sensor
         """
-        """
-        # Current bounding rect
         xmin, ymin, xmax, ymax = self.getBounds()
         self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
 
     def __updateShape(self, ):
-        # Cache the shape
+        """Update the shape of the sensor
+        """
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         self._shape = QtGui.QPainterPath()
         self._shape.addPolygon(QtGui.QPolygonF(points))
 
     def isAtMaxRange(self, ):
-        """
+        """Check if the sensor is at its maximum range or not
         """
         return self._currDist == self._maxDist
 
     def getCone(self, distance):
+        """Get the envelope of the beam of the sensor
+        """
         return [(self._rmin*cos(self._phi/2),self._rmin*sin(self._phi/2)),
                 (distance*cos(self._phi/2),distance*sin(self._phi/2)),
                 (distance,0),
@@ -89,6 +91,8 @@ class ProximitySensor(SimObject):
                 (self._rmin*cos(self._phi/2),-self._rmin*sin(self._phi/2))]
 
     def show(self, show_):
+        """Choose wether to draw the proximity sensor on screen or not
+        """
         if show_:
             self._brush = QtGui.QBrush(self._brushColor)
         else:
@@ -97,27 +101,28 @@ class ProximitySensor(SimObject):
         # Trigger an update of the view
         self.update()
 
-    # Restart the sensor to its initial state
     def restart(self, ):
-        """
+        """Restart the sensor to its initial state
         """
 
     def getEnvelope(self):
-        """Return the envelope of the sensor"""
+        """Return the envelope of the sensor
+        """
         return self._envelope
 
     def boundingRect(self, ):
-        """
+        """Return the bounding rectangle of the sensor
         """
         return self._boundingRect
 
     def shape(self, ):
-        """
+        """Return the shape of the sensor
         """
         return self._shape
 
     def updateDistance(self, simObject = None):
-        """updates all the distances from the reading"""
+        """updates all the distances from the reading
+        """
         if simObject is None:
             # reset distance to max
             self._currDist = self._maxDist
@@ -139,8 +144,9 @@ class ProximitySensor(SimObject):
         self.__updateShape()
 
     def getDistanceTo(self, simObject):
-        """Gets the distance to another simobject
-        returns distance in meters or None if not in contact"""
+        """Gets the distance to another simObject
+        returns distance in meters or None if not in contact
+        """
         pos = self.parentItem().mapToScene(self.pos())
         ox, oy = pos.x(), pos.y()
         minDist = None
@@ -154,7 +160,7 @@ class ProximitySensor(SimObject):
 
     # Define how to paint the shape
     def paint(self, painter, option, widget):
-        """
+        """Paints the shape on screen
         """
         painter.setBrush(self.brush())
         painter.setPen(self.pen())
