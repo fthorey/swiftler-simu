@@ -10,12 +10,11 @@ from utils.xmlreader import XMLReader
 from utils import helpers
 
 class World(QtGui.QGraphicsScene):
-    """ World class provides access to all objects within the simulated environment
+    """ World class provides access to all objects within the simulated environment.
     """
 
     def __init__(self, parent_):
-        """
-        """
+
         # Call parent constructor
         super(World, self).__init__(parent_)
 
@@ -50,51 +49,47 @@ class World(QtGui.QGraphicsScene):
         self._isGhostMode = True
 
     def getRobots(self, ):
-        """
+        """Get a list of all robots currently in the world.
         """
         return self._robots
 
-    def isZoomOnRobot(self, ):
-        """
-        """
-        return self._zoomOnRObot
-
     def isGhostModeActivated(self, ):
-        """
+        """Checks if the ghost mode is activated.
         """
         return self._isGhostMode
 
     def toggleGhostMode(self, ):
-        """
+        """Toggle the ghost mode.
         """
         self._isGhostMode = not self._isGhostMode
 
     def toggleRobotTracks(self, ):
-        """
+        """Toggle the robot tracks display.
         """
         self._showTracks = not self._showTracks
 
     def toggleRobotSensors(self, ):
+        """Toggles the robots sensors display.
+        """
         self._showRobotSensors = not self._showRobotSensors
 
         for robot in self._robots:
             robot.showProxSensors(self._showRobotSensors)
 
-    # Toggle the current state of the zoom
     def setZoomOnRobot(self, zoom_):
-        """
+        """Toggles the current state of the zoom.
         """
         self._zoomOnRobot = zoom_
 
-    # Get the current state of the zoom
     def isZoomOnRobot(self, ):
-        """
+        """Checks if the zoom is currently on the master robot.
         """
         return self._zoomOnRobot
 
     # Construct the world
     def autoConstruct(self, ):
-        """
+        """ Autoconstructs the world from informations provided into the xml
+        template files.
         """
 
         # Get all objects from xml
@@ -155,42 +150,32 @@ class World(QtGui.QGraphicsScene):
                 print "{world.autConstruct] Can't recognized the item!"
                 raise
 
-    # Set the physics that rules the world
-    def setPhysics(self, physics_):
-        """
-        """
-        self._physics = physics_
-
-    # Add a robot to the world
-    # The position is given in m
     def addRobot(self, robot_, position_, angle_):
-        """
+        """Adds a robot to the world
+        The position is given in m.
         """
         robot_.setInitialPos(position_, angle_)
         self.addItem(robot_)
         self._robots.append(robot_)
 
-    # Return the current physics of the world
-    def getPhysics(self, ):
+    def setPhysics(self, physics_):
+        """Sets the physics that rules the world.
         """
+        self._physics = physics_
+
+    def getPhysics(self, ):
+        """Returns the current physics of the world.
         """
         return self._physics
 
-    # Return a list of all robots in the world
-    def getRobots(self, ):
-        """
-        """
-        return self._robots
-
     # Return a list of all obstacles in the wolrd
     def getObstacles(self, ):
-        """
+        """Return a list of all obstacles in the world.
         """
         return self._obstacles
 
-    # Action to perform when the scene changes
     def advance(self, ):
-        """
+        """Perform actions when the world advance.
         """
         # Call parent advance method
         # -> Call all items currently in the world advance method
@@ -207,12 +192,12 @@ class World(QtGui.QGraphicsScene):
         self._physics.apply()
 
     def setGridSize(self, size_):
-        """
+        """Sets the grid size.
         """
         self._gridSize = size_
 
     def drawBackground(self, painter, rect):
-        """
+        """Draw the background.
         """
         painter.setPen(self._gridPen)
         painter.setWorldMatrixEnabled(True);
