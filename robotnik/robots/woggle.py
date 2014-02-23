@@ -39,9 +39,6 @@ class Woggle(Robot):
         self._leftRevolutions = 0
         self._rightRevolutions = 0
 
-        # Set default heading angle (in rad)
-        self.setAngle(0)
-
         # Add a wheel encoder to each wheel
         self._leftWheelEncoder = WheelEncoder(2764.8, self._wheelRadius)
 
