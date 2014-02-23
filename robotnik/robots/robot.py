@@ -7,13 +7,11 @@ from utils import const
 from utils.tracker import Tracker
 
 class Robot(SimObject):
-    """ Robot class handles a robot
+    """ The Robot class represents a generic class for robots.
     """
 
-    # Constructor
     def __init__(self, name_, brush_, color_):
-        """
-        """
+
         # Call parent constructor
         super(Robot, self).__init__(name_, brush_, color_)
 
@@ -40,75 +38,64 @@ class Robot(SimObject):
         self._isMaster = False
 
         # Keep the current zoom
-        self._zoom = 1
-
-        # Store track item into the current view
-        self._trackItem = None
+        self._zoom = 1.0
 
         # Store all items which belong to the robot
         self._items = [self, ]
 
     def tracker(self, ):
-        """
+        """Return the tracker of the robot.
         """
         return self._tracker
 
     def addItem(self, item):
-        """
+        """Add an item to the robot's item list.
         """
         self._items.append(item)
 
     def getAllItems(self, ):
-        """
+        """Return the robot's item list.
         """
         return self._items
 
-    def getTrack(self, ):
-        """
-        """
-        return self._tracker.getTrack()
-
     def showProxSensors(self, show_):
+        """Select to show or not the proximity sensors.
+        """
         for sensor in self._proxSensors:
             sensor.show(show_)
 
     def proxSensors(self, ):
-        """
+        """Return the list of proximity sensors of the robot.
         """
         return self._proxSensors
 
     def setZoom(self, zoom_):
-        """
+        """Set the current zoom level of the robot.
         """
         self._zoom = zoom_
 
-    # Check if the robot is currently the master
     def isMasterRobot(self, ):
-        """
+        """Check if the robot is currently the master.
         """
         return self._isMaster
 
-    # Set master
     def setMasterRobot(self, ):
-        """
+        """Set this robot the master robot.
         """
         self._isMaster = True
 
-    # Set a goal
     def setGoal(self, goal_):
-        """
+        """Set a heading goal to the robot.
         """
         self._supervisor.setGoal(goal_)
 
-    # Get a goal
     def getGoal(self, ):
-        """
+        """Get the heading goal of the robot.
         """
         return self._supervisor.getGoal()
 
-    # Restart from the robot to its initial state
     def restart(self, ):
-        """
+        """Restart from the robot to its initial state.
         """
         # Set the initial postion (in m)
         self.setPos(self._initPos)
@@ -122,9 +109,8 @@ class Robot(SimObject):
         # Restart the tracker
         self._tracker.restart(self._initPos)
 
-    # Set the initial position of the robot (in m & rad)
     def setInitialPos(self, pos_, angle_):
-        """
+        """Set the initial position of the robot (in m & rad).
         """
         # in m
         self._initPos = pos_
@@ -143,52 +129,45 @@ class Robot(SimObject):
                                           self._initPos.y(),
                                           self._initAngle)
 
-    # Get the initial position of the robot (in m & rad)
     def getInitialPos(self, ):
-        """
+        """Get the initial position of the robot (in m & rad).
         """
         return self._initPos, self._initAngle
 
-    # Set the dynamics followed by the robot
     def setDynamics(self, dynamics_):
-        """
+        """Set the dynamics followed by the robot.
         """
         self._dynamics = dynamics_
 
-    # Get the dynamic of the robot
     def getDynamics(self, ):
-        """
+        """Get the dynamic of the robot.
         """
         return self._dynamics
 
-    # Set the supervisor that run the robot
     def setSupervisor(self, supervisor_):
-        """
+        """Set the supervisor that run the robot.
         """
         self._supervisor = supervisor_
 
-    # Get the supervisor of the robot
     def getSupervisor(self, ):
-        """
+        """Get the supervisor of the robot.
         """
         return self._supervisor
 
-    # Stop the robot
     def stop(self, ):
-        """
+        """Stop the robot.
         """
         self._stopped = True
 
-    # Check if the robot is stopped
     def isStopped(self, ):
-        """
+        """Check if the robot is stopped.
         """
         return self._stopped
 
-    # Return the bounding rect of the robot and all its sensors by a zoom factor
-    # The zoom factor must be between 0% and 100%
     def enlargedBoundingRect(self):
-        """
+        """Return the bounding rect of the robot and all its sensors
+        by a zoom factor.
+        The zoom factor must be between 0% and 100%.
         """
         zoom = 1.0 / self._zoom
         rect = self.boundingRect() | self.childrenBoundingRect()
@@ -199,9 +178,8 @@ class Robot(SimObject):
         rect.adjust(dx1, dy1, dx2, dy2)
         return rect
 
-    # Action to perform when the scene changes
     def advance(self, step_):
-        """
+        """Action to perform when the scene changes.
         """
         # Called twice by QGraphicsScene::advance() First, with step_ == 0: about to advance,
         # and then called with phase == 1, advance effectively

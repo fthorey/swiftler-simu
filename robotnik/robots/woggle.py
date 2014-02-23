@@ -10,15 +10,10 @@ from dynamics.differential import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
 class Woggle(Robot):
-    """ Woggle class handles a Woggle robot
+    """ The Woggle class handles a unicycle robot called Woggle
     """
 
-    # Constructor
-    # Get wheel radius (in m)
-    # Get in-between wheels distance (in m)
     def __init__(self, name_, wheelRadius_, wheelBaseLength_, brush_, color_):
-        """
-        """
         # Call parent constructor
         super(Woggle, self).__init__(name_, brush_, color_)
 
@@ -104,101 +99,94 @@ class Woggle(Robot):
             sensor.setParentItem(self)
 
     def leftRevolutions(self, ):
-        """
+        """Return the number of revolutions of the left wheel.
         """
         return self._leftRevolutions
 
     def rightRevolutions(self, ):
+        """Return the number of revolutions of the right wheel.
+        """
         return self._rightRevolutions
 
     def setLeftRevolutions(self, rev_):
-        """
+        """Set the number of revolutions of the left wheel.
         """
         self._leftRevolutions = rev_
 
     def setRightRevolutions(self, rev_):
-        """
+        """Set the number of revolutions of the right wheel.
         """
         self._rightRevolutions = rev_
 
     def leftWheelEncoder(self, ):
-        """
+        """Return the left wheel encoder.
         """
         return self._leftWheelEncoder
 
     def rightWheelEncoder(self, ):
-        """
+        """Return the right wheel encoder.
         """
         return self._rightWheelEncoder
 
-    # Get the wheel radius (in m)
     def wheelRadius(self, ):
-        """
+        """Return the wheel radius (in m).
         """
         return self._wheelRadius
 
-    # Get the wheel base length (in m)
     def wheelBaseLength(self, ):
-        """
+        """Return the wheel base length (in m).
         """
         return self._wheelBaseLength
 
-    # Set the current left wheel speed (in m/s)
     def setLeftWheelSpeed(self, speed_):
-        """
+        """Set the current left wheel speed (in m/s).
         """
         self._leftWheelSpeed = speed_
 
-    # Set the current right wheel speed (in m/s)
     def setRightWheelSpeed(self, speed_):
-        """
+        """Set the current right wheel speed (in m/s).
         """
         self._rightWheelSpeed = speed_
 
-    # Return the current left wheel speed (in m/s)
     def getLeftWheelSpeed(self, ):
-        """
+        """Return the current left wheel speed (in m/s).
         """
         return self._leftWheelSpeed
 
-    # Set the speed of both wheels (in m/s)
-    def setWheelSpeeds(self, vel_l, vel_r):
+    def getRightWheelSpeed(self, ):
+        """Return the current right wheel speed (in m/s).
         """
+        return self._rightWheelSpeed
+
+    def setWheelSpeeds(self, vel_l, vel_r):
+        """Set the speed of both wheels (in m/s).
         """
         self._leftWheelSpeed = vel_l
         self._rightWheelSpeed = vel_r
 
-    # Get current speed (in m/s)
     def getSpeed(self, ):
-        """
+        """Get current speed (in m/s).
         """
         v, w = self.dynamics.diff2Uni(self._leftWheelSpeed, self._rightWheelSpeed)
         return v
 
-    # Return the current left wheel speed (in m/s)
-    def getRightWheelSpeed(self, ):
-        """
-        """
-        return self._rightWheelSpeed
-
     def getEnvelope(self, ):
-        """
+        """Return the envelope of the robot.
         """
         return self._envelope
 
     def boundingRect(self, ):
-        """
+        """Return the bounding rect of the robot.
         """
         return self._boundingRect
 
     def shape(self, ):
-        """
+        """Return the shape of the robot.
         """
         return self._shape
 
-    # Define how to paint the robot
     def paint(self, painter, option, widget):
-        """
+        """Paint the robot on screen
         """
         # Paint body (always grey)
         painter.setBrush(QtGui.QColor("light grey"))
