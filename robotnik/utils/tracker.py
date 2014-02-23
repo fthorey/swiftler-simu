@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from PyQt4 import QtGui, QtCore
-from utils import const
 
 class Tracker(QtCore.QObject):
     """

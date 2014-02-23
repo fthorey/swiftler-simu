@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from utils import const
 from utils.polygon import Polygon
 from PyQt4 import QtGui, QtCore
 from physics import Physics
