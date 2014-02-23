@@ -73,3 +73,7 @@ class Physics(QtCore.QObject):
                     # Reset the sensor to its maximum range if not already
                     if not sensor.isAtMaxRange():
                         sensor.updateDistance()
+
+                # Stop the robot if the minimum range has been reached
+                if sensor.isMinRangeReached():
+                    robot.stop()

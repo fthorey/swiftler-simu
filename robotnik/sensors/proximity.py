@@ -37,6 +37,9 @@ class ProximitySensor(SimObject):
         # Maximum range (in m)
         self._rmax = 0.10
 
+        # Minimum detection distance of the sensor (in m)
+        self._minDist = 0.03
+
         # Maximum detection distance of the sensor (in m)
         self._maxDist = 65536
 
@@ -75,6 +78,11 @@ class ProximitySensor(SimObject):
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         self._shape = QtGui.QPainterPath()
         self._shape.addPolygon(QtGui.QPolygonF(points))
+
+    def isMinRangeReached(self, ):
+        """Check if the minimum range has been reached or not.
+        """
+        return self._currDist <= self._minDist
 
     def isAtMaxRange(self, ):
         """Check if the sensor is at its maximum range or not
