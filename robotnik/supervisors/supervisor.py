@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from math import degrees, sqrt
-from controllers.controller import GoToGoal, Rotate
 from utils import const
 
 from PyQt4 import QtCore
@@ -18,7 +17,7 @@ class Supervisor(object):
         self.robot = robot_
 
         # Current controller
-        self.controller = GoToGoal()
+        self.controller = None
 
         # Goal expressed in the scene referential (in m)
         self.goal = QtCore.QPointF(25, 4)

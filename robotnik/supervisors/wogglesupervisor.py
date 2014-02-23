@@ -4,7 +4,7 @@
 
 from math import degrees, sqrt, cos, sin, pi
 from robots.robot import Robot
-from controllers.controller import GoToGoal, Rotate
+from controllers.gotogoal import GoToGoal
 from utils import const
 from supervisors.supervisor import Supervisor
 from utils import const
