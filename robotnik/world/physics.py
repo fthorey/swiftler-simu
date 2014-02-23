@@ -19,8 +19,6 @@ class Physics(QtCore.QObject):
         # Set the world on which the physics apply
         self._world = world_
 
-        self._sensorReduction = 10*1e-4
-
     # Apply physics at each step
     def apply(self, ):
         """
