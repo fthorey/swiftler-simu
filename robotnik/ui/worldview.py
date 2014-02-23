@@ -4,7 +4,7 @@
 from PyQt4 import QtCore, QtGui
 
 class WorldView(QtGui.QGraphicsView):
-    """ WorldView class displays the embedded world to the real world
+    """ The WorldView class displays the embedded world to real world.
     """
 
     def __init__(self, parent_=None):
@@ -17,7 +17,8 @@ class WorldView(QtGui.QGraphicsView):
         self.world = self.scene
 
     def focusOnWorld(self, ):
-        """Scale the view to include all of the world (including robots)"""
+        """Scale the view to include all of the world (including robots).
+        """
         # Unset the zoom on robot parameter
         self.world().setZoomOnRobot(False)
         # Set scene bounding rectangle (in pixel)
@@ -26,7 +27,7 @@ class WorldView(QtGui.QGraphicsView):
         self.fitInView(self.world().sceneRect(), QtCore.Qt.KeepAspectRatio)
 
     def focusOnRobot(self, ):
-        """
+        """Scale the view to focus only on the robot.
         """
         # Set the zoom on robot parameter
         self.world().setZoomOnRobot(True)
@@ -38,18 +39,8 @@ class WorldView(QtGui.QGraphicsView):
                 self.fitInView(boundingRect, QtCore.Qt.KeepAspectRatio)
                 break
 
-    def wheelEvent(self, event):
-        """
-        """
-        # # self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse);
-        # scaleFactor = 1.15
-        # if event.delta() > 0:
-        #     self.scale(scaleFactor, scaleFactor)
-        # else:
-        #     self.scale(1.0 / scaleFactor, 1.0 / scaleFactor)
-
     def resizeEvent(self, event):
-        """
+        """Check if the current zoom is on the robot on resize events.
         """
         if self.world().isZoomOnRobot():
             self.focusOnRobot()
