@@ -22,6 +22,12 @@ class GoToGoal(Controller):
         # error step k-1
         self._e_k_1 = 0;
 
+    def restart(self, ):
+        """Restarts the controller
+        """
+        self._E_k = 0;
+        self._e_k_1 = 0;
+
     def execute(self, state_, goal_, dt_):
         """ Take an estimation of the current state and a heading goal to
         process the appropriate linear velocity v (m/s) and angular velocity (rad/s) to steers
