@@ -84,8 +84,8 @@ class Robotnik(QtGui.QMainWindow):
         # Attach the world to the current view
         self.worldView.setScene(self.world)
 
-        # Focus on the world by default
-        self.worldView.focusOnWorld()
+        # Focus on the robot by default
+        self.worldView.focusOnRobot()
 
     def configureWindow(self, ):
         """Configures the window.

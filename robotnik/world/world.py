@@ -36,7 +36,7 @@ class World(QtGui.QGraphicsScene):
         self._obstacles = list()
 
         # Store the current state of the zoom (robot or world)
-        self._zoomOnRobot = False
+        self._zoomOnRobot = True
 
         # Store if the robots sensors are displayed
         self._showRobotSensors = True
