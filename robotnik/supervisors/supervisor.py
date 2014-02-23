@@ -13,9 +13,6 @@ class Supervisor(object):
         # Robot supervised
         self._robot = robot_
 
-        # Current controller
-        self._controller = None
-
     def stopDist(self, ):
         """Return the distance from an obstacle to which the robot stops.
         """
@@ -40,16 +37,6 @@ class Supervisor(object):
         """Return the goal of the robot.
         """
         return self._goal.x(), self._goal.y()
-
-    def controller(self, ):
-        """Return the current controller of the robot.
-        """
-        return self._controller
-
-    def setController(self, controller_):
-        """Set the controller of the robot.
-        """
-        self._controller = controller_
 
     def stateEstimate(self, ):
         """Return an estimate of the state of the robot (x,y,theta).

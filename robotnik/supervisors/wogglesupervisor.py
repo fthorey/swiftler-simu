@@ -20,18 +20,28 @@ class WoggleSupervisor(Supervisor):
         # Call parent constructor
         super(WoggleSupervisor, self,).__init__(robot_);
 
-        # Set the default controller
-        self.setController(GoToGoal())
+        # Current controller
+        self._controller = GoToGoal()
 
         # Store old values of wheel encoder ticks
         self._prevLeftTicks = 0
         self._prevRightTicks = 0
 
         # Set the goal (in m)
-        self.setGoal(-5, 1)
+        self.setGoal(-10, 1)
 
         # Distance from the goal to which the robot stop (in m)
         self.setStopDist(0.05)
+
+    def controller(self, ):
+        """Return the current controller of the robot.
+        """
+        return self._controller
+
+    def setController(self, controller_):
+        """Set the controller of the robot.
+        """
+        self._controller = controller_
 
     def execute(self, dt_):
         """Selects and executes a controller.
