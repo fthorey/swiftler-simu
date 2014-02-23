@@ -52,6 +52,7 @@ class Robot(SimObject):
         """Add an item to the robot's item list.
         """
         self._items.append(item)
+        item.setParentItem(self)
 
     def getAllItems(self, ):
         """Return the robot's item list.
@@ -157,7 +158,7 @@ class Robot(SimObject):
         """
         self._supervisor = supervisor_
 
-    def getSupervisor(self, ):
+    def supervisor(self, ):
         """Get the supervisor of the robot.
         """
         return self._supervisor

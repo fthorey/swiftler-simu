@@ -92,8 +92,10 @@ class Woggle(Robot):
         # Add the sensors to the robot
         for pos in self._proxSensorsPos:
             sensor = ProximitySensor(pos)
+            # Add the sensor to the list of sensors
             self.proxSensors().append(sensor)
-            sensor.setParentItem(self)
+            # Add the sensor to the general list of items of the robot
+            self.addItem(sensor)
 
     def restart(self, ):
         """Restart.
