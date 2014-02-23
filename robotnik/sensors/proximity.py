@@ -142,7 +142,8 @@ class ProximitySensor(SimObject):
     def getDistanceTo(self, simObject):
         """Gets the distance to another simobject
         returns distance in meters or None if not in contact"""
-        ox, oy = self.pos().x(), self.pos().y()
+        pos = self.parentItem().mapToScene(self.pos())
+        ox, oy = pos.x(), pos.y()
         minDist = None
         for px, py in self.getContactPoints(simObject):
             distance = sqrt((px-ox)*(px-ox)+(py-oy)*(py-oy))
