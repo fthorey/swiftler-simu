@@ -10,7 +10,7 @@ from ui.worldrenderer import WorldRenderer
 from utils.xmlreader import XMLReader
 from utils import helpers
 
-class World(WorldRenderer):
+class World(QtGui.QGraphicsScene):
     """ World class provides access to all objects within the simulated environment
     """
 
@@ -25,6 +25,12 @@ class World(WorldRenderer):
 
         # Create a xml reader object to parse world files
         self._xmlReader = XMLReader('templates/labyrinth_small.xml')
+
+        # Define a grid size of 10cm
+        self._gridSize = 0.1
+
+        # Type of the grid pen
+        self._gridPen = QtGui.QPen(QtGui.QColor(0x808080))
 
         # List of robots currently in the world
         self._robots = list()
@@ -198,6 +204,11 @@ class World(WorldRenderer):
 
         # Apply physics
         self._physics.apply()
+
+    def setGridSize(self, size_):
+        """
+        """
+        self._gridSize = size_
 
     def drawBackground(self, painter, rect):
         """
