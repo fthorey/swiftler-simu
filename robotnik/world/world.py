@@ -233,6 +233,8 @@ class World(QtGui.QGraphicsScene):
 
         # painter.drawLines(lines)
 
+        # Draw robots tracks
         if self._showTracks:
             for robot in self._robots:
+                painter.setPen(QtGui.QColor(robot.brush()))
                 painter.drawPath(robot.getTrack())
