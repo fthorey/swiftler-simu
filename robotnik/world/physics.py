@@ -26,7 +26,7 @@ class Physics(QtCore.QObject):
         # Proximity sensors detection
         self.proximitySensorDetection()
 
-    def isSensorColliding(self, sensor):
+    def isSensorColliding(self, sensor_, collItems_):
 
         def isARobot(item):
             for robot in self._world.getRobots():
@@ -34,17 +34,14 @@ class Physics(QtCore.QObject):
                     return True
             return False
 
-        # Get all items in collision with the sensor
-        colItems = self._world.collidingItems(sensor)
-
-        for item in colItems:
+        for item in collItems_:
             # Check if the item is a robot or affiliated
             if isARobot(item):
                 # If ghost mode activated, continue, else return False
                 if self._world.isGhostModeActivated():
                     continue
                 else:
-                    myRobot = sensor.parentItem()
+                    myRobot = sensor_.parentItem()
                     if item in myRobot.getAllItems():
                         continue
                     return True
