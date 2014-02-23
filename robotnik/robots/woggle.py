@@ -212,7 +212,7 @@ class Woggle(Robot):
         bodyH = self._wheelBaseLength
 
         # Paint identifier
-        painter.setBrush(QtGui.QColor(self.brush()))
+        painter.setBrush(self.brush())
         painter.setPen(self.pen())
         rect = QtCore.QRectF(-bodyW/8, -bodyH/8, bodyW/4, bodyH/4)
         painter.drawEllipse(rect)
