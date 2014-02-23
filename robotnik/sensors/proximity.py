@@ -37,7 +37,11 @@ class ProximitySensor(SimObject):
 
         # The current cone of the sensor
         self._pts = self.getCone(self._rmax)
+        # Maximum detection distance of the sensor (in m)
+        self._maxDist = 65536
 
+        # Current detection ditance of the sensor (in m)
+        self._currDist = self._maxDist
 
 
         # Update current bounding rect
@@ -68,6 +72,11 @@ class ProximitySensor(SimObject):
         points = [QtCore.QPointF(p[0], p[1]) for p in self._pts]
         self._shape = QtGui.QPainterPath()
         self._shape.addPolygon(QtGui.QPolygonF(points))
+
+    def isAtMaxRange(self, ):
+        """
+        """
+        return self._currDist == self._maxDist
 
     def getCone(self, distance):
         return [(self._rmin*cos(self._phi/2),self._rmin*sin(self._phi/2)),
