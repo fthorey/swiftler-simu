@@ -4,6 +4,7 @@
 from math import degrees, sqrt, cos, sin, pi
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
+from controllers.avoidobstacle import AvoidObstacle
 from supervisors.supervisor import Supervisor
 
 from PyQt4 import QtCore
@@ -20,8 +21,12 @@ class WoggleSupervisor(Supervisor):
         # Call parent constructor
         super(WoggleSupervisor, self,).__init__(robot_);
 
+        # Create a go-to-goal controller
+        self._controllers = {'obst': AvoidObstacle(robot_.proxSensors()),
+                             'gtg': GoToGoal(),}
+
         # Current controller
-        self._controller = GoToGoal()
+        self._currController = self._controllers['obst']
 
         # Store old values of wheel encoder ticks
         self._prevLeftTicks = 0
@@ -37,7 +42,7 @@ class WoggleSupervisor(Supervisor):
         """Restart.
         """
         # Restart the controller
-        self._controller.restart()
+        self._currController.restart()
 
         # Restart the wheel encoders ticks
         self._prevLeftTicks = 0
@@ -46,12 +51,13 @@ class WoggleSupervisor(Supervisor):
     def controller(self, ):
         """Return the current controller of the robot.
         """
-        return self._controller
+        return self._currController
 
     def setController(self, controller_):
         """Set the controller of the robot.
         """
-        self._controller = controller_
+        self._currController = controller_
+
 
     def execute(self, dt_):
         """Selects and executes a controller.
@@ -66,7 +72,7 @@ class WoggleSupervisor(Supervisor):
         self.updateOdometry()
 
         # 2 -> Execute the controller to obtain command to apply to the robot
-        v, w = self.controller().execute(self._stateEstimate, self.goal(), dt_)
+        v, w = self._currController.execute(self._stateEstimate, self.goal(), dt_)
 
         # Convert speed (in m/s) and angular rotation (in rad/s) to
         # angular speed to apply to each robot wheels (in rad/s)
