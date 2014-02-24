@@ -19,6 +19,7 @@ class ProximitySensor(SimObject):
         super(ProximitySensor, self).__init__('sharp' + str(self.count),
                                               QtCore.Qt.NoBrush,
                                               QtCore.Qt.NoPen)
+
         # Increment by 1 the number of proximity sensors in the world
         self.count = self.count + 1
 
@@ -65,6 +66,16 @@ class ProximitySensor(SimObject):
 
         # Pen color
         self.setPen(QtGui.QPen(QtCore.Qt.NoPen))
+
+    def rmin(self, ):
+        """Return the minimum value of the sensor beam
+        """
+        return self._rmin
+
+    def rmax(self, ):
+        """Return the minimum value of the sensor beam
+        """
+        return self._rmax
 
     def __updateBoundingRect(self, ):
         """Update the bounding rectangle of the sensor
@@ -170,7 +181,6 @@ class ProximitySensor(SimObject):
             else: minDist = distance
         return minDist
 
-    # Define how to paint the shape
     def paint(self, painter, option, widget):
         """Paints the shape on screen
         """
