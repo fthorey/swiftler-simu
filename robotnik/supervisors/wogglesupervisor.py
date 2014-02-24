@@ -58,6 +58,17 @@ class WoggleSupervisor(Supervisor):
         """
         self._currController = controller_
 
+    def getIRDistance(self, sensor):
+        """Converts the IR distance readings into a distance in meters
+        """
+        # Get the current reading of the sensor
+        reading = sensor.reading()
+
+        # Conver the reading to a distance (in m)
+        irDistance = max( min((log1p(3960) - log1p(reading))/30 + sensor.rmin(), sensor.rmax()),
+                          sensor.rmin)
+
+        return irDistance
 
     def execute(self, dt_):
         """Selects and executes a controller.
