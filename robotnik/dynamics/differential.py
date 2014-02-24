@@ -72,7 +72,6 @@ class DifferentialDrive(object):
 
         return vl, vr
 
-
     def diff2Uni(self, vel_l, vel_r):
         """Convert left wheel angular velocity and right wheel angular velocity to
         heading velocity and angular velocity (in m/s & rad/s).

@@ -27,11 +27,6 @@ class PIDController(Controller):
         # error step k-1
         self._e_k_1 = 0;
 
-        # This angle shows the direction that the controller
-        # tries to follow. It is used by the supervisor
-        # to draw and debug this controller
-        self._headingAngle = 0
-
     def restart(self, ):
         """Restarts the PID controller
         """

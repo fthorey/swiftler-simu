@@ -20,8 +20,6 @@ class GoToGoal(PIDController):
 
     def getHeadingAngle(self, state_, goal_):
         """Get the direction in which the controller wants to move the robot
-        as a vector.
-
         """
         # Retrieve the goal location (in m)
         x_g, y_g = goal_
