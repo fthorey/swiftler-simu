@@ -9,6 +9,22 @@ from supervisors.wogglesupervisor import WoggleSupervisor
 from dynamics.differential import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
+class WoggleIRSensor(ProximitySensor):
+    """The WoggleIRSensor class returns measurements specific to IR sensors
+    embedded on the Woggle
+    """
+    def __init__(self, pos_):
+        # Call the generic proximity sensors constructor
+        super(WoggleIRSensor, self).__init__(pos_)
+
+    def distance2Value(self, distance):
+        """Returns the distance calculation from the distance readings of the proximity sensors
+        """
+        if distance < self.rmin :
+            return 3960;
+        else:
+            return (3960*exp(-30*(distance-self._rmin)));
+
 class Woggle(Robot):
     """ The Woggle class handles a unicycle robot called Woggle
     """
@@ -25,9 +41,6 @@ class Woggle(Robot):
 
         # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
-
-        # A supervisor is attached to the Woggle robot
-        self.setSupervisor(WoggleSupervisor(self))
 
         # Current speed of the left wheel (rad/s)
         self._leftWheelSpeed = 0
@@ -91,11 +104,14 @@ class Woggle(Robot):
 
         # Add the sensors to the robot
         for pos in self._proxSensorsPos:
-            sensor = ProximitySensor(pos)
+            sensor = WoggleIRSensor(pos)
             # Add the sensor to the list of sensors
             self.proxSensors().append(sensor)
             # Add the sensor to the general list of items of the robot
             self.addItem(sensor)
+
+        # A supervisor is attached to the Woggle robot
+        self.setSupervisor(WoggleSupervisor(self))
 
     def restart(self, ):
         """Restart.
@@ -187,7 +203,6 @@ class Woggle(Robot):
         """Return the envelope of the robot.
         """
         return self._envelope
-
     def boundingRect(self, ):
         """Return the bounding rect of the robot.
         """
