@@ -189,3 +189,18 @@ class ProximitySensor(SimObject):
 
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         painter.drawPolygon(QtGui.QPolygonF(points))
+
+    def distance(self):
+        """Returns the distance
+        """
+        self._currDist
+
+    def distanceToValue(self, distance_):
+        """Returns the distance to the value using sensor calculations
+        """
+        raise NotImplementedError("ProximitySensor.distanceToValue")
+
+    def reading(self):
+        """Returns the reading value
+        """
+        return self.distanceToValue(self.distance())
