@@ -33,7 +33,7 @@ class WoggleSupervisor(Supervisor):
         self._prevRightTicks = 0
 
         # Set the goal (in m)
-        self.setGoal(0, 0)
+        self.setGoal(1, 1)
 
         # Distance from the goal to which the robot stop (in m)
         self.setStopDist(0.05)
