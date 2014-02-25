@@ -193,7 +193,7 @@ class ProximitySensor(SimObject):
     def distance(self):
         """Returns the distance
         """
-        self._currDist
+        return self._currDist
 
     def distanceToValue(self, distance_):
         """Returns the distance to the value using sensor calculations
