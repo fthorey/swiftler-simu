@@ -194,6 +194,7 @@ class World(QtGui.QGraphicsScene):
     def advance(self, ):
         """Perform actions when the world advance.
         """
+
         # Call parent advance method
         # -> Call all items currently in the world advance method
         super(World, self).advance()

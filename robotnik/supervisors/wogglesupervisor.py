@@ -26,14 +26,14 @@ class WoggleSupervisor(Supervisor):
                              'gtg': GoToGoal(),}
 
         # Current controller
-        self._currController = self._controllers['obst']
+        self._currController = self._controllers['gtg']
 
         # Store old values of wheel encoder ticks
         self._prevLeftTicks = 0
         self._prevRightTicks = 0
 
         # Set the goal (in m)
-        self.setGoal(1, 1)
+        self.setGoal(1, -10)
 
         # Distance from the goal to which the robot stop (in m)
         self.setStopDist(0.05)

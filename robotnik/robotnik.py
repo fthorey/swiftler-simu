@@ -113,6 +113,8 @@ class Robotnik(QtGui.QMainWindow):
         self._world = World(self)
         # Tell the world to auto-construct
         self._world.autoConstruct()
+        # Advance the world to acquire first position
+        self._world.advance()
 
     def configureView(self, ):
         """Configures the view slot.
@@ -144,6 +146,8 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Play_Pause.triggered.connect(self.startPause)
         # Restart
         self.action_Restart.triggered.connect(self.restart)
+        # Step
+        self.action_Step.triggered.connect(self.step)
 
         # Connect timer trigger signal to world advance function
         self.timer.timeout.connect(self._world.advance)
@@ -168,7 +172,17 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
 
     @QtCore.pyqtSlot()
+    def step(self, ):
+        """Step the simulation.
+        """
+        # The timer class needs a duration in ms
+        # -> Convert s into ms
+        self.timer.singleShot(const.stepDuration*1e3, self._world.advance)
+
+    @QtCore.pyqtSlot()
     def updateTime(self, ):
+        """Update the current time.
+        """
         self._currentSteps = self._currentSteps + const.stepDuration
 
     @QtCore.pyqtSlot()
