@@ -54,9 +54,6 @@ class DifferentialDrive(object):
         self._robot.setPos(QtCore.QPointF(x, y))
         self._robot.setAngle((theta + pi)%(2*pi) - pi)
 
-        # Add the position to the tracker
-        self._robot.tracker().addPosition(QtCore.QPointF(x, y))
-
     def uni2Diff(self, v, w):
         """Convert heading velocity and angular velocity (in m/s & rad/s)
         to left wheel angular velocity and right wheel angular velocity (in rad/s).

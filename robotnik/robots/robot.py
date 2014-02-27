@@ -109,12 +109,17 @@ class Robot(SimObject):
 
         # The robot is not stopped anymore
         self._stopped = False
+
+        # Actions below must be performed after the position
+        # of the robot has been restarted
+
         # Restart all sensors
         for sensor in self._proxSensors:
             sensor.restart()
 
         # Restar the supervisor
         self._supervisor.restart()
+
         # Restart the tracker
         self._tracker.restart(self._initPos)
 
@@ -202,3 +207,6 @@ class Robot(SimObject):
 
         # 2 -> Update the robot position using dynamic and current command
         self._dynamics.update(const.stepDuration)
+
+        # 3 -> Add the position to the tracker
+        self.tracker().addPosition(self.pos())

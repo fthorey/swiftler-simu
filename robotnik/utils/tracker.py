@@ -13,22 +13,19 @@ class Tracker(QtCore.QObject):
         super(Tracker, self).__init__(parent)
 
         # Scale position and add it to current track
-        self.track = QtGui.QPainterPath(self.scalePosition(pos_))
+        self.track = QtGui.QPainterPath(QtCore.QPointF(pos_.x(), pos_.y()))
 
     def restart(self, pos_):
         """
         """
-        self.track = QtGui.QPainterPath(self.scalePosition(pos_))
+        self.track = QtGui.QPainterPath(QtCore.QPointF(pos_.x(), pos_.y()))
 
     def getTrack(self, ):
         """
         """
         return self.track
 
-    def scalePosition(self, pos_):
-        return QtCore.QPointF(pos_.x(), pos_.y())
-
     def addPosition(self, pos_):
         """
         """
-        self.track.lineTo(self.scalePosition(pos_))
+        self.track.lineTo(QtCore.QPointF(pos_.x(), pos_.y()))
