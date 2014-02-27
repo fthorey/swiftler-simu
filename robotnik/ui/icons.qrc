@@ -10,5 +10,13 @@
         <file>icons/Robot_Sensors.png</file>
         <file>icons/Robot_Path.png</file>
         <file>icons/silk/ruby.png</file>
+        <file>icons/silk/folder_explore.png</file>
+        <file>icons/silk/resultset_first.png</file>
+        <file>icons/silk/resultset_last.png</file>
+        <file>icons/silk/resultset_next.png</file>
+        <file>icons/silk/control_pause_blue.png</file>
+        <file>icons/silk/control_play_blue.png</file>
+        <file>icons/silk/control_rewind_blue.png</file>
+        <file>icons/silk/control_fastforward_blue.png</file>
     </qresource>
 </RCC>

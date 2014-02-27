@@ -41,22 +41,12 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
-   <addaction name="action_Restart"/>
-   <addaction name="action_Play_Pause"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="action_Zoom_World"/>
-   <addaction name="action_Zoom_Robot"/>
-   <addaction name="action_Sensors_Robot"/>
-   <addaction name="action_Tracks_Robot"/>
-   <addaction name="action_Ghost_Mode"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Play_Pause">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/new/myRessources/icons/Play-Disabled-icon.png</normaloff>:/new/myRessources/icons/Play-Disabled-icon.png</iconset>
+     <normaloff>:/new/myRessources/icons/silk/control_play_blue.png</normaloff>:/new/myRessources/icons/silk/control_play_blue.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Play_Pause</string>
@@ -68,7 +58,7 @@
   <action name="action_Restart">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/new/myRessources/icons/Play-Mode-Repeat-All-Disabled-icon.png</normaloff>:/new/myRessources/icons/Play-Mode-Repeat-All-Disabled-icon.png</iconset>
+     <normaloff>:/new/myRessources/icons/silk/control_rewind_blue.png</normaloff>:/new/myRessources/icons/silk/control_rewind_blue.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Restart</string>
@@ -162,6 +152,30 @@
    </property>
    <property name="toolTip">
     <string>Ghost Mode</string>
+   </property>
+  </action>
+  <action name="action_Open_World">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/silk/folder_explore.png</normaloff>:/new/myRessources/icons/silk/folder_explore.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open_World</string>
+   </property>
+   <property name="toolTip">
+    <string>Open World</string>
+   </property>
+  </action>
+  <action name="action_Step">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/silk/control_fastforward_blue.png</normaloff>:/new/myRessources/icons/silk/control_fastforward_blue.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Step</string>
+   </property>
+   <property name="toolTip">
+    <string>Step Simulation</string>
    </property>
   </action>
  </widget>
