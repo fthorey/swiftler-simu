@@ -42,6 +42,51 @@ class Robotnik(QtGui.QMainWindow):
     def configureToolBar(self, ):
         """Configures the toolbar.
         """
+
+        # Add open world action
+        self.mainToolBar.addAction(self.action_Open_World)
+
+        # Add separator
+        self.mainToolBar.addSeparator()
+
+        # Add restart action
+        self.mainToolBar.addAction(self.action_Restart)
+        # Add play action
+        self.mainToolBar.addAction(self.action_Play_Pause)
+        # Add step action
+        self.mainToolBar.addAction(self.action_Step)
+
+        # Add simulation speed toolbar
+        self.zoom_Slider = QtGui.QSlider(QtCore.Qt.Horizontal,self)
+        self.zoom_Slider.setTickPosition(QtGui.QSlider.NoTicks)
+        self.zoom_Slider.setToolTip("Adjust simulation speed factor")
+        self.zoom_Slider.setStatusTip("Adjust simulation speed factor")
+        self.zoom_Slider.setMaximumWidth(100)
+        self.zoom_Slider.setRange(-100,100)
+        self.zoom_Slider.setValue(0)
+        self.zoom_Slider.setEnabled(False)
+        self.mainToolBar.addWidget(self.zoom_Slider)
+        self.zoom_Label = QtGui.QLabel(" Speed: 1.0x ",self)
+        self.zoom_Label.setToolTip("Current Speed factor")
+        self.mainToolBar.addWidget(self.zoom_Label)
+
+        # Add separator
+        self.mainToolBar.addSeparator()
+
+        # Add show robots sensors
+        self.mainToolBar.addAction(self.action_Sensors_Robot)
+        # Add show robots tracks
+        self.mainToolBar.addAction(self.action_Tracks_Robot)
+        # Add ghost mode
+        self.mainToolBar.addAction(self.action_Ghost_Mode)
+
+        # Add separator
+        self.mainToolBar.addSeparator()
+
+        # Add zoom world
+        self.mainToolBar.addAction(self.action_Zoom_World)
+        # Add zoom master robot
+        self.mainToolBar.addAction(self.action_Zoom_Robot)
         # Add robot zoom slider
         self.zoom_Slider = QtGui.QSlider(QtCore.Qt.Horizontal,self)
         self.zoom_Slider.setTickPosition(QtGui.QSlider.NoTicks)
@@ -134,13 +179,13 @@ class Robotnik(QtGui.QMainWindow):
             # Stop the timer
             self.timer.stop()
             # Change the icon
-            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/Play-Disabled-icon.png"))
+            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
         else:
             # The timer class needs a duration in ms
             # -> Convert s into ms
             self.timer.start(const.stepDuration*1e3)
             # Change the icon
-            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/Pause-Disabled-icon.png"))
+            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_pause_blue.png"))
 
         self._world.toggleRunning()
 
@@ -162,7 +207,7 @@ class Robotnik(QtGui.QMainWindow):
             self._worldView.focusOnRobot()
 
         # Change the play/pause icon
-        self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/Play-Disabled-icon.png"))
+        self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
         # Set the world to the not running state
         self._world.setRunning(False)
 
