@@ -95,7 +95,7 @@ class Robotnik(QtGui.QMainWindow):
         self.zoom_Slider.setMaximumWidth(150)
         self.zoom_Slider.setRange(-150,100)
         self.zoom_Slider.setValue(0)
-        self.zoom_Slider.setEnabled(False)
+        self.zoom_Slider.setEnabled(True)
         self.mainToolBar.addWidget(self.zoom_Slider)
         self.zoom_Label = QtGui.QLabel(" Zoom: 1.0x ",self)
         self.zoom_Label.setToolTip("Current zoom factor")
