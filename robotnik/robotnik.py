@@ -18,8 +18,8 @@ class Robotnik(QtGui.QMainWindow):
     """ The Robotnik class is the main container for the simulator.
     """
 
-    # Step duration of 10ms (min possible for Qt framework)
-    const.stepDuration = 10*1e-3 # in s
+    # Step duration of 20ms (min possible for Qt framework)
+    const.stepDuration = 20*1e-3 # in s
 
     def __init__(self, ):
         # Call parent constructor
