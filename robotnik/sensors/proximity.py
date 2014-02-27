@@ -67,6 +67,9 @@ class ProximitySensor(SimObject):
         # Pen color
         self.setPen(QtGui.QPen(QtCore.Qt.NoPen))
 
+        # Show the sensor on screen
+        self._show = True
+
     def rmin(self, ):
         """Return the minimum value of the sensor beam
         """
@@ -112,10 +115,7 @@ class ProximitySensor(SimObject):
     def show(self, show_):
         """Choose wether to draw the proximity sensor on screen or not
         """
-        if show_:
-            self._brush = QtGui.QBrush(self._brushColor)
-        else:
-            self._brush = QtGui.QBrush(QtCore.Qt.NoBrush)
+        self._show = show_
 
         # Trigger an update of the view
         self.update()
@@ -123,10 +123,8 @@ class ProximitySensor(SimObject):
     def restart(self, ):
         """Restart the sensor to its initial state
         """
-        # Set the envelope to its maximum value
-        self._envelope = self.getCone(self._rmax)
-        # Change brush color
-        self.setBrush(QtGui.QBrush(self._brushColorNoCol))
+        # Update all distances
+        self.updateDistance()
 
     def getEnvelope(self):
         """Return the envelope of the sensor
@@ -184,6 +182,9 @@ class ProximitySensor(SimObject):
     def paint(self, painter, option, widget):
         """Paints the shape on screen
         """
+        if not self._show:
+            return
+
         painter.setBrush(self.brush())
         painter.setPen(self.pen())
 
