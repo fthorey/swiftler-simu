@@ -57,18 +57,18 @@ class Robotnik(QtGui.QMainWindow):
         self.mainToolBar.addAction(self.action_Step)
 
         # Add simulation speed toolbar
-        self.zoom_Slider = QtGui.QSlider(QtCore.Qt.Horizontal,self)
-        self.zoom_Slider.setTickPosition(QtGui.QSlider.NoTicks)
-        self.zoom_Slider.setToolTip("Adjust simulation speed factor")
-        self.zoom_Slider.setStatusTip("Adjust simulation speed factor")
-        self.zoom_Slider.setMaximumWidth(100)
-        self.zoom_Slider.setRange(-100,100)
-        self.zoom_Slider.setValue(0)
-        self.zoom_Slider.setEnabled(False)
-        self.mainToolBar.addWidget(self.zoom_Slider)
-        self.zoom_Label = QtGui.QLabel(" Speed: 1.0x ",self)
-        self.zoom_Label.setToolTip("Current Speed factor")
-        self.mainToolBar.addWidget(self.zoom_Label)
+        self.speed_Slider = QtGui.QSlider(QtCore.Qt.Horizontal,self)
+        self.speed_Slider.setTickPosition(QtGui.QSlider.NoTicks)
+        self.speed_Slider.setToolTip("Adjust simulation speed factor")
+        self.speed_Slider.setStatusTip("Adjust simulation speed factor")
+        self.speed_Slider.setMaximumWidth(100)
+        self.speed_Slider.setRange(1,5)
+        self.speed_Slider.setValue(1)
+        self.speed_Slider.setEnabled(True)
+        self.mainToolBar.addWidget(self.speed_Slider)
+        self.speed_Label = QtGui.QLabel(" Speed: 1.0x ",self)
+        self.speed_Label.setToolTip("Current Speed factor")
+        self.mainToolBar.addWidget(self.speed_Label)
 
         # Add separator
         self.mainToolBar.addSeparator()
@@ -113,8 +113,6 @@ class Robotnik(QtGui.QMainWindow):
         self._world = World(self)
         # Tell the world to auto-construct
         self._world.autoConstruct()
-        # Advance the world to acquire first position
-        self._world.advance()
 
     def configureView(self, ):
         """Configures the view slot.
@@ -149,8 +147,11 @@ class Robotnik(QtGui.QMainWindow):
         # Step
         self.action_Step.triggered.connect(self.step)
 
-        # Connect timer trigger signal to world advance function
-        self.timer.timeout.connect(self._world.advance)
+        # Connect simulation speed factor slider
+        self.speed_Slider.valueChanged[int].connect(self.setSpeedFactor)
+
+        # Connect timer trigger signal to world update method
+        self.timer.timeout.connect(self._world.update)
         self.timer.timeout.connect(self.updateTime)
 
         # Connect zoom world
@@ -170,6 +171,16 @@ class Robotnik(QtGui.QMainWindow):
 
         # Connect ghost mode enabling
         self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
+
+    @QtCore.pyqtSlot(int)
+    def setSpeedFactor(self, value_):
+        """Sets the simulation speed factor
+        """
+        # Update slider label
+        self.speed_Label.setText(" speed: %.1fx "%(value_))
+
+        # Update world speed factor
+        self._world.setSpeedFactor(value_)
 
     @QtCore.pyqtSlot()
     def step(self, ):

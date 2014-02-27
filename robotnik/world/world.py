@@ -50,6 +50,14 @@ class World(QtGui.QGraphicsScene):
         # Stores the running state of the world
         self._isRunning = False
 
+        # World speed factor
+        self._speedFactor = 1
+
+    def setSpeedFactor(self, factor_):
+        """Set the world speed factor.
+        """
+        self._speedFactor = factor_
+
     def setRunning(self, isRunning_):
         """Set the running state of the world.
         """
@@ -190,6 +198,13 @@ class World(QtGui.QGraphicsScene):
         """Return a list of all obstacles in the world.
         """
         return self._obstacles
+
+    def update(self, ):
+        """Update the world. Call the advance method a certain number
+        of times according to the current value of the speed factor.
+        """
+        for step in range(int(self._speedFactor)):
+            self.advance()
 
     def advance(self, ):
         """Perform actions when the world advance.

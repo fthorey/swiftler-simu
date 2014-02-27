@@ -32,8 +32,6 @@ class AvoidObstacle(PIDController):
         ws = sum(self.weights)
         self.weights = [w/ws for w in self.weights]
 
-        print self.weights
-
     def getIRDistance(self, sensor):
         """Converts the IR distance readings into a distance in meters
         """

@@ -196,9 +196,9 @@ class Robot(SimObject):
         if (step_ == 0):
             return
 
-        # 1 -> Update the robot position using dynamic and current command
-        self._dynamics.update(const.stepDuration)
-
-        # 2 -> Execute the supervisor to obtain new command to apply to the robot
+        # 1 -> Execute the supervisor to obtain new command to apply to the robot
         # according to the new state
         self._supervisor.execute(const.stepDuration)
+
+        # 2 -> Update the robot position using dynamic and current command
+        self._dynamics.update(const.stepDuration)
