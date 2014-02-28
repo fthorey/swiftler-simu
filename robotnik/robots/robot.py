@@ -37,7 +37,7 @@ class Robot(SimObject):
         # Is the robot master
         self._isMaster = False
 
-        # Keep the current zoom
+        # Current zoom level
         self._zoom = 1.0
 
         # Store all items which belong to the robot

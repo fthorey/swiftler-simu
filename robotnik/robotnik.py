@@ -127,7 +127,7 @@ class Robotnik(QtGui.QMainWindow):
         self._worldView.setScene(self._world)
 
         # Focus on the robot by default
-        self._worldView.focusOnRobot()
+        self._worldView.scaleOnRobot()
 
     def configureWindow(self, ):
         """Configures the window.
@@ -248,6 +248,7 @@ class Robotnik(QtGui.QMainWindow):
         self.zoom_Slider.setEnabled(False)
 
         # Set focus on world
+        self._world.setZoomOnRobot(False)
         self._worldView.focusOnWorld()
 
     @QtCore.pyqtSlot()
@@ -262,7 +263,8 @@ class Robotnik(QtGui.QMainWindow):
         self.zoom_Slider.setEnabled(True)
 
         # Set focus on robot
-        self._worldView.focusOnRobot()
+        self._world.setZoomOnRobot(True)
+        self._worldView.scaleOnRobot()
 
     @QtCore.pyqtSlot(int)
     def setRobotZoomLevel(self, value_):
@@ -275,8 +277,8 @@ class Robotnik(QtGui.QMainWindow):
 
         self.zoom_Label.setText(" Zoom: %.1fx "%(zoom))
 
-        # Update focus on robot
-        self._worldView.focusOnRobot()
+        # Update scale on robot
+        self._worldView.scaleOnRobot()
 
     @QtCore.pyqtSlot()
     def showProxSensors(self, ):

@@ -13,36 +13,41 @@ class WorldView(QtGui.QGraphicsView):
         # Call parent constructor
         super(WorldView, self).__init__(parent_)
 
-        # Rename scene to world
-        self.world = self.scene
-
     def focusOnWorld(self, ):
         """Scale the view to include all of the world (including robots).
         """
-        # Unset the zoom on robot parameter
-        self.world().setZoomOnRobot(False)
         # Set scene bounding rectangle (in pixel)
-        self.world().setSceneRect(self.world().itemsBoundingRect())
+        self.scene().setSceneRect(self.scene().itemsBoundingRect())
         # Update the view
-        self.fitInView(self.world().sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.fitInView(self.scene().sceneRect(), QtCore.Qt.KeepAspectRatio)
+
+    def scaleOnRobot(self, ):
+        """Scale the view on the robot.
+        """
+        for robot in self.scene().getRobots():
+            if robot.isMasterRobot():
+                # Update bounding rect
+                self._boundingRect = robot.mapRectToParent(robot.enlargedBoundingRect())
+                # Update view
+                self.fitInView(self._boundingRect, QtCore.Qt.KeepAspectRatio)
+                break
 
     def focusOnRobot(self, ):
         """Scale the view to focus only on the robot.
         """
         # Set the zoom on robot parameter
-        self.world().setZoomOnRobot(True)
-        # Search for the master robot
-        for robot in self.world().getRobots():
+        for robot in self.scene().getRobots():
             if robot.isMasterRobot():
                 # Update view
-                boundingRect = robot.mapRectToParent(robot.enlargedBoundingRect())
-                self.fitInView(boundingRect, QtCore.Qt.KeepAspectRatio)
+                self.fitInView(self._boundingRect, QtCore.Qt.KeepAspectRatio)
+                # Center on master robot
+                self.centerOn(robot.pos())
                 break
 
     def resizeEvent(self, event):
         """Check if the current zoom is on the robot on resize events.
         """
-        if self.world().isZoomOnRobot():
+        if self.scene().isZoomOnRobot():
             self.focusOnRobot()
         else:
             self.focusOnWorld()
