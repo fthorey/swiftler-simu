@@ -214,15 +214,13 @@ class World(QtGui.QGraphicsScene):
         # -> Call all items currently in the world advance method
         super(World, self).advance()
 
-        # Update the view on the robot if necessary
-        if self._zoomOnRobot:
-            try:
-                self.views()[0].focusOnRobot()
-            except:
-                pass
-
         # Apply physics
         self._physics.apply()
+
+        # Update the views on the robot if necessary
+        if self._zoomOnRobot:
+            for view in self.views():
+                view.focusOnRobot()
 
     def setGridSize(self, size_):
         """Sets the grid size.
