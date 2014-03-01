@@ -34,7 +34,7 @@ class PIDController(Controller):
         """
         raise NotImplementedError("PIDController.getHeading")
 
-    def execute(self, state_, goal_, dt_):
+    def execute(self, state_, dt_):
         """ Take an estimation of the current state and a heading goal to
         process the appropriate linear velocity v (m/s) and angular velocity (rad/s) to steers
         the robot toward this goal direction.
@@ -44,7 +44,7 @@ class PIDController(Controller):
         """
 
         # This is the direction we want to go
-        e_k = self.getHeadingAngle(state_, goal_)
+        e_k = self.getHeadingAngle(state_)
 
         # Error for the proportional term
         e_P = e_k

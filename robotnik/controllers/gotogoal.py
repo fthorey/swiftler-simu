@@ -18,11 +18,13 @@ class GoToGoal(PIDController):
         # Call PIDController constructor
         super(GoToGoal, self).__init__(coeff)
 
-    def getHeadingAngle(self, state_, goal_):
+        self._goal = (1, -10)
+
+    def getHeadingAngle(self, state_):
         """Get the direction in which the controller wants to move the robot
         """
         # Retrieve the goal location (in m)
-        x_g, y_g = goal_
+        x_g, y_g = self._goal
 
         # Get an estimate of the current pos (in m and rad)
         x, y, theta = state_
