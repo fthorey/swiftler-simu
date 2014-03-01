@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-import sys
+import sys, os
 from math import pi
 from world.world import World
 from robots.woggle import Woggle
@@ -30,6 +30,14 @@ class Robotnik(QtGui.QMainWindow):
 
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
+
+        # Create XML file dialog
+        self._worldDialog = QtGui.QFileDialog(self,
+                                "Select World File",
+                                "worlds",
+                                "WorldFile (*.xml)")
+        self._worldDialog.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
+        self._worldDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
 
         # Configure
         self.configureToolBar()
@@ -112,7 +120,7 @@ class Robotnik(QtGui.QMainWindow):
         # Create a new world
         self._world = World(self)
         # Tell the world to auto-construct
-        self._world.autoConstruct()
+        self._world.readConfigurationFile('templates/empty.xml')
 
     def configureView(self, ):
         """Configures the view slot.
@@ -140,6 +148,10 @@ class Robotnik(QtGui.QMainWindow):
     def connectSlots(self, ):
         """Connects all slots.
         """
+
+        # Open World
+        self.action_Open_World.triggered.connect(self.onOpenWorld)
+
         # Play/Pause
         self.action_Play_Pause.triggered.connect(self.startPause)
         # Restart
@@ -171,6 +183,18 @@ class Robotnik(QtGui.QMainWindow):
 
         # Connect ghost mode enabling
         self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
+
+    @QtCore.pyqtSlot()
+    def onOpenWorld(self, ):
+        """Action to perform when the XML world file dialog is invocated.
+        """
+        # First, if the simulation is running, stop it
+        if self._world.isRunning():
+            self.startPause()
+
+        # Then load the world from the configuration file
+        if self._worldDialog.exec_():
+            self.loadWorld(self._worldDialog.selectedFiles()[0])
 
     @QtCore.pyqtSlot(int)
     def setSpeedFactor(self, value_):
@@ -307,7 +331,6 @@ class Robotnik(QtGui.QMainWindow):
         # Toggle the ghost mode enabling
         self._world.toggleGhostMode()
 
-    # Center the main window
     def center(self, ):
         """Centers the window on screen.
         """
@@ -315,6 +338,17 @@ class Robotnik(QtGui.QMainWindow):
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
+    def loadWorld(self,filename_):
+        """Load a new world according to an existing XML file.
+        """
+        # Check the existence of the file
+        if not os.path.exists(filename_):
+            print "Cannot open file {}".format(filename_)
+            return
+
+        # Check the configuration file
+        self._world.readConfigurationFile(filename_)
 
 if __name__ == '__main__':
     # Create a Qt application

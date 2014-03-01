@@ -20,9 +20,6 @@ class World(QtGui.QGraphicsScene):
         # Physics that rules the world
         self._physics = Physics(self)
 
-        # Create a xml reader object to parse world files
-        self._xmlReader = XMLReader('templates/labyrinth_small.xml')
-
         # Define a grid size of 10cm
         self._gridSize = 0.1
 
@@ -52,6 +49,16 @@ class World(QtGui.QGraphicsScene):
 
         # World speed factor
         self._speedFactor = 1
+
+    def clear(self, ):
+        """
+        """
+        # Call parent clear
+        super(World, self).clear()
+
+        # Clear all robots and obstacles
+        self._robots = list()
+        self._obstacles = list()
 
     def setSpeedFactor(self, factor_):
         """Set the world speed factor.
@@ -111,11 +118,30 @@ class World(QtGui.QGraphicsScene):
         """
         return self._zoomOnRobot
 
-    # Construct the world
+    def readConfigurationFile(self, filename_):
+        """Check the existence of the configuration file
+        and create a specific XML reader to parse it. then call autoConstruct
+        """
+        try:
+            self._xmlReader = XMLReader(filename_)
+        except Exception, e:
+            raise Exception('[World.checkConfigurationFile] Failed to parse ' + filename \
+                + ': ' + str(e))
+        else:
+            self.autoConstruct()
+
+        # Update the views on the robot if necessary
+        if self._zoomOnRobot:
+            for view in self.views():
+                view.focusOnRobot()
+
     def autoConstruct(self, ):
         """ Autoconstructs the world from informations provided into the xml
         template files.
         """
+
+        # Start by erasing all current objects in the world
+        self.clear()
 
         # Get all objects from xml
         objects = self._xmlReader.parseConfiguration()
