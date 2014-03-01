@@ -28,7 +28,12 @@ class Supervisor(object):
         """
         raise NotImplementedError("Supervisor.execute")
 
-    def updateOdometry(self, ):
+    def updateStateEstimate(self, ):
         """Update the current estimation of the state of the robot position.
         """
-        raise NotImplementedError("Supervisor.updateOdometry")
+        raise NotImplementedError("Supervisor.updateStateEstimate")
+
+    def controllerState(self, ):
+        """Get the parameters that the current controller needs for s.
+        """
+        raise NotImplementedError('Supervisor.controllerState')

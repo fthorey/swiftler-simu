@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from utils.struct import Struct
 from math import degrees, sqrt, cos, sin, pi
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
@@ -31,6 +32,15 @@ class WoggleSupervisor(Supervisor):
         self._prevLeftTicks = 0
         self._prevRightTicks = 0
 
+        # Set some parameters
+        self._state = Struct()
+        # Goal
+        self._state.goal = Struct()
+        self._state.goal.x = 1
+        self._state.goal.y = -10
+        # Position
+        self._state.pos = pos_
+
     def controller(self, ):
         """Return the current controller of the robot.
         """
@@ -41,38 +51,40 @@ class WoggleSupervisor(Supervisor):
         """
         self._currController = controller_
 
+    def controllerState(self, ):
+        """Return the parameters needed by the controller.
+        """
+        return self._state
+
     def execute(self, info_, dt_):
         """Selects and executes a controller.
         """
-        # Update the informations about the robot
-        self._robotInfo = info_
-
         # 1 -> Update the estimation of the robot state
-        self.updateOdometry()
+        self.updateStateEstimate(info_)
 
         # 2 -> Execute the controller to obtain unicycle command (v, w) to apply
-        v, w = self._currController.execute(self.posEstimate(), dt_)
+        v, w = self._currController.execute(self.controllerState(), dt_)
 
         return v, w
 
-    def updateOdometry(self, ):
+    def updateStateEstimate(self, info_):
         """Update the current estimation of the robot state.
         """
         # Get the number of ticks on each wheel since last call
-        dtl = self._robotInfo.wheels.leftTicks - self._prevLeftTicks
-        dtr = self._robotInfo.wheels.rightTicks - self._prevRightTicks
+        dtl = info_.wheels.leftTicks - self._prevLeftTicks
+        dtr = info_.wheels.rightTicks - self._prevRightTicks
 
         # Save the wheel encoder ticks for the next estimate
         self._prevLeftTicks += dtl
         self._prevRightTicks += dtr
 
         # Get old state estimation (in m and rad)
-        x, y, theta = self.posEstimate()
+        x, y, theta = self._state.pos
 
         # Get robot parameters (in m)
-        R = self._robotInfo.wheels.radius
-        L = self._robotInfo.wheels.baseLength
-        m_per_tick = (2*pi*R) / self._robotInfo.wheels.ticksPerRev
+        R = info_.wheels.radius
+        L = info_.wheels.baseLength
+        m_per_tick = (2*pi*R) / info_.wheels.ticksPerRev
 
         # distance travelled by left wheel
         dl = dtl*m_per_tick
@@ -90,4 +102,4 @@ class WoggleSupervisor(Supervisor):
         y_new = y + y_dt
 
         # Update the state estimation
-        self.setPosEstimate((x_new, y_new, theta_new))
+        self._state.pos = (x_new, y_new, theta_new)
