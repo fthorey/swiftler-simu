@@ -29,6 +29,9 @@ class Robotnik(QtGui.QMainWindow):
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
+        # Default file name
+        self._filename = 'templates/labyrinth_small.xml'
+
         # Configure
         # Status bar
         self.configureStatusLabel()
@@ -177,8 +180,9 @@ class Robotnik(QtGui.QMainWindow):
         """
         # Create a new world
         self._world = World(self)
-        # Tell the world to auto-construct
-        self._world.readConfigurationFile('templates/labyrinth_small.xml')
+
+        # Fill the world with data from the configuration file
+        self._world.readConfigurationFile(self._filename)
 
     def configureView(self, ):
         """Configures the view slot.
@@ -200,6 +204,7 @@ class Robotnik(QtGui.QMainWindow):
         """
         # Center the main window
         self.center()
+
     def connectSlots(self, ):
         """Connects all slots.
         """
@@ -437,7 +442,8 @@ class Robotnik(QtGui.QMainWindow):
             return
 
         # Check the configuration file
-        self._world.readConfigurationFile(filename_)
+        self._filename = filename_
+        self._world.readConfigurationFile(self._filename)
 
 if __name__ == '__main__':
     # Create a Qt application
