@@ -148,9 +148,10 @@ class World(QtGui.QGraphicsScene):
                     # Get robot supervisor class
                     sup_class = helpers.load_by_name(supervisor_type,'supervisors')
                     # Generate a robot name
-                    name = "Robot_{}:_{}".format(len(self._robots), sup_class.__name__)
+                    name = "{}{}".format(robot_class.__name__,
+                                              len(self._robots))
                     brush = QtGui.QBrush(QtGui.QColor(robot_color))
-                    robot = robot_class(name, robot_pos, brush)
+                    robot = robot_class(name, sup_class, robot_pos, brush)
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:
                         robot.setMasterRobot()
