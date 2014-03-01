@@ -150,18 +150,19 @@ class Robot(SimObject):
     def advance(self, step_):
         """Action to perform when the scene changes.
         """
-        # Called twice by QGraphicsScene::advance() First, with step_ == 0: about to advance,
-        # and then called with phase == 1, advance effectively
         # -> Do nothing on the 1st phase but move on 2nd phase
         if (step_ == 0):
             return
 
-        # 1 -> Execute the supervisor to obtain new command to apply to the robot
-        # according to the new state
-        self._supervisor.execute(const.stepDuration)
+        # 1 -> Execute the supervisor to obtain unicycle command (v,w) to apply
+        v, w = self._supervisor.execute(self.info(), const.stepDuration)
+        vel_l, vel_r = self.dynamics().uni2Diff(v, w)
 
-        # 2 -> Update the robot position using dynamic and current command
+        # 2 -> Apply current speed to wheels
+        self.setWheelSpeeds(vel_l, vel_r)
+
+        # 3 -> Update the robot position using dynamic and current command
         self._dynamics.update(const.stepDuration)
 
-        # 3 -> Add the new position to the tracker
+        # 4 -> Add the new position to the tracker
         self.tracker().addPosition((self.pos().x(), self.pos().y()))
