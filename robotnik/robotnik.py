@@ -16,7 +16,7 @@ class Robotnik(QtGui.QMainWindow):
     """ The Robotnik class is the main container for the simulator.
     """
 
-    # Step duration of 20ms (min possible for Qt framework)
+    # Step duration of 20ms
     const.stepDuration = 20*1e-3 # in s
 
     def __init__(self, ):
@@ -30,24 +30,38 @@ class Robotnik(QtGui.QMainWindow):
         self.timer = QtCore.QTimer(self)
 
         # Configure
+        # Status bar
+        self.configureStatusLabel()
+        self.setStatusTips() # (Missing in QtCreator)
+        # Menu bar
         self.configureMenuBar()
+        # Tool bar
         self.configureToolBar()
-        self.configureSimu()
+        # World
         self.configureWorld()
+        # World view
         self.configureView()
+        # Simu
+        self.configureSimu()
+        # Window
         self.configureWindow()
+        # Slots
         self.connectSlots()
-        # Missing in QtCreator
-        self.setStatusTips()
 
         # Create XML file dialog
         self._worldDialog = QtGui.QFileDialog(self,
-                                "Select World File",
-                                "worlds",
-                                "WorldFile (*.xml)")
+                                              "Select World File",
+                                              "worlds",
+                                              "WorldFile (*.xml)")
         self._worldDialog.setDirectory(QtCore.QDir.currentPath() + os.sep + 'templates')
         self._worldDialog.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
         self._worldDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
+
+    def configureStatusLabel(self, ):
+        # By default the status label is empty
+        self._statusLabel = QtGui.QLabel("", self.statusBar)
+        self._statusLabel.setFrameShape(QtGui.QFrame.NoFrame)
+        self.statusBar.addWidget(self._statusLabel)
 
     def setStatusTips(self, ):
         """Set status tips (missing in QtCreator).
@@ -65,8 +79,6 @@ class Robotnik(QtGui.QMainWindow):
     def configureMenuBar(self, ):
         """Configure the menubar.
         """
-        self.setMenuBar(self.menuBar)
-
         # File
         file_menu = self.menuBar.addMenu("&File")
         file_menu.addAction(self.action_Open_World)
@@ -157,6 +169,8 @@ class Robotnik(QtGui.QMainWindow):
         """Configures the simulation.
         """
         self._currentSteps = 0
+
+        self.pause()
 
     def configureWorld(self, ):
         """Configures the world.
@@ -274,23 +288,45 @@ class Robotnik(QtGui.QMainWindow):
         """
         self._currentSteps = self._currentSteps + const.stepDuration
 
+        # Update the status bar
+        t = self._currentSteps # (in s)
+        minutes = int(t//60)
+        self._statusLabel.setText(
+            "Simulation running: {:02d}:{:04.1f}".format(minutes,t - minutes*60))
+
+    def pause(self, ):
+        """Pause the simulation.
+        """
+        self._world.setRunning(False)
+        # Stop the timer
+        self.timer.stop()
+        # Change the icon
+        self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
+
+        # Update the status bar
+        t = self._currentSteps # (in s)
+        minutes = int(t//60)
+        self._statusLabel.setText(
+            "Simulation paused: {:02d}:{:04.1f}".format(minutes,t - minutes*60))
+
+    def start(self, ):
+        """Start the simulation.
+        """
+        self._world.setRunning(True)
+        # The timer class needs a duration in ms
+        # -> Convert s into ms
+        self.timer.start(const.stepDuration*1e3)
+        # Change the icon
+        self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_pause_blue.png"))
+
     @QtCore.pyqtSlot()
     def startPause(self, ):
         """Starts or pauses the simulation.
         """
         if self._world.isRunning():
-            # Stop the timer
-            self.timer.stop()
-            # Change the icon
-            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
+            self.pause()
         else:
-            # The timer class needs a duration in ms
-            # -> Convert s into ms
-            self.timer.start(const.stepDuration*1e3)
-            # Change the icon
-            self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_pause_blue.png"))
-
-        self._world.toggleRunning()
+            self.start()
 
     @QtCore.pyqtSlot()
     def restart(self, ):
