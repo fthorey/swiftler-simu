@@ -31,15 +31,8 @@ class Robotnik(QtGui.QMainWindow):
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
-        # Create XML file dialog
-        self._worldDialog = QtGui.QFileDialog(self,
-                                "Select World File",
-                                "worlds",
-                                "WorldFile (*.xml)")
-        self._worldDialog.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
-        self._worldDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
-
         # Configure
+        self.configureMenuBar()
         self.configureToolBar()
         self.configureSimu()
         self.configureWorld()
@@ -47,8 +40,46 @@ class Robotnik(QtGui.QMainWindow):
         self.configureWindow()
         self.connectSlots()
 
+        # Create XML file dialog
+        self._worldDialog = QtGui.QFileDialog(self,
+                                "Select World File",
+                                "worlds",
+                                "WorldFile (*.xml)")
+        self._worldDialog.setDirectory(QtCore.QDir.currentPath() + os.sep + 'templates')
+        self._worldDialog.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
+        self._worldDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
+
+    def configureMenuBar(self, ):
+        """Configure the menubar.
+        """
+        self.setMenuBar(self.menuBar)
+
+        # File
+        file_menu = self.menuBar.addMenu("&File")
+        file_menu.addAction(self.action_Open_World)
+        file_menu.addSeparator()
+        file_menu.addAction(self.action_Exit)
+
+        # View
+        view_menu = self.menuBar.addMenu("&View")
+        view_menu.addAction(self.action_Zoom_World)
+        view_menu.addAction(self.action_Zoom_Robot)
+        view_menu.addSeparator()
+        view_menu.addAction(self.action_Sensors_Robot)
+        view_menu.addAction(self.action_Tracks_Robot)
+        view_menu.addAction(self.action_Ghost_Mode)
+
+        # Simu
+        run_menu = self.menuBar.addMenu("&Simu")
+        run_menu.addAction(self.action_Restart)
+        run_menu.addAction(self.action_Play_Pause)
+        run_menu.addAction(self.action_Step)
+
+        help_menu = self.menuBar.addMenu("&Help")
+        help_menu.addAction(self.action_About)
+
     def configureToolBar(self, ):
-        """Configures the toolbar.
+        """Configure the toolbar.
         """
 
         # Add open world action
@@ -120,7 +151,7 @@ class Robotnik(QtGui.QMainWindow):
         # Create a new world
         self._world = World(self)
         # Tell the world to auto-construct
-        self._world.readConfigurationFile('templates/empty.xml')
+        self._world.readConfigurationFile('templates/labyrinth_small.xml')
 
     def configureView(self, ):
         """Configures the view slot.
@@ -183,6 +214,20 @@ class Robotnik(QtGui.QMainWindow):
 
         # Connect ghost mode enabling
         self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
+
+        # Connect exit
+        self.action_Exit.triggered.connect(self.close)
+
+        # About
+        self.action_About.triggered.connect(self.about)
+
+    @QtCore.pyqtSlot()
+    def about(self):
+        QtGui.QMessageBox.about(self,"About Robotnik",
+        """<b>Robotnik (Qt)</b><br>
+        Robot simulator<br>
+        &copy; Robotnik Team
+        """)
 
     @QtCore.pyqtSlot()
     def onOpenWorld(self, ):
@@ -352,7 +397,7 @@ class Robotnik(QtGui.QMainWindow):
 
 if __name__ == '__main__':
     # Create a Qt application
-    app = QtGui.QApplication([])
+    app = QtGui.QApplication(sys.argv)
     robotnik = Robotnik()
     # Exit
     sys.exit(app.exec_())

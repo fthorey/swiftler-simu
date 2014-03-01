@@ -18,5 +18,7 @@
         <file>icons/silk/control_play_blue.png</file>
         <file>icons/silk/control_rewind_blue.png</file>
         <file>icons/silk/control_fastforward_blue.png</file>
+        <file>icons/silk/cancel.png</file>
+        <file>icons/silk/information.png</file>
     </qresource>
 </RCC>
