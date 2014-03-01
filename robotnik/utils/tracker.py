@@ -4,7 +4,8 @@
 from PyQt4 import QtGui, QtCore
 
 class Tracker(QtCore.QObject):
-    """
+    """The Tracker class implements a simple way to store the path followed
+    by a robot.
     """
     def __init__(self, pos_, parent=None):
         """
@@ -12,13 +13,7 @@ class Tracker(QtCore.QObject):
         # Call parent constructor
         super(Tracker, self).__init__(parent)
 
-        x, y, theta = pos_
-        self.track = QtGui.QPainterPath(QtCore.QPointF(x, y))
-
-    def restart(self, pos_):
-        """Restart the tracker.
-        """
-        x, y, theta = pos_
+        x, y = pos_
         self.track = QtGui.QPainterPath(QtCore.QPointF(x, y))
 
     def getTrack(self, ):
@@ -29,5 +24,5 @@ class Tracker(QtCore.QObject):
     def addPosition(self, pos_):
         """Add a position to the current track.
         """
-        x, y, theta = pos_
+        x, y = pos_
         self.track.lineTo(QtCore.QPointF(x, y))

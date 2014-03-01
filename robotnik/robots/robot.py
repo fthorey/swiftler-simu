@@ -34,7 +34,8 @@ class Robot(SimObject):
         self._items = [self, ]
 
         # Associate a tracker to store the path (in m)
-        self._tracker = Tracker(pos_)
+        # Tracker only manipulates (x,y)
+        self._tracker = Tracker(pos_[:2])
 
     def tracker(self, ):
         """Return the tracker of the robot.
