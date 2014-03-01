@@ -44,7 +44,7 @@ class AvoidObstacle(PIDController):
 
         return irDistance
 
-    def getHeadingAngle(self, state_, goal_):
+    def getHeadingAngle(self, info_, goal_):
         """Get the direction in which the controller wants to move the robot.
         """
         vect_sensors = list()

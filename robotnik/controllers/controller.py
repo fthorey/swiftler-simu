@@ -7,11 +7,8 @@ class Controller(object):
     'execute' method to return a unicycle model output
     """
 
-    def execute(self, state_, goal_, dt_):
+    def execute(self, info_, dt_):
         """Given a state estimation and elapsed time,
-        calculate and return robot motion parameters
-
-        :param state_: Estimation of the current state of the robot (x,y,theta) (m,m,rad)
-        :param dt_: Time elapsed (s) since last call to 'execute'
+        calculate and return robot motion parameters.
         """
         raise NotImplementedError("Controller.execute")

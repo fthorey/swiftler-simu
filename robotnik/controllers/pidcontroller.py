@@ -9,33 +9,33 @@ class PIDController(Controller):
     a certain heading direction. The heading is recalculated on every execution
     """
 
-    def __init__(self, coeff_):
+    def __init__(self, info_):
 
         # Call parent constructor
         super(PIDController, self).__init__()
 
         # PID gains
         # Proportional
-        self._Kp = coeff_['Kp']
+        self._Kp = info_.gains.Kp
         # Integral
-        self._Ki = coeff_['Ki']
+        self._Ki = info_.gains.Ki
         # Derivative
-        self._Kd = coeff_['Kd']
+        self._Kd = info_.gains.Kd
 
         # Accumulated error
         self._E_k = 0;
         # error step k-1
         self._e_k_1 = 0;
 
-    def getHeadingAngle(self, state_):
+    def getHeadingAngle(self, info_):
         """Return the heading as an angle"""
 
         # The vector to follow
-        heading = self.getHeading(state_)
+        heading = self.getHeading(info_)
         print math.atan2(heading[1], heading[0])
         return math.atan2(heading[1], heading[0])
 
-    def getHeading(self, state):
+    def getHeading(self, info_):
         """Get the direction in which the controller wants to move the robot
         as a vector.
 
@@ -43,17 +43,14 @@ class PIDController(Controller):
         """
         raise NotImplementedError("PIDController.getHeading")
 
-    def execute(self, state_, dt_):
+    def execute(self, info_, dt_):
         """ Take an estimation of the current state and a heading goal to
         process the appropriate linear velocity v (m/s) and angular velocity (rad/s) to steers
         the robot toward this goal direction.
-
-        :param state_: Estimation of the current state of the robot (x,y,theta) (m,m,rad)
-        :param dt_: Time elapsed since last call to 'execute'
         """
 
         # This is the direction we want to go
-        e_k = self.getHeadingAngle(state_)
+        e_k = self.getHeadingAngle(info_)
 
         # Error for the proportional term
         e_P = e_k
