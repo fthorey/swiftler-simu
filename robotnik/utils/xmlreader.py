@@ -70,11 +70,6 @@ class XMLReader(object):
                 raise Exception(
                     '[XMLReader.parseConfiguration] No supervisor specified!')
 
-            dimension = robot.find('dimension')
-            if dimension == None:
-                raise Exception(
-                    '[XMLReader.parseConfiguration] No dimension specified!')
-
             pose = robot.find('pose')
             if pose == None:
                 raise Exception(
@@ -86,25 +81,16 @@ class XMLReader(object):
                     raise Exception(
                         '[XMLReader.parseConfiguration] Invalid pose!')
 
-                if robot_type ==  "Woggle":
-                    wheelRadius = dimension.get('wheelradius')
-                    wheelBaseLength = dimension.get('wheelbaselength')
-                    if wheelRadius == None or wheelBaseLength == None:
-                        raise Exception(
-                            '[XMLReader.parseConfiguration] Invalid dimension!')
+                robot_color = self.parseColor(robot.get('color'))
 
-                    robot_color = self.parseColor(robot.get('color'))
+                simulator_objects.append(('robot',
+                                          robot_type,
+                                          supervisor.attrib['type'],
+                                          (float(x),
+                                           float(y),
+                                           float(theta)),
+                                          robot_color,))
 
-                    simulator_objects.append(('robot',
-                                              robot_type,
-                                              supervisor.attrib['type'],
-                                              (float(x),
-                                               float(y),
-                                               float(theta)),
-                                              robot_color,
-                                              (float(wheelRadius),
-                                               float(wheelBaseLength)
-                                           )))
             except ValueError:
                 raise Exception(
                     '[XMLReader.parseConfiguration] Invalid robot (bad value)!')
