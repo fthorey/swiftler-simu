@@ -18,28 +18,30 @@ class WoggleSupervisor(Supervisor):
     to generate the robot inputs.
     """
 
-    def __init__(self, pos_):
+    def __init__(self, pos_, robotInfo_):
         # Call parent constructor
-        super(WoggleSupervisor, self,).__init__(pos_);
+        super(WoggleSupervisor, self,).__init__(pos_, robotInfo_);
+
+        # Set some extra informations
+        # PID parameters
+        self.info().gains = Struct()
+        self.info().gains.Kp = 0.8
+        self.info().gains.Ki = 0.1
+        self.info().gains.Kd = 0.01
+        # Goal
+        self.info().goal = Struct()
+        self.info().goal.x = 1
+        self.info().goal.y = -10
+        # Wheels
+        self.info().wheels = Struct()
+        self.info().wheels.leftTicks = robotInfo_.wheels.leftTicks
+        self.info().wheels.rightTicks = robotInfo_.wheels.rightTicks
 
         # Create a go-to-goal controller
-        self._controllers = {'gtg': GoToGoal()}
+        self._controllers = {'gtg': GoToGoal(self.info())}
 
         # Current controller
         self._currController = self._controllers['gtg']
-
-        # Store old values of wheel encoder ticks
-        self._prevLeftTicks = 0
-        self._prevRightTicks = 0
-
-        # Set some parameters
-        self._state = Struct()
-        # Goal
-        self._state.goal = Struct()
-        self._state.goal.x = 1
-        self._state.goal.y = -10
-        # Position
-        self._state.pos = pos_
 
     def controller(self, ):
         """Return the current controller of the robot.
@@ -51,11 +53,6 @@ class WoggleSupervisor(Supervisor):
         """
         self._currController = controller_
 
-    def controllerState(self, ):
-        """Return the parameters needed by the controller.
-        """
-        return self._state
-
     def execute(self, info_, dt_):
         """Selects and executes a controller.
         """
@@ -63,7 +60,7 @@ class WoggleSupervisor(Supervisor):
         self.updateStateEstimate(info_)
 
         # 2 -> Execute the controller to obtain unicycle command (v, w) to apply
-        v, w = self._currController.execute(self.controllerState(), dt_)
+        v, w = self._currController.execute(self.info(), dt_)
 
         return v, w
 
@@ -71,15 +68,15 @@ class WoggleSupervisor(Supervisor):
         """Update the current estimation of the robot state.
         """
         # Get the number of ticks on each wheel since last call
-        dtl = info_.wheels.leftTicks - self._prevLeftTicks
-        dtr = info_.wheels.rightTicks - self._prevRightTicks
+        dtl = info_.wheels.leftTicks - self.info().wheels.leftTicks
+        dtr = info_.wheels.rightTicks - self.info().wheels.rightTicks
 
         # Save the wheel encoder ticks for the next estimate
-        self._prevLeftTicks += dtl
-        self._prevRightTicks += dtr
+        self.info().wheels.leftTicks += dtl
+        self.info().wheels.rightTicks += dtr
 
         # Get old state estimation (in m and rad)
-        x, y, theta = self._state.pos
+        x, y, theta = self.info().pos
 
         # Get robot parameters (in m)
         R = info_.wheels.radius
@@ -102,4 +99,4 @@ class WoggleSupervisor(Supervisor):
         y_new = y + y_dt
 
         # Update the state estimation
-        self._state.pos = (x_new, y_new, theta_new)
+        self.info().pos = (x_new, y_new, theta_new)
