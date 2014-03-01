@@ -7,12 +7,12 @@ class Polygon(SimObject):
        """
     count = 0
 
-    def __init__(self, envelope, brush_, pen_):
-        SimObject.__init__(self, "polygon" + str(self.count), brush_, pen_)
+    def __init__(self, pos_, envelope_, brush_):
+        SimObject.__init__(self, "polygon" + str(self.count), pos_, brush_)
         self.count = self.count + 1
 
         # Cache the envelope
-        self._envelope = envelope
+        self._envelope = envelope_
 
         # Cache the bounding rect
         xmin, ymin, xmax, ymax = self.getBounds()

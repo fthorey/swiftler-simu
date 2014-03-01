@@ -17,17 +17,10 @@ class ProximitySensor(SimObject):
 
         # Call parent constructor
         super(ProximitySensor, self).__init__('sharp' + str(self.count),
-                                              QtCore.Qt.NoBrush,
-                                              QtCore.Qt.NoPen)
+                                              pos_, QtCore.Qt.NoBrush)
 
         # Increment by 1 the number of proximity sensors in the world
         self.count = self.count + 1
-
-        # Location on the parent object (in m)
-        self.setPos(pos_[0])
-
-        # angle of the beam (in rad)
-        self.setAngle(pos_[1])
 
         # View angle (in rad)
         self._phi = pi/10

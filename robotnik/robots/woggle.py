@@ -13,15 +13,15 @@ class Woggle(Robot):
     """ The Woggle class handles a unicycle robot called Woggle
     """
 
-    def __init__(self, name_, wheelRadius_, wheelBaseLength_, brush_, color_):
+    def __init__(self, name_, pos_, brush_):
         # Call parent constructor
-        super(Woggle, self).__init__(name_, brush_, color_)
+        super(Woggle, self).__init__(name_, pos_, brush_)
 
         # Radius of the wheels (m)
-        self._wheelRadius = wheelRadius_
+        self._wheelRadius = 0.021
 
         # Length between each wheel (m)
-        self._wheelBaseLength = wheelBaseLength_
+        self._wheelBaseLength = 0.0881
 
         # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
@@ -77,14 +77,14 @@ class Woggle(Robot):
         # Position of the sharp sensors
         bl = self._wheelBaseLength/2 + 0.01
         self._proxSensorsPos = [
-            [QtCore.QPointF(bl*cos(0), sin(0)), 0],
-            [QtCore.QPointF(bl*cos(17*pi/120), bl*sin(17*pi/120)), 17*pi/120],
-            [QtCore.QPointF(bl*cos(-17*pi/120), bl*sin(-17*pi/120)), -17*pi/120],
-            [QtCore.QPointF(bl*cos(-9*pi/24), bl*sin(-9*pi/24)), -9*pi/24],
-            [QtCore.QPointF(bl*cos(9*pi/24), bl*sin(9*pi/24)), 9*pi/24],
-            [QtCore.QPointF(bl*cos(-pi/2-7*pi/24), bl*sin(-pi/2-7*pi/24)), -pi/2-7*pi/24],
-            [QtCore.QPointF(bl*cos(pi/2+7*pi/24), bl*sin(pi/2+7*pi/24)), pi/2+7*pi/24],
-            [QtCore.QPointF(bl*cos(pi), bl*sin(pi)), pi]]
+            [bl*cos(0), sin(0), 0],
+            [bl*cos(17*pi/120), bl*sin(17*pi/120), 17*pi/120],
+            [bl*cos(-17*pi/120), bl*sin(-17*pi/120), -17*pi/120],
+            [bl*cos(-9*pi/24), bl*sin(-9*pi/24), -9*pi/24],
+            [bl*cos(9*pi/24), bl*sin(9*pi/24), 9*pi/24],
+            [bl*cos(-pi/2-7*pi/24), bl*sin(-pi/2-7*pi/24), -pi/2-7*pi/24],
+            [bl*cos(pi/2+7*pi/24), bl*sin(pi/2+7*pi/24), pi/2+7*pi/24],
+            [bl*cos(pi), bl*sin(pi), pi]]
 
         # Add the sensors to the robot
         for pos in self._proxSensorsPos:

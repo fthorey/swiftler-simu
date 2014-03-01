@@ -10,17 +10,10 @@ class Robot(SimObject):
     """ The Robot class represents a generic class for robots.
     """
 
-    def __init__(self, name_, brush_, color_):
+    def __init__(self, name_, pos_, brush_):
 
         # Call parent constructor
-        super(Robot, self).__init__(name_, brush_, color_)
-
-        # Dynamics followed by the robot
-        self._dynamics = None
-
-        # Supervisor to run the robot
-        from supervisors.supervisor import Supervisor
-        self._supervisor = Supervisor(self)
+        super(Robot, self).__init__(name_, pos_, brush_)
 
         # Is the robot stopped
         self._stopped = False
@@ -41,7 +34,10 @@ class Robot(SimObject):
         self._zoom = 1.0
 
         # Store all items which belong to the robot
-        self._items = [self, ]
+        self._items = [self]
+
+        # Associate a tracker to store the path (in m)
+        self._tracker = Tracker(pos_)
 
     def tracker(self, ):
         """Return the tracker of the robot.
@@ -153,7 +149,7 @@ class Robot(SimObject):
         """
         self._dynamics = dynamics_
 
-    def getDynamics(self, ):
+    def dynamics(self, ):
         """Get the dynamic of the robot.
         """
         return self._dynamics
@@ -208,5 +204,5 @@ class Robot(SimObject):
         # 2 -> Update the robot position using dynamic and current command
         self._dynamics.update(const.stepDuration)
 
-        # 3 -> Add the position to the tracker
+        # 3 -> Add the new position to the tracker
         self.tracker().addPosition(self.pos())

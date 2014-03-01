@@ -9,7 +9,7 @@ class SimObject(QtGui.QGraphicsItem):
     """ SimObject class is the basic class for all objects in the simulator
     """
 
-    def __init__(self, name_, brush_, pen_, parent=None):
+    def __init__(self, name_, pos_, brush_, parent=None):
         """
         """
         # Call parent constructor
@@ -18,9 +18,15 @@ class SimObject(QtGui.QGraphicsItem):
         # Name of the simObject
         self._name = name_
 
-        # Save the brush and the pen
+        # Set the position
+        x, y, angle = pos_
+        self.setPos(QtCore.QPointF(x,y))
+        self.setAngle(angle)
+
+        # Save the brush
         self._brush = brush_
-        self._pen = pen_
+        # Set to NoPen by default
+        self._pen = QtCore.Qt.NoPen
 
         # Cached envelope (in its own coordinates system)
         self._envelope = None
