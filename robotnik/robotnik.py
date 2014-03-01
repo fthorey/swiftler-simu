@@ -334,8 +334,9 @@ class Robotnik(QtGui.QMainWindow):
         """
         # Restart the current number of steps
         self._currentSteps = 0
-        # Stop the timer
-        self.timer.stop()
+
+        # Pause the world
+        self.pause()
 
         # Put robots at there initial position
         for robot in self._world.getRobots():
@@ -347,8 +348,6 @@ class Robotnik(QtGui.QMainWindow):
 
         # Change the play/pause icon
         self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
-        # Set the world to the not running state
-        self._world.setRunning(False)
 
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
