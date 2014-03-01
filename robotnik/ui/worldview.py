@@ -24,7 +24,7 @@ class WorldView(QtGui.QGraphicsView):
     def scaleOnRobot(self, ):
         """Scale the view on the robot.
         """
-        for robot in self.scene().getRobots():
+        for robot in self.scene().robots():
             if robot.isMasterRobot():
                 # Update bounding rect
                 self._boundingRect = robot.mapRectToParent(robot.enlargedBoundingRect())
@@ -36,7 +36,7 @@ class WorldView(QtGui.QGraphicsView):
         """Scale the view to focus only on the robot.
         """
         # Set the zoom on robot parameter
-        for robot in self.scene().getRobots():
+        for robot in self.scene().robots():
             if robot.isMasterRobot():
                 # Update view
                 self.fitInView(self._boundingRect, QtCore.Qt.KeepAspectRatio)

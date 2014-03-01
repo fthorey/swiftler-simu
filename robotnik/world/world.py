@@ -80,7 +80,7 @@ class World(QtGui.QGraphicsScene):
         """
         return self._isRunning
 
-    def getRobots(self, ):
+    def robots(self, ):
         """Get a list of all robots currently in the world.
         """
         return self._robots

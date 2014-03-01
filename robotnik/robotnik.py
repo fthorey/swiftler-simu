@@ -384,7 +384,7 @@ class Robotnik(QtGui.QMainWindow):
         """Sets the master robot zoom level.
         """
         zoom = 5.0**(value_/100.0)
-        for robot in self._world.getRobots():
+        for robot in self._world.robots():
             if robot.isMasterRobot():
                 robot.setZoom(zoom)
 

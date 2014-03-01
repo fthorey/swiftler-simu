@@ -26,7 +26,7 @@ class Physics(QtCore.QObject):
         def isARobot(item):
             """Checks if the item is the robot to which belong the sensor.
             """
-            for robot in self._world.getRobots():
+            for robot in self._world.robots():
                 if item in robot.getAllItems():
                     return True
             return False
@@ -54,7 +54,7 @@ class Physics(QtCore.QObject):
         """
         # Check all sensors of all robots currently in the scene
         # Loop over robots
-        for robot in self._world.getRobots():
+        for robot in self._world.robots():
             # Don't check for collision if the robot is already stopped
             if robot.isStopped():
                 continue
