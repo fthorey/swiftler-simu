@@ -2,9 +2,7 @@
 # coding: utf-8
 
 import sys, os
-from math import pi
 from world.world import World
-from robots.woggle import Woggle
 from utils import const
 import ui.icons
 
@@ -188,9 +186,6 @@ class Robotnik(QtGui.QMainWindow):
         """
         # Center the main window
         self.center()
-        # Show the view on screen
-        self.show()
-
     def connectSlots(self, ):
         """Connects all slots.
         """
@@ -413,5 +408,7 @@ if __name__ == '__main__':
     # Create a Qt application
     app = QtGui.QApplication(sys.argv)
     robotnik = Robotnik()
+    # Show the view on screen
+    robotnik.show()
     # Exit
     sys.exit(app.exec_())
