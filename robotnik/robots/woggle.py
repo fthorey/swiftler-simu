@@ -31,8 +31,8 @@ class Woggle(Robot):
         # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
-        # A Woggle supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(pos_))
+        # The supervisor is attached to the robot
+        self.setSupervisor(supervisorClass_(pos_, self._info))
 
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
