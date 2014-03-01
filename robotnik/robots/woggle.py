@@ -88,11 +88,7 @@ class Woggle(Robot):
 
         # Add the sensors to the robot
         for pos in self._proxSensorsPos:
-            sensor = WoggleIRSensor(pos)
-            # Add the sensor to the list of sensors
-            self.proxSensors().append(sensor)
-            # Add the sensor to the general list of items of the robot
-            self.addItem(sensor)
+            self.addProxSensor(WoggleIRSensor(pos))
 
         # A supervisor is attached to the Woggle robot
         self.setSupervisor(WoggleSupervisor(self))

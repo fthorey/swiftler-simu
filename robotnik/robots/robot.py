@@ -24,9 +24,6 @@ class Robot(SimObject):
         # Initial heading angle (in rad)
         self._initAngle = 0
 
-        # List of all proximity sensors of the robot
-        self._proxSensors = list()
-
         # Is the robot master
         self._isMaster = False
 
@@ -34,7 +31,7 @@ class Robot(SimObject):
         self._zoom = 1.0
 
         # Store all items which belong to the robot
-        self._items = [self]
+        self._items = [self, ]
 
         # Associate a tracker to store the path (in m)
         self._tracker = Tracker(pos_)
@@ -65,6 +62,18 @@ class Robot(SimObject):
         """Return the list of proximity sensors of the robot.
         """
         return self._proxSensors
+
+    def addProxSensor(self, sensor):
+        """Add a sensors to the prox sensors list.
+        """
+        try:
+            self._proxSensors.append(sensor)
+        except AttributeError:
+            self._proxSensors = list()
+            self._proxSensors.append(sensor)
+
+        # Add to list of all items
+        self.addItem(sensor)
 
     def setZoom(self, zoom_):
         """Set the current zoom level of the robot.
