@@ -10,7 +10,7 @@ class Robot(SimObject):
     """ The Robot class represents a generic class for robots.
     """
 
-    def __init__(self, name_, supervisorClass_, pos_, brush_):
+    def __init__(self, name_, pos_, brush_):
 
         # Call parent constructor
         super(Robot, self).__init__(name_, pos_, brush_)
@@ -20,9 +20,6 @@ class Robot(SimObject):
 
         # Is the robot master
         self._isMaster = False
-
-        # A supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(pos_))
 
         # Current zoom level
         self._zoom = 1.0
@@ -92,16 +89,6 @@ class Robot(SimObject):
         """Set this robot the master robot.
         """
         self._isMaster = True
-
-    def setGoal(self, goal_):
-        """Set a heading goal to the robot.
-        """
-        self._supervisor.setGoal(goal_)
-
-    def getGoal(self, ):
-        """Get the heading goal of the robot.
-        """
-        return self._supervisor.getGoal()
 
     def setDynamics(self, dynamics_):
         """Set the dynamics followed by the robot.

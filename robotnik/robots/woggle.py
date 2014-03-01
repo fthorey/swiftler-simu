@@ -14,9 +14,9 @@ class Woggle(Robot):
     """ The Woggle class handles a unicycle robot called Woggle
     """
 
-    def __init__(self, name_, supervisor_, pos_, brush_):
+    def __init__(self, name_, supervisorClass_, pos_, brush_):
         # Call parent constructor
-        super(Woggle, self).__init__(name_, supervisor_, pos_, brush_)
+        super(Woggle, self).__init__(name_, pos_, brush_)
 
         # Fill-in the state informations
         self._info = Struct()
@@ -30,6 +30,9 @@ class Woggle(Robot):
 
         # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
+
+        # A Woggle supervisor is attached to the robot
+        self.setSupervisor(supervisorClass_(pos_))
 
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
