@@ -10,7 +10,7 @@ class Robot(SimObject):
     """ The Robot class represents a generic class for robots.
     """
 
-    def __init__(self, name_, pos_, brush_):
+    def __init__(self, name_, supervisorClass_, pos_, brush_):
 
         # Call parent constructor
         super(Robot, self).__init__(name_, pos_, brush_)
@@ -21,6 +21,9 @@ class Robot(SimObject):
         # Is the robot master
         self._isMaster = False
 
+        # A supervisor is attached to the robot
+        self.setSupervisor(supervisorClass_(pos_))
+
         # Current zoom level
         self._zoom = 1.0
 
@@ -30,6 +33,11 @@ class Robot(SimObject):
         # Associate a tracker to store the path (in m)
         # Tracker only manipulates (x,y)
         self._tracker = Tracker(pos_[:2])
+
+    def info(self):
+        """Return the robot information structure.
+        """
+        raise NotImplementedError("Robot.info")
 
     def tracker(self, ):
         """Return the tracker of the robot.

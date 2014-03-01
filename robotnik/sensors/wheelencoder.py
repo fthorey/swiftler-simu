@@ -5,10 +5,7 @@ class WheelEncoder(object):
     """ The WheelEncoder class represents a generic class for wheel encoders
     """
 
-    def __init__(self, ticksPerRev_, wheelRadius_):
-        # Store Wheel radius
-        self._wheelRadius = wheelRadius_
-
+    def __init__(self, ticksPerRev_):
         # Store the number of ticks in a revolution (2pi)
         self._ticksPerRev = ticksPerRev_
 

@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from math import pi, degrees, radians, cos, sin
+from utils.struct import Struct
 from robots.robot import Robot
 from sensors.woggleirsensor import WoggleIRSensor
 from sensors.wheelencoder import WheelEncoder
@@ -13,23 +14,25 @@ class Woggle(Robot):
     """ The Woggle class handles a unicycle robot called Woggle
     """
 
-    def __init__(self, name_, pos_, brush_):
+    def __init__(self, name_, supervisor_, pos_, brush_):
         # Call parent constructor
-        super(Woggle, self).__init__(name_, pos_, brush_)
+        super(Woggle, self).__init__(name_, supervisor_, pos_, brush_)
 
-        # Radius of the wheels (m)
-        self._wheelRadius = 0.021
-
-        # Length between each wheel (m)
-        self._wheelBaseLength = 0.0881
+        # Fill-in the state informations
+        self._info = Struct()
+        self._info.wheels = Struct()
+        # These are the original parameters
+        self._info.wheels.radius = 0.021
+        self._info.wheels.baseLength = 0.0885
+        self._info.wheels.ticksPerRev = 2764.8
+        self._info.wheels.leftTicks = 0
+        self._info.wheels.rightTicks = 0
 
         # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
-        # Current speed of the left wheel (rad/s)
+        # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
-
-        # Current speed of the right wheel (rad/s)
         self._rightWheelSpeed = 0
 
         # Current number of revolution of each wheel
@@ -37,13 +40,13 @@ class Woggle(Robot):
         self._rightRevolutions = 0
 
         # Add a wheel encoder to each wheel
-        self._leftWheelEncoder = WheelEncoder(2764.8, self._wheelRadius)
+        self._leftWheelEncoder = WheelEncoder(self._info.wheels.ticksPerRev)
 
         # Add a wheel encoder to each wheel
-        self._rightWheelEncoder = WheelEncoder(2764.8, self._wheelRadius)
+        self._rightWheelEncoder = WheelEncoder(self._info.wheels.ticksPerRev)
 
         # Cache the envelope
-        bl = self._wheelBaseLength/2
+        bl = self._info.wheels.baseLength/2
         self._envelope = [[bl * cos(pi/2 + pi/12), bl * sin(pi/2 + pi/12)],
                           [bl * cos(pi/2 - pi/12), bl * sin(pi/2 - pi/12)],
                           [bl * cos(pi/3), bl * sin(pi/3)],
@@ -75,7 +78,7 @@ class Woggle(Robot):
         self._shape.addPolygon(QtGui.QPolygonF(points))
 
         # Position of the sharp sensors
-        bl = self._wheelBaseLength/2 + 0.01
+        bl = self._info.wheels.baseLength/2 + 0.01
         self._proxSensorsPos = [
             [bl*cos(0), sin(0), 0],
             [bl*cos(17*pi/120), bl*sin(17*pi/120), 17*pi/120],
@@ -90,8 +93,10 @@ class Woggle(Robot):
         for pos in self._proxSensorsPos:
             self.addProxSensor(WoggleIRSensor(pos))
 
-        # A supervisor is attached to the Woggle robot
-        self.setSupervisor(WoggleSupervisor(self, pos_))
+    def info(self):
+        """Return the robot information structure.
+        """
+        return self._info
 
     def leftRevolutions(self, ):
         """Return the number of revolutions of the left wheel.
@@ -122,16 +127,6 @@ class Woggle(Robot):
         """Return the right wheel encoder.
         """
         return self._rightWheelEncoder
-
-    def wheelRadius(self, ):
-        """Return the wheel radius (in m).
-        """
-        return self._wheelRadius
-
-    def wheelBaseLength(self, ):
-        """Return the wheel base length (in m).
-        """
-        return self._wheelBaseLength
 
     def setLeftWheelSpeed(self, speed_):
         """Set the current left wheel speed (in m/s).
@@ -188,10 +183,10 @@ class Woggle(Robot):
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         painter.drawPolygon(QtGui.QPolygonF(points))
 
-        bodyX = (-self._wheelBaseLength/2)
-        bodyY = (-self._wheelBaseLength/2)
-        bodyW = self._wheelBaseLength
-        bodyH = self._wheelBaseLength
+        bodyX = (-self._info.wheels.baseLength/2)
+        bodyY = (-self._info.wheels.baseLength/2)
+        bodyW = self._info.wheels.baseLength
+        bodyH = self._info.wheels.baseLength
 
         # Paint identifier
         painter.setBrush(self.brush())
