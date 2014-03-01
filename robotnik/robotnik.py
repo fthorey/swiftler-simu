@@ -39,6 +39,8 @@ class Robotnik(QtGui.QMainWindow):
         self.configureView()
         self.configureWindow()
         self.connectSlots()
+        # Missing in QtCreator
+        self.setStatusTips()
 
         # Create XML file dialog
         self._worldDialog = QtGui.QFileDialog(self,
@@ -48,6 +50,19 @@ class Robotnik(QtGui.QMainWindow):
         self._worldDialog.setDirectory(QtCore.QDir.currentPath() + os.sep + 'templates')
         self._worldDialog.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
         self._worldDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
+
+    def setStatusTips(self, ):
+        """Set status tips (missing in QtCreator).
+        """
+        self.action_Open_World.setStatusTip("Open a new world")
+        self.action_Restart.setStatusTip("Restart the simulation")
+        self.action_Play_Pause.setStatusTip("Play/pause the simulation")
+        self.action_Step.setStatusTip("Execute one step of simulation")
+        self.action_Sensors_Robot.setStatusTip("Show/Hide robots sensors")
+        self.action_Tracks_Robot.setStatusTip("Show/Hide robots tracks")
+        self.action_Ghost_Mode.setStatusTip("Enable/Disable ghost mode")
+        self.action_Zoom_World.setStatusTip("Show the entire world")
+        self.action_Zoom_Robot.setStatusTip("Follow the master robot")
 
     def configureMenuBar(self, ):
         """Configure the menubar.
@@ -179,7 +194,6 @@ class Robotnik(QtGui.QMainWindow):
     def connectSlots(self, ):
         """Connects all slots.
         """
-
         # Open World
         self.action_Open_World.triggered.connect(self.onOpenWorld)
 

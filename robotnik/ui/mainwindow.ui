@@ -32,7 +32,11 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -160,7 +164,7 @@
      <normaloff>:/new/myRessources/icons/silk/folder_explore.png</normaloff>:/new/myRessources/icons/silk/folder_explore.png</iconset>
    </property>
    <property name="text">
-    <string>Open XML World</string>
+    <string>Open an XML World</string>
    </property>
    <property name="toolTip">
     <string>Open World</string>
