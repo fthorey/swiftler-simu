@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from math import degrees, sqrt
+from utils.struct import Struct
 
 from PyQt4 import QtCore
 
@@ -9,21 +10,12 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, pos_):
-        # Initialize the estimation of the position
-        self._posEstimate = pos_
+    def __init__(self, pos_, robotInfo_):
+        # Store information about the robot
+        self._info = Struct()
+        self._info.pos = pos_
 
-    def posEstimate(self, ):
-        """Get the current estimation of the position.
-        """
-        return self._posEstimate
-
-    def setPosEstimate(self, pos_):
-        """Update the current estimation of the position.
-        """
-        self._posEstimate = pos_
-
-    def execute(self, state_, dt_):
+    def execute(self, info_, dt_):
         """Select and execute the current controller.
         """
         raise NotImplementedError("Supervisor.execute")
@@ -33,7 +25,7 @@ class Supervisor(object):
         """
         raise NotImplementedError("Supervisor.updateStateEstimate")
 
-    def controllerState(self, ):
+    def info(self, ):
         """Get the parameters that the current controller needs for s.
         """
-        raise NotImplementedError('Supervisor.controllerState')
+        return self._info
