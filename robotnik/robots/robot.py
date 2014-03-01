@@ -18,12 +18,6 @@ class Robot(SimObject):
         # Is the robot stopped
         self._stopped = False
 
-        # Initial position (in m)
-        self._initPos = QtCore.QPointF(0, 0)
-
-        # Initial heading angle (in rad)
-        self._initAngle = 0
-
         # Is the robot master
         self._isMaster = False
 
@@ -101,59 +95,6 @@ class Robot(SimObject):
         """
         return self._supervisor.getGoal()
 
-    def restart(self, ):
-        """Restart from the robot to its initial state.
-        """
-        # Set the initial postion (in m)
-        self.setPos(self._initPos)
-        # Set the initial heading angle (in rad)
-        self.setAngle(self._initAngle)
-        # Set the initial state estimate of the supervisor
-        self._supervisor.setStateEstimate(self._initPos.x(),
-                                          self._initPos.y(),
-                                          self._initAngle)
-
-        # The robot is not stopped anymore
-        self._stopped = False
-
-        # Actions below must be performed after the position
-        # of the robot has been restarted
-
-        # Restart all sensors
-        for sensor in self._proxSensors:
-            sensor.restart()
-
-        # Restar the supervisor
-        self._supervisor.restart()
-
-        # Restart the tracker
-        self._tracker.restart(self._initPos)
-
-    def setInitialPos(self, pos_, angle_):
-        """Set the initial position of the robot (in m & rad).
-        """
-        # in m
-        self._initPos = pos_
-        # in rad
-        self._initAngle = angle_
-
-        # setPos and setAngle are in charge of converting m to pixel
-        self.setPos(pos_)
-        self.setAngle(angle_)
-
-        # Associate a tracker to store the path (in m)
-        self._tracker = Tracker(pos_)
-
-        # Set the initial state estimate of the supervisor
-        self._supervisor.setStateEstimate(self._initPos.x(),
-                                          self._initPos.y(),
-                                          self._initAngle)
-
-    def getInitialPos(self, ):
-        """Get the initial position of the robot (in m & rad).
-        """
-        return self._initPos, self._initAngle
-
     def setDynamics(self, dynamics_):
         """Set the dynamics followed by the robot.
         """
@@ -215,4 +156,4 @@ class Robot(SimObject):
         self._dynamics.update(const.stepDuration)
 
         # 3 -> Add the new position to the tracker
-        self.tracker().addPosition(self.pos())
+        self.tracker().addPosition((self.pos().x(), self.pos().y()))

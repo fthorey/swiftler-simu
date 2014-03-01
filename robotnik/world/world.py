@@ -20,18 +20,6 @@ class World(QtGui.QGraphicsScene):
         # Physics that rules the world
         self._physics = Physics(self)
 
-        # Define a grid size of 10cm
-        self._gridSize = 0.1
-
-        # Type of the grid pen
-        self._gridPen = QtGui.QPen(QtGui.QColor(0x808080))
-
-        # List of robots currently in the world
-        self._robots = list()
-
-        # List of obstacle currently in the world
-        self._obstacles = list()
-
         # Store the current state of the zoom (robot or world)
         self._zoomOnRobot = True
 
@@ -130,16 +118,17 @@ class World(QtGui.QGraphicsScene):
         else:
             self.autoConstruct()
 
-        # Update the views on the robot if necessary
-        if self._zoomOnRobot:
-            for view in self.views():
-                view.focusOnRobot()
+        # Update the views on the robot
+        for view in self.views():
+                if self._zoomOnRobot:
+                    view.focusOnRobot()
+                else:
+                    view.focusOnWorld()
 
     def autoConstruct(self, ):
         """ Autoconstructs the world from informations provided into the xml
         template files.
         """
-
         # Start by erasing all current objects in the world
         self.clear()
 
@@ -152,10 +141,7 @@ class World(QtGui.QGraphicsScene):
             objsType = objs[0]
             if objsType is 'robot':
                 # Get robot parameters
-                robot_type, supervisor_type, robot_pos, robot_color, robot_dim = objs[1:6]
-                # Get robot position (in m and rad)
-                x, y, theta = robot_pos
-                wR, wBL = robot_dim
+                robot_type, supervisor_type, robot_pos, robot_color = objs[1:5]
                 try:
                     # Get robot class
                     robot_class = helpers.load_by_name(robot_type,'robots')
@@ -164,14 +150,15 @@ class World(QtGui.QGraphicsScene):
                     # Generate a robot name
                     name = "Robot_{}:_{}".format(len(self._robots), sup_class.__name__)
                     brush = QtGui.QBrush(QtGui.QColor(robot_color))
-                    pen = QtGui.QPen(QtCore.Qt.NoPen)
-                    robot = robot_class(name, wR, wBL, brush, pen)
+                    robot = robot_class(name, robot_pos, brush)
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:
                         robot.setMasterRobot()
                         masterRobotSet = True
-                    # Add the robot to the wo
-                    self.addRobot(robot, QtCore.QPointF(x, y), theta)
+                    # Add the robot to the world
+                    self.addItem(robot)
+                    # Add the robot to the robots list
+                    self._robots.append(robot)
                 except:
                     print "[world.autoConstruct] Robot creation failed!"
                     raise
@@ -184,43 +171,27 @@ class World(QtGui.QGraphicsScene):
                     obstacle_color = 0xFF0000
                 # Get obstacle attribute
                 brush = QtGui.QBrush(QtGui.QColor(obstacle_color))
-                pen = QtGui.QPen(QtCore.Qt.NoPen)
-                obstacle = Polygon(obstacle_coords, brush, pen)
+                obstacle = Polygon(obstacle_pos, obstacle_coords, brush)
                 # Add the obstacle to the world
                 self.addItem(obstacle)
-                # Get obstacle position (in m)
-                x = obstacle_pos[0]
-                y = obstacle_pos[1]
-                theta = obstacle_pos[2]
-                # Position the obstacle
-                obstacle.setPos(QtCore.QPointF(x, y))
-                obstacle.rotate(degrees(theta))
                 # Add the obstacle to obstacles list
                 self._obstacles.append(obstacle)
             else:
                 print "{world.autConstruct] Can't recognized the item!"
                 raise
 
-    def addRobot(self, robot_, position_, angle_):
-        """Adds a robot to the world
-        The position is given in m.
-        """
-        robot_.setInitialPos(position_, angle_)
-        self.addItem(robot_)
-        self._robots.append(robot_)
-
     def setPhysics(self, physics_):
         """Sets the physics that rules the world.
         """
         self._physics = physics_
 
-    def getPhysics(self, ):
+    def physics(self, ):
         """Returns the current physics of the world.
         """
         return self._physics
 
     # Return a list of all obstacles in the wolrd
-    def getObstacles(self, ):
+    def obstacles(self, ):
         """Return a list of all obstacles in the world.
         """
         return self._obstacles
@@ -248,17 +219,9 @@ class World(QtGui.QGraphicsScene):
             for view in self.views():
                 view.focusOnRobot()
 
-    def setGridSize(self, size_):
-        """Sets the grid size.
-        """
-        self._gridSize = size_
-
     def drawBackground(self, painter, rect):
         """Draw the background.
         """
-        painter.setPen(self._gridPen)
-        painter.setWorldMatrixEnabled(True);
-
         # Draw robots tracks
         if self._showTracks:
             for robot in self._robots:

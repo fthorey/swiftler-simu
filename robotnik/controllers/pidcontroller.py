@@ -27,12 +27,6 @@ class PIDController(Controller):
         # error step k-1
         self._e_k_1 = 0;
 
-    def restart(self, ):
-        """Restarts the PID controller
-        """
-        self._E_k = 0
-        self._e_k_1 = 0
-
     def getHeadingAngle(self, state_, goal_):
         """Get the direction in which the controller wants to move the robot
         as a vector.

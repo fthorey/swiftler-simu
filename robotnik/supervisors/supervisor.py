@@ -9,9 +9,22 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, robot_):
+    def __init__(self, robot_, pos_):
         # Robot supervised
         self._robot = robot_
+
+        # Initialize the estimation of the position
+        self._posEstimate = pos_
+
+    def posEstimate(self, ):
+        """Get the current estimation of the position.
+        """
+        return self._posEstimate
+
+    def setPosEstimate(self, pos_):
+        """Update the current estimation of the position.
+        """
+        self._posEstimate = pos_
 
     def stopDist(self, ):
         """Return the distance from an obstacle to which the robot stops.
@@ -38,18 +51,6 @@ class Supervisor(object):
         """
         return self._goal.x(), self._goal.y()
 
-    def stateEstimate(self, ):
-        """Return an estimate of the state of the robot (x,y,theta).
-        """
-        return self._stateEstimate
-
-    def setStateEstimate(self, x, y, theta):
-        """Set the current estimate of the state of the robot.
-        """
-        # Current estimation of the robot position (in m) and angle (in rad)
-        # in the scene referential
-        self._stateEstimate = {'x': x, 'y': y, 'theta': theta, }
-
     def execute(self, ):
         """Select and execute the current controller.
         """
@@ -59,11 +60,6 @@ class Supervisor(object):
         """Update the current estimation of the state of the robot position.
         """
         raise NotImplementedError("Supervisor.updateOdometry")
-
-    def restart(self, ):
-        """Restart.
-        """
-        raise NotImplementedError("Supervisor.restart")
 
     def isAtGoal(self, ):
         """Check if the robot is nearby enough its goal.

@@ -91,21 +91,7 @@ class Woggle(Robot):
             self.addProxSensor(WoggleIRSensor(pos))
 
         # A supervisor is attached to the Woggle robot
-        self.setSupervisor(WoggleSupervisor(self))
-
-    def restart(self, ):
-        """Restart.
-        """
-        # Call robot restart
-        super(Woggle, self).restart()
-
-        # Set wheel speeds to 0
-        self._leftWheelSpeed = 0
-        self._rightWheelSpeed = 0
-
-        # Set current number of revolutions to 0
-        self._leftRevolutions = 0
-        self._rightRevolutions = 0
+        self.setSupervisor(WoggleSupervisor(self, pos_))
 
     def leftRevolutions(self, ):
         """Return the number of revolutions of the left wheel.

@@ -25,8 +25,7 @@ class GoToGoal(PIDController):
         x_g, y_g = goal_
 
         # Get an estimate of the current pos (in m and rad)
-        x, y = state_['x'], state_['y']
-        theta = state_['theta']
+        x, y, theta = state_
 
         # 1. Calculate the heading (angle) to the goal
 

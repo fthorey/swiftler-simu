@@ -17,9 +17,9 @@ class WoggleSupervisor(Supervisor):
     to generate the robot inputs.
     """
 
-    def __init__(self, robot_):
+    def __init__(self, robot_, pos_):
         # Call parent constructor
-        super(WoggleSupervisor, self,).__init__(robot_);
+        super(WoggleSupervisor, self,).__init__(robot_, pos_);
 
         # Create a go-to-goal controller
         self._controllers = {'obst': AvoidObstacle(robot_.proxSensors()),
@@ -38,16 +38,6 @@ class WoggleSupervisor(Supervisor):
         # Distance from the goal to which the robot stop (in m)
         self.setStopDist(0.05)
 
-    def restart(self, ):
-        """Restart.
-        """
-        # Restart the controller
-        self._currController.restart()
-
-        # Restart the wheel encoders ticks
-        self._prevLeftTicks = 0
-        self._prevRightTicks = 0
-
     def controller(self, ):
         """Return the current controller of the robot.
         """
@@ -57,18 +47,6 @@ class WoggleSupervisor(Supervisor):
         """Set the controller of the robot.
         """
         self._currController = controller_
-
-    def getIRDistance(self, sensor):
-        """Converts the IR distance readings into a distance in meters
-        """
-        # Get the current reading of the sensor
-        reading = sensor.reading()
-
-        # Conver the reading to a distance (in m)
-        irDistance = max( min((log1p(3960) - log1p(reading))/30 + sensor.rmin(), sensor.rmax()),
-                          sensor.rmin)
-
-        return irDistance
 
     def execute(self, dt_):
         """Selects and executes a controller.
@@ -83,11 +61,11 @@ class WoggleSupervisor(Supervisor):
         self.updateOdometry()
 
         # 2 -> Execute the controller to obtain command to apply to the robot
-        v, w = self._currController.execute(self._stateEstimate, self.goal(), dt_)
+        v, w = self._currController.execute(self.posEstimate(), self.goal(), dt_)
 
         # Convert speed (in m/s) and angular rotation (in rad/s) to
         # angular speed to apply to each robot wheels (in rad/s)
-        vel_l, vel_r = self.robot().getDynamics().uni2Diff(v, w)
+        vel_l, vel_r = self.robot().dynamics().uni2Diff(v, w)
 
         # 3 -> Apply current speed to wheels
         self.robot().setWheelSpeeds(vel_l, vel_r)
@@ -107,8 +85,7 @@ class WoggleSupervisor(Supervisor):
         self._prevRightTicks += dtr
 
         # Get old state estimation (in m and rad)
-        x, y  = self._stateEstimate['x'], self._stateEstimate['y']
-        theta =self._stateEstimate['theta']
+        x, y, theta = self.posEstimate()
 
         # Get robot parameters (in m)
         R = self.robot().wheelRadius()
@@ -131,6 +108,4 @@ class WoggleSupervisor(Supervisor):
         y_new = y + y_dt
 
         # Update the state estimation
-        self._stateEstimate['x'] = x_new
-        self._stateEstimate['y'] = y_new
-        self._stateEstimate['theta'] = (theta_new + pi)%(2*pi)-pi
+        self.setPosEstimate((x_new, y_new, theta_new))

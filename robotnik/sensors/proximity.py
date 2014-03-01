@@ -113,12 +113,6 @@ class ProximitySensor(SimObject):
         # Trigger an update of the view
         self.update()
 
-    def restart(self, ):
-        """Restart the sensor to its initial state
-        """
-        # Update all distances
-        self.updateDistance()
-
     def getEnvelope(self):
         """Return the envelope of the sensor
         """

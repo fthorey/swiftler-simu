@@ -343,16 +343,8 @@ class Robotnik(QtGui.QMainWindow):
         # Pause the world
         self.pause()
 
-        # Put robots at there initial position
-        for robot in self._world.getRobots():
-            robot.restart()
-
-        # Refocus the view on the master robot
-        if self._world.isZoomOnRobot():
-            self._worldView.focusOnRobot()
-
-        # Change the play/pause icon
-        self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
+        # Tell the world to auto-construct
+        self._world.readConfigurationFile('templates/labyrinth_small.xml')
 
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
