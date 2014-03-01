@@ -18,31 +18,15 @@ class GoToGoal(PIDController):
         # Call PIDController constructor
         super(GoToGoal, self).__init__(coeff)
 
-        self._goal = (1, -10)
-
+    # Let's overwrite this way:
     def getHeadingAngle(self, state_):
-        """Get the direction in which the controller wants to move the robot
+        """Get the direction from the robot to the goal as a vector.
         """
-        # Retrieve the goal location (in m)
-        x_g, y_g = self._goal
+        # The goal:
+        x_g, y_g = state_.goal.x, state_.goal.y
 
-        # Get an estimate of the current pos (in m and rad)
-        x, y, theta = state_
+        # The robot:
+        x_r, y_r, theta = state_.pos
 
-        # 1. Calculate the heading (angle) to the goal
-
-        # Distance between goal and robot in x-direction (in m)
-        u_x = x_g - x
-
-        # Distance between goal and robot in y-direction (in m)
-        u_y = y_g - y
-
-        # Angle from robot to goal. Use ATAN2 (in rad)
-        theta_g = atan2(u_y, u_x)
-
-        # 2. Calculate the heading error
-
-        # Error between the goal angle and robot's angle
-        # Use ATAN2 to make sure this stays in [-pi,pi]
-        e_k = theta_g - theta
-        return atan2(sin(e_k), cos(e_k))
+        # Where is the goal in the robot's frame of reference?
+        return atan2(y_g - y_r, x_g - x_r) - theta

@@ -27,10 +27,19 @@ class PIDController(Controller):
         # error step k-1
         self._e_k_1 = 0;
 
-    def getHeadingAngle(self, state_, goal_):
+    def getHeadingAngle(self, state_):
+        """Return the heading as an angle"""
+
+        # The vector to follow
+        heading = self.getHeading(state_)
+        print math.atan2(heading[1], heading[0])
+        return math.atan2(heading[1], heading[0])
+
+    def getHeading(self, state):
         """Get the direction in which the controller wants to move the robot
         as a vector.
 
+        return a numpy array [x, y, z] with z = 1.
         """
         raise NotImplementedError("PIDController.getHeading")
 
