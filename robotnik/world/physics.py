@@ -55,9 +55,6 @@ class Physics(QtCore.QObject):
         # Check all sensors of all robots currently in the scene
         # Loop over robots
         for robot in self._world.robots():
-            # Don't check for collision if the robot is already stopped
-            if robot.isStopped():
-                continue
             # Loop over robot sensors
             for sensor in robot.proxSensors():
                 # Get all items in collision with the sensor
