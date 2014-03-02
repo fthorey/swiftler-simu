@@ -26,8 +26,8 @@ class WoggleSupervisor(Supervisor):
         # Set some extra informations
         # PID parameters
         self.info().gains = Struct()
-        self.info().gains.Kp = 0.8
-        self.info().gains.Ki = 0.1
+        self.info().gains.Kp = 1.0
+        self.info().gains.Ki = 0.2
         self.info().gains.Kd = 0.01
         # Goal
         self.info().goal = Struct()
