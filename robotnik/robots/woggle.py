@@ -30,7 +30,7 @@ class Woggle(Robot):
         # Proximyt sensors
         self._info.sensors = Struct()
         self._info.sensors.rmin = 0.01
-        self._info.sensors.rmax = 0.10
+        self._info.sensors.rmax = 0.15
         self._info.sensors.phi = pi/10
 
         # Current speed of each wheel (rad/s)

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <simulation>
     <robot type="Woggle" color="#4169E1">
-        <pose theta="1.57079629346" x="1.0" y="-5.7000016"/>
+        <pose theta="1.57079629346" x="1.0" y="-5.6000016"/>
         <supervisor type="WoggleSupervisor"/>
     </robot>
     <obstacle color="#979797">
