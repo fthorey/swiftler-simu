@@ -31,15 +31,19 @@ class WoggleSupervisor(Supervisor):
         self.info().gains.Kd = 0.01
         # Goal
         self.info().goal = Struct()
-        self.info().goal.x = 20
+        self.info().goal.x = -5
         self.info().goal.y = 10
         # Wheels
         self.info().wheels = Struct()
+        self.info().wheels.radius = 0.021
+        self.info().wheels.baseLength = 0.0885
         self.info().wheels.leftTicks = robotInfo_.wheels.leftTicks
         self.info().wheels.rightTicks = robotInfo_.wheels.rightTicks
         # Sensors
         self.info().sensors = Struct()
         self.info().sensors.insts = robotInfo_.sensors.insts
+        self.info().sensors.rmin = robotInfo_.sensors.rmin
+        self.info().sensors.rmax = robotInfo_.sensors.rmax
 
         # Create:
         # - a go-to-goal controller
@@ -60,14 +64,32 @@ class WoggleSupervisor(Supervisor):
         """
         self._currController = controller_
 
+    def atGoal(self):
+        """Check if the distance to goal is small.
+        """
+        return self._toGoal < self.info().wheels.baseLength/2
+
+    def atObst(self):
+        """Check if the distance to obstacle is small.
+        """
+        return self._toObst < self.info().sensors.rmax/2
+
     def execute(self, robotInfo_, dt_):
         """Selects and executes a controller.
         """
         # 1 -> Update the estimation of the robot state
         self.updateStateEstimate(robotInfo_)
 
+        if self.atObst():
+            self._currController = self._controllers['avd']
+        else:
+            self._currController = self._controllers['gtg']
+
         # 2 -> Execute the controller to obtain unicycle command (v, w) to apply
         v, w = self._currController.execute(self.info(), dt_)
+
+        if self.atGoal():
+            v, w = 0, 0
 
         return v, w
 
@@ -122,3 +144,10 @@ class WoggleSupervisor(Supervisor):
 
         # Update the sensors readings
         self.info().sensors.dist = self.getIRDistance(robotInfo_)
+
+        # Distance to the goal
+        self._toGoal = sqrt((x_new - self.info().goal.x)**2 +
+                            (y_new - self.info().goal.y)**2)
+
+        # Distance to the closest obstacle
+        self._toObst = min(self.info().sensors.dist)
