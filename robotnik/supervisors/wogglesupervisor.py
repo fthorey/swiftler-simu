@@ -44,7 +44,8 @@ class WoggleSupervisor(Supervisor):
         # Create:
         # - a go-to-goal controller
         # - an avoidobstacle controller
-        self._controllers = {'gtg': GoToGoal(self.info())}
+        self._controllers = {'gtg': GoToGoal(self.info()),
+                             'avd': AvoidObstacle(self.info())}
 
         # Current controller
         self._currController = self._controllers['gtg']
@@ -118,5 +119,6 @@ class WoggleSupervisor(Supervisor):
 
         # Update the state estimation
         self.info().pos = (x_new, y_new, theta_new)
+
         # Update the sensors readings
         self.info().sensors.dist = self.getIRDistance(robotInfo_)
