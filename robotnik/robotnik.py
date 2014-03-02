@@ -344,7 +344,7 @@ class Robotnik(QtGui.QMainWindow):
         self.pause()
 
         # Tell the world to auto-construct
-        self._world.readConfigurationFile('templates/labyrinth_small.xml')
+        self._world.readConfigurationFile(self._filename)
 
     @QtCore.pyqtSlot()
     def zoomWorld(self, ):
