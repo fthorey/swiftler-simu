@@ -32,8 +32,7 @@ class PIDController(Controller):
 
         # The vector to follow
         heading = self.getHeading(info_)
-        print math.atan2(heading[1], heading[0])
-        return math.atan2(heading[1], heading[0])
+        return atan2(heading[1], heading[0])
 
     def getHeading(self, info_):
         """Get the direction in which the controller wants to move the robot
