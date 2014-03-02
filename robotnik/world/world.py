@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from utils.polygon import Polygon
+from utils import const
 from PyQt4 import QtGui, QtCore
 from physics import Physics
 from math import pi, degrees
@@ -38,8 +39,18 @@ class World(QtGui.QGraphicsScene):
         # World speed factor
         self._speedFactor = 1
 
-    def clear(self, ):
+    def setCurrentSteps(self, steps_):
+        """Set the current number of steps.
         """
+        self._currentSteps = steps_
+
+    def currentSteps(self, ):
+        """Get the current number of steps.
+        """
+        return self._currentSteps
+
+    def clear(self, ):
+        """Clear the world
         """
         # Call parent clear
         super(World, self).clear()
@@ -202,6 +213,7 @@ class World(QtGui.QGraphicsScene):
         of times according to the current value of the speed factor.
         """
         for step in range(int(self._speedFactor)):
+            self._currentSteps = self._currentSteps + const.stepDuration
             self.advance()
 
     def advance(self, ):

@@ -171,7 +171,7 @@ class Robotnik(QtGui.QMainWindow):
     def configureSimu(self, ):
         """Configures the simulation.
         """
-        self._currentSteps = 0
+        self._world.setCurrentSteps(0)
 
         self.pause()
 
@@ -291,10 +291,9 @@ class Robotnik(QtGui.QMainWindow):
     def updateTime(self, ):
         """Update the current time.
         """
-        self._currentSteps = self._currentSteps + const.stepDuration
 
         # Update the status bar
-        t = self._currentSteps # (in s)
+        t = self._world.currentSteps() # (in s)
         minutes = int(t//60)
         self._statusLabel.setText(
             "Simulation running: {:02d}:{:04.1f}".format(minutes,t - minutes*60))
@@ -309,7 +308,7 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Play_Pause.setIcon(QtGui.QIcon("ui/icons/silk/control_play_blue.png"))
 
         # Update the status bar
-        t = self._currentSteps # (in s)
+        t = self._world.currentSteps() # (in s)
         minutes = int(t//60)
         self._statusLabel.setText(
             "Simulation paused: {:02d}:{:04.1f}".format(minutes,t - minutes*60))
@@ -338,7 +337,7 @@ class Robotnik(QtGui.QMainWindow):
         """Restarts the simulation.
         """
         # Restart the current number of steps
-        self._currentSteps = 0
+        self._world.setCurrentSteps(0)
 
         # Pause the world
         self.pause()
