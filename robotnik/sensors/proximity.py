@@ -155,7 +155,7 @@ class ProximitySensor(SimObject):
         """Gets the distance to another simObject
         returns distance in meters or None if not in contact
         """
-        pos = self.mapToScene(QtCore.QPointF(0, 0))
+        pos = self.mapToScene(0, 0)
         ox, oy = pos.x(), pos.y()
         minDist = None
         for px, py in self.getContactPoints(simObject):
