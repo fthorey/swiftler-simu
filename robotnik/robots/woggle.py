@@ -27,12 +27,6 @@ class Woggle(Robot):
         self._info.wheels.ticksPerRev = 2764.8
         self._info.wheels.leftTicks = 0
         self._info.wheels.rightTicks = 0
-
-        # The Woggle robot follows the differential drive dynamic
-        self.setDynamics(DifferentialDrive(self))
-
-        # The supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(pos_, self._info))
         # Proximyt sensors
         self._info.sensors = Struct()
         self._info.sensors.rmin = 0.01
@@ -104,6 +98,18 @@ class Woggle(Robot):
 
         # Add sensors position in robot frame to infos
         self._info.sensors.pos = self._proxSensorsPos
+
+        #------------------------------------------------------------------#
+        # Dynamics and supervisor must be set after all robot configurations
+        # and structures are well known
+        #------------------------------------------------------------------#
+
+        # The Woggle robot follows the differential drive dynamic
+        self.setDynamics(DifferentialDrive(self))
+
+        # The supervisor is attached to the robot
+        self.setSupervisor(supervisorClass_(pos_, self._info))
+
 
     def info(self):
         """Return the robot information structure.
