@@ -23,5 +23,11 @@ class GoToGoal(PIDController):
         # The robot:
         x_r, y_r, theta = info_.pos
 
-        # Where is the goal in the robot's frame of reference?
-        return atan2(y_g - y_r, x_g - x_r) - theta
+        # Heading angle:
+        heading_angle = atan2(y_g - y_r, x_g - x_r) - theta
+
+        # Avoid weird oscilations pi -> -pi -> pi -> ...
+        heading_angle = (heading_angle + pi)%(2*pi) - pi
+
+        # Return the goal in the robot's frame of reference?
+        return (heading_angle + pi)%(2*pi) - pi
