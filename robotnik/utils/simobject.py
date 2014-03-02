@@ -34,6 +34,36 @@ class SimObject(QtGui.QGraphicsItem):
         # Cached world envelope (in the scene coordinates system)
         self._worldEnvelope = None
 
+    def mapToParent(self, *args, **kwargs):
+        """
+        """
+        obj = None
+        if (len(args) == 1) and (isinstance(args[0], tuple)):
+            point = QtCore.QPointF(args[0][0], args[0][1])
+            obj = super(SimObject, self).mapToParent(point)
+        else:
+            obj = super(SimObject, self).mapToParent(*args, **kwargs)
+
+        if isinstance(obj, QtCore.QPointF):
+            return (obj.x(), -obj.y())
+        else:
+            return obj
+
+    def mapToScene(self, *args, **kwargs):
+        """
+        """
+        obj = None
+        if (len(args) == 1) and (isinstance(args[0], tuple)):
+            point = QtCore.QPointF(args[0][0], args[0][1])
+            obj = super(SimObject, self).mapToScene(point)
+        else:
+            obj = super(SimObject, self).mapToScene(*args, **kwargs)
+
+        if isinstance(obj, QtCore.QPointF):
+            return (obj.x(), obj.y())
+        else:
+            return obj
+
     def setBrush(self, brush_):
         """Set the brush of the simObject
         """
@@ -90,10 +120,8 @@ class SimObject(QtGui.QGraphicsItem):
         The envelope is cached, and will be recalculated if *recalculate*
         is `True`.
         """
-
         if self._worldEnvelope is None or recalculate:
-            point = [self.mapToScene(p[0], p[1]) for p in self.getEnvelope()]
-            self._worldEnvelope = [[p.x(), p.y()] for p in point]
+            self._worldEnvelope = [self.mapToScene(p) for p in self.getEnvelope()]
 
         return self._worldEnvelope
 
