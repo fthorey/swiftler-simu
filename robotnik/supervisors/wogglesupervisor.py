@@ -2,11 +2,12 @@
 # coding: utf-8
 
 from utils.struct import Struct
-from math import degrees, sqrt, cos, sin, pi
+from math import degrees, sqrt, cos, sin, pi, log1p
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
 from controllers.avoidobstacle import AvoidObstacle
 from supervisors.supervisor import Supervisor
+import numpy as np
 
 from PyQt4 import QtCore
 
@@ -36,6 +37,9 @@ class WoggleSupervisor(Supervisor):
         self.info().wheels = Struct()
         self.info().wheels.leftTicks = robotInfo_.wheels.leftTicks
         self.info().wheels.rightTicks = robotInfo_.wheels.rightTicks
+        # Sensors
+        self.info().sensors = Struct()
+        self.info().sensors.pos = np.array(robotInfo_.sensors.pos)
 
         # Create:
         # - a go-to-goal controller
@@ -65,6 +69,18 @@ class WoggleSupervisor(Supervisor):
         v, w = self._currController.execute(self.info(), dt_)
 
         return v, w
+
+    def getIRDistance(self, robotInfo_):
+        """Converts the IR distance readings into a distance in meters
+        """
+        # Get the current parameters of the sensor
+        readings = robotInfo_.sensors.readings
+        rmin = robotInfo_.sensors.rmin
+        rmax = robotInfo_.sensors.rmax
+
+        # Conver the readings to a distance (in m)
+        dists = [max( min( (log1p(3960) - log1p(r))/30 + rmin, rmax), rmin) for r in readings]
+        return dists
 
     def updateStateEstimate(self, robotInfo_):
         """Update the current estimation of the robot state.
@@ -102,3 +118,5 @@ class WoggleSupervisor(Supervisor):
 
         # Update the state estimation
         self.info().pos = (x_new, y_new, theta_new)
+        # Update the sensors readings
+        self.info().sensors.dist = self.getIRDistance(robotInfo_)

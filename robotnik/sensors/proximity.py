@@ -13,7 +13,7 @@ class ProximitySensor(SimObject):
     # Overall number of proximity sensors in the world
     count = 0
 
-    def __init__(self, pos_):
+    def __init__(self, pos_, rmin_, rmax_, phi_):
 
         # Call parent constructor
         super(ProximitySensor, self).__init__('sharp' + str(self.count),
@@ -23,13 +23,13 @@ class ProximitySensor(SimObject):
         self.count = self.count + 1
 
         # View angle (in rad)
-        self._phi = pi/10
+        self._phi = phi_
 
         # Minimum range (in m)
-        self._rmin = 0.01
+        self._rmin = rmin_
 
         # Maximum range (in m)
-        self._rmax = 0.10
+        self._rmax = rmax_
 
         # Minimum detection distance of the sensor (in m)
         self._minDist = 0.03

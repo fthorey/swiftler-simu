@@ -20,8 +20,8 @@ class Woggle(Robot):
 
         # Fill-in the state informations
         self._info = Struct()
+        # Wheels
         self._info.wheels = Struct()
-        # These are the original parameters
         self._info.wheels.radius = 0.021
         self._info.wheels.baseLength = 0.0885
         self._info.wheels.ticksPerRev = 2764.8
@@ -33,6 +33,11 @@ class Woggle(Robot):
 
         # The supervisor is attached to the robot
         self.setSupervisor(supervisorClass_(pos_, self._info))
+        # Proximyt sensors
+        self._info.sensors = Struct()
+        self._info.sensors.rmin = 0.01
+        self._info.sensors.rmax = 0.10
+        self._info.sensors.phi = pi/10
 
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
@@ -93,18 +98,18 @@ class Woggle(Robot):
             [bl*cos(pi), bl*sin(pi), pi]]
 
         # Add the sensors to the robot
-        for pos in self._proxSensorsPos:
-            self.addProxSensor(WoggleIRSensor(pos))
+        rmin, rmax, phi = self._info.sensors.rmin, self._info.sensors.rmax, self._info.sensors.phi
+        for p in self._proxSensorsPos:
+            self.addProxSensor(WoggleIRSensor(p, rmin, rmax, phi))
 
         # Add sensors position in robot frame to infos
-        self._info.sensors = Struct()
         self._info.sensors.pos = self._proxSensorsPos
 
     def info(self):
         """Return the robot information structure.
         """
         # Measures current reading of the sensors
-        self._info.sensors.reading = [s.reading() for s in self._proxSensors]
+        self._info.sensors.readings = [s.reading() for s in self._proxSensors]
         return self._info
 
     def leftRevolutions(self, ):
