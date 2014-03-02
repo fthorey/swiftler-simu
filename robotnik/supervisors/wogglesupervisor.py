@@ -39,7 +39,7 @@ class WoggleSupervisor(Supervisor):
         self.info().wheels.rightTicks = robotInfo_.wheels.rightTicks
         # Sensors
         self.info().sensors = Struct()
-        self.info().sensors.pos = np.array(robotInfo_.sensors.pos)
+        self.info().sensors.insts = robotInfo_.sensors.insts
 
         # Create:
         # - a go-to-goal controller

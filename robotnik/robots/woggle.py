@@ -96,8 +96,10 @@ class Woggle(Robot):
         for p in self._proxSensorsPos:
             self.addProxSensor(WoggleIRSensor(p, rmin, rmax, phi))
 
-        # Add sensors position in robot frame to infos
-        self._info.sensors.pos = self._proxSensorsPos
+        # Add sensors instance to the information
+        # -> Mostly needed to get the correct transformation matrix
+        # to world/robot frame.
+        self._info.sensors.insts = self._proxSensors
 
         #------------------------------------------------------------------#
         # Dynamics and supervisor must be set after all robot configurations
