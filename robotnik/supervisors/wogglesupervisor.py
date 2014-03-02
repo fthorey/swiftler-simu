@@ -30,8 +30,8 @@ class WoggleSupervisor(Supervisor):
         self.info().gains.Kd = 0.01
         # Goal
         self.info().goal = Struct()
-        self.info().goal.x = 1
-        self.info().goal.y = -10
+        self.info().goal.x = 20
+        self.info().goal.y = 10
         # Wheels
         self.info().wheels = Struct()
         self.info().wheels.leftTicks = robotInfo_.wheels.leftTicks
@@ -55,23 +55,23 @@ class WoggleSupervisor(Supervisor):
         """
         self._currController = controller_
 
-    def execute(self, info_, dt_):
+    def execute(self, robotInfo_, dt_):
         """Selects and executes a controller.
         """
         # 1 -> Update the estimation of the robot state
-        self.updateStateEstimate(info_)
+        self.updateStateEstimate(robotInfo_)
 
         # 2 -> Execute the controller to obtain unicycle command (v, w) to apply
         v, w = self._currController.execute(self.info(), dt_)
 
         return v, w
 
-    def updateStateEstimate(self, info_):
+    def updateStateEstimate(self, robotInfo_):
         """Update the current estimation of the robot state.
         """
         # Get the number of ticks on each wheel since last call
-        dtl = info_.wheels.leftTicks - self.info().wheels.leftTicks
-        dtr = info_.wheels.rightTicks - self.info().wheels.rightTicks
+        dtl = robotInfo_.wheels.leftTicks - self.info().wheels.leftTicks
+        dtr = robotInfo_.wheels.rightTicks - self.info().wheels.rightTicks
 
         # Save the wheel encoder ticks for the next estimate
         self.info().wheels.leftTicks += dtl
@@ -81,9 +81,9 @@ class WoggleSupervisor(Supervisor):
         x, y, theta = self.info().pos
 
         # Get robot parameters (in m)
-        R = info_.wheels.radius
-        L = info_.wheels.baseLength
-        m_per_tick = (2*pi*R) / info_.wheels.ticksPerRev
+        R = robotInfo_.wheels.radius
+        L = robotInfo_.wheels.baseLength
+        m_per_tick = (2*pi*R) / robotInfo_.wheels.ticksPerRev
 
         # distance travelled by left wheel
         dl = dtl*m_per_tick
