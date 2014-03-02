@@ -130,10 +130,10 @@ class Robotnik(QtGui.QMainWindow):
         self.speed_Slider.setStatusTip("Adjust simulation speed factor")
         self.speed_Slider.setMaximumWidth(100)
         self.speed_Slider.setRange(1,5)
-        self.speed_Slider.setValue(1)
+        self.speed_Slider.setValue(2)
         self.speed_Slider.setEnabled(True)
         self.mainToolBar.addWidget(self.speed_Slider)
-        self.speed_Label = QtGui.QLabel(" Speed: 1.0x ",self)
+        self.speed_Label = QtGui.QLabel(" Speed: 2.0x ",self)
         self.speed_Label.setToolTip("Current Speed factor")
         self.mainToolBar.addWidget(self.speed_Label)
 
@@ -274,7 +274,7 @@ class Robotnik(QtGui.QMainWindow):
         """Sets the simulation speed factor
         """
         # Update slider label
-        self.speed_Label.setText(" speed: %.1fx "%(value_))
+        self.speed_Label.setText(" Speed: %.1fx "%(value_))
 
         # Update world speed factor
         self._world.setSpeedFactor(value_)

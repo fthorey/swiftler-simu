@@ -37,7 +37,7 @@ class World(QtGui.QGraphicsScene):
         self._isRunning = False
 
         # World speed factor
-        self._speedFactor = 1
+        self._speedFactor = 2
 
     def setCurrentSteps(self, steps_):
         """Set the current number of steps.
