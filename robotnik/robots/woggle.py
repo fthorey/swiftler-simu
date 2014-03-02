@@ -96,9 +96,15 @@ class Woggle(Robot):
         for pos in self._proxSensorsPos:
             self.addProxSensor(WoggleIRSensor(pos))
 
+        # Add sensors position in robot frame to infos
+        self._info.sensors = Struct()
+        self._info.sensors.pos = self._proxSensorsPos
+
     def info(self):
         """Return the robot information structure.
         """
+        # Measures current reading of the sensors
+        self._info.sensors.reading = [s.reading() for s in self._proxSensors]
         return self._info
 
     def leftRevolutions(self, ):

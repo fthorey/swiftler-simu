@@ -37,7 +37,9 @@ class WoggleSupervisor(Supervisor):
         self.info().wheels.leftTicks = robotInfo_.wheels.leftTicks
         self.info().wheels.rightTicks = robotInfo_.wheels.rightTicks
 
-        # Create a go-to-goal controller
+        # Create:
+        # - a go-to-goal controller
+        # - an avoidobstacle controller
         self._controllers = {'gtg': GoToGoal(self.info())}
 
         # Current controller
