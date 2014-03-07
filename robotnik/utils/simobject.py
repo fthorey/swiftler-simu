@@ -45,7 +45,7 @@ class SimObject(QtGui.QGraphicsItem):
             obj = super(SimObject, self).mapToParent(*args, **kwargs)
 
         if isinstance(obj, QtCore.QPointF):
-            return (obj.x(), -obj.y())
+            return (obj.x(), obj.y())
         else:
             return obj
 

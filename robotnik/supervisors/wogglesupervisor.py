@@ -129,7 +129,7 @@ class WoggleSupervisor(Supervisor):
         # distance travelled by right wheel
         dr = dtr*m_per_tick
 
-        theta_dt = (dr-dl)/L
+        theta_dt = -(dr-dl)/L
         theta_mid = theta + theta_dt/2
         dst = (dr+dl)/2
         x_dt = dst*cos(theta_mid)
