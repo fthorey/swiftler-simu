@@ -3,6 +3,8 @@
 
 from math import atan2, fabs, log, sin, cos, degrees, pi
 from controllers.pidcontroller import PIDController
+import numpy as np
+
 
 class GoToGoal(PIDController):
     """ The GoToGoal class steers the robot towards a goal with a certain linear velocity using PID.
@@ -33,4 +35,4 @@ class GoToGoal(PIDController):
         """Get the heading direction from the robot to the goal.
         """
         goal_angle = self.getHeadingAngle(info_)
-        return numpy.array([cos(goal_angle),sin(goal_angle),1])
+        return np.array([cos(goal_angle),sin(goal_angle), 1])

@@ -28,4 +28,4 @@ class AvoidObstacle(PIDController):
 
         # Get the resulting vector in the robot's frame of reference
         sum_w = np.sum(end_w, axis=0)
-        return sum_w
+        return np.array([sum_w[0], sum_w[1], 1])
