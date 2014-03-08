@@ -31,8 +31,8 @@ class WoggleSupervisor(Supervisor):
         self.info().gains.Kd = 0.01
         # Goal
         self.info().goal = Struct()
-        self.info().goal.x = -5
-        self.info().goal.y = 10
+        self.info().goal.x = -1
+        self.info().goal.y = 1
         # Wheels
         self.info().wheels = Struct()
         self.info().wheels.radius = 0.021
@@ -129,6 +129,7 @@ class WoggleSupervisor(Supervisor):
         # distance travelled by right wheel
         dr = dtr*m_per_tick
 
+        # TODO: works the minus sign
         theta_dt = -(dr-dl)/L
         theta_mid = theta + theta_dt/2
         dst = (dr+dl)/2

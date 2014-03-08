@@ -32,6 +32,7 @@ class PIDController(Controller):
 
         # The vector to follow
         heading = self.getHeading(info_)
+        # TODO: works the minus sign
         return atan2(-heading[1], heading[0])
 
     def getHeading(self, info_):
