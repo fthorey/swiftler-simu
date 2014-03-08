@@ -26,7 +26,7 @@ class DifferentialDrive(object):
         vel_l = self._robot.getLeftWheelSpeed()
         vel_r = self._robot.getRightWheelSpeed()
 
-        # Convert to robot spped and angular velocity (in m and rad/s)
+        # Convert to robot speed and angular velocity (in m and rad/s)
         v, w = self.diff2Uni(vel_l, vel_r)
 
         # Current angle of the robot (rad)
@@ -70,8 +70,8 @@ class DifferentialDrive(object):
         summ = 2*v/R
         diff = L*w/R
 
-        vl = (summ-diff)/2
-        vr = (summ+diff)/2
+        vl = (summ+diff)/2
+        vr = (summ-diff)/2
 
         return vl, vr
 

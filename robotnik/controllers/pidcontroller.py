@@ -29,11 +29,9 @@ class PIDController(Controller):
 
     def getHeadingAngle(self, info_):
         """Return the heading as an angle"""
-
         # The vector to follow
         heading = self.getHeading(info_)
-        # TODO: works the minus sign
-        return atan2(-heading[1], heading[0])
+        return atan2(heading[1], heading[0])
 
     def getHeading(self, info_):
         """Get the direction in which the controller wants to move the robot

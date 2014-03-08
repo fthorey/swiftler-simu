@@ -24,11 +24,9 @@ class GoToGoal(PIDController):
         x_r, y_r, theta = info_.pos
 
         # Heading angle:
-        # TODO: works the minus sign
-        heading_angle = atan2(-(y_g - y_r), x_g - x_r) + theta
+        heading_angle = atan2((y_g - y_r), x_g - x_r) - theta
 
         # Avoid weird oscilations pi -> -pi -> pi -> ...
-        # Get the resulting angle in the world frame of reference
         return (heading_angle + pi)%(2*pi) - pi
 
     def getHeading(self,info_):
