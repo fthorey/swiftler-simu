@@ -26,6 +26,9 @@ class Robotnik(QtGui.QMainWindow):
         # Load window design
         uic.loadUi('ui/mainwindow.ui', self)
 
+        # Set window title
+        self.setWindowTitle("Robotnik Simulator")
+
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
