@@ -39,6 +39,12 @@ class World(QtGui.QGraphicsScene):
         # World speed factor
         self._speedFactor = 2
 
+    def toggleShowSupervisors(self, ):
+        """Toggle the display of supervisors infos.
+        """
+        for robot in self._robots:
+            robot.toggleShowSupervisors()
+
     def setCurrentSteps(self, steps_):
         """Set the current number of steps.
         """

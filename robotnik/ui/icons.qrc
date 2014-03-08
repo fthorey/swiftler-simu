@@ -20,5 +20,6 @@
         <file>icons/silk/control_fastforward_blue.png</file>
         <file>icons/silk/cancel.png</file>
         <file>icons/silk/information.png</file>
+        <file>icons/silk/brick.png</file>
     </qresource>
 </RCC>

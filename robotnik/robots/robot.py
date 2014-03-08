@@ -31,7 +31,19 @@ class Robot(SimObject):
         # Tracker only manipulates (x,y)
         self._tracker = Tracker(pos_[:2])
 
-    def info(self):
+        self._showSupervisors = True
+
+    def showSupervisors(self, ):
+        """Return the status of the display of the supervisors infos
+        """
+        return self._showSupervisors
+
+    def toggleShowSupervisors(self, ):
+        """Toggle the display of the supervisors infos
+        """
+        self._showSupervisors = not self._showSupervisors
+
+    def info():
         """Return the robot information structure.
         """
         raise NotImplementedError("Robot.info")

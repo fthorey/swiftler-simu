@@ -2,14 +2,14 @@
 # coding: utf-8
 
 from utils.struct import Struct
-from math import degrees, sqrt, cos, sin, pi, log1p
+from math import degrees, sqrt, cos, sin, pi, log1p, tan
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
 from controllers.avoidobstacle import AvoidObstacle
 from supervisors.supervisor import Supervisor
 import numpy as np
 
-from PyQt4 import QtCore
+from PyQt4 import QtCore, QtGui
 
 class WoggleSupervisor(Supervisor):
     """ WoggleSupervisor is a class that provides a way to control a Woggle robot.
@@ -152,3 +152,38 @@ class WoggleSupervisor(Supervisor):
 
         # Distance to the closest obstacle
         self._toObst = min(self.info().sensors.dist)
+
+    def drawHeading(self, painter, option=None, widget=None):
+        """Draw the heading direction.
+        """
+        def drawArrow(painter, color, x1, y1, x2, y2, angle=0.5, ratio=0.02):
+            """Draw an arrow.
+            """
+            line = QtCore.QLineF(x1, y1, x2, y2)
+            xe = arrow_l - ratio
+            ye = tan(angle) * ratio
+            line1 = QtCore.QLineF(x2, y2, xe, ye)
+            line2 = QtCore.QLineF(x2, y2, xe, -ye)
+            painter.setPen(QtCore.Qt.SolidLine)
+            painter.setPen(QtGui.QColor(color))
+            painter.drawLine(line)
+            painter.drawLine(line1)
+            painter.drawLine(line2)
+
+        # Go to Goal heading angle
+        gtg_angle = self._controllers['gtg'].getHeadingAngle(self.info())
+        avd_angle = self._controllers['avd'].getHeadingAngle(self.info())
+        arrow_l = self.info().wheels.baseLength * 2
+
+        # Robot direction
+        drawArrow(painter, "green", 0, 0, arrow_l, 0)
+
+        # GoToGoal direction
+        painter.rotate(degrees(gtg_angle))
+        drawArrow(painter, "blue", 0, 0, arrow_l, 0)
+        painter.rotate(-degrees(gtg_angle))
+
+        # AvoidObstacle direction
+        painter.rotate(degrees(avd_angle))
+        drawArrow(painter, "red", 0, 0, arrow_l, 0)
+        painter.rotate(-degrees(avd_angle))

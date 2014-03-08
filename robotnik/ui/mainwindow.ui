@@ -119,7 +119,7 @@
     <string>&amp;Sensors_Robot</string>
    </property>
    <property name="toolTip">
-    <string>Show Sensors</string>
+    <string>Show/Hide Sensors</string>
    </property>
   </action>
   <action name="action_Tracks_Robot">
@@ -137,7 +137,7 @@
     <string>&amp;Tracks_Robot</string>
    </property>
    <property name="toolTip">
-    <string>Show Tracks</string>
+    <string>Show/Hide Tracks</string>
    </property>
   </action>
   <action name="action_Ghost_Mode">
@@ -198,6 +198,24 @@
    </property>
    <property name="text">
     <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_Show_Supervisors">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/new/myRessources/icons/silk/brick.png</normaloff>:/new/myRessources/icons/silk/brick.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Supervisors_Infos</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide supervisors infos</string>
    </property>
   </action>
  </widget>

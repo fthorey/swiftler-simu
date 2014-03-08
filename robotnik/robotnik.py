@@ -78,6 +78,7 @@ class Robotnik(QtGui.QMainWindow):
         self.action_Ghost_Mode.setStatusTip("Enable/Disable ghost mode")
         self.action_Zoom_World.setStatusTip("Show the entire world")
         self.action_Zoom_Robot.setStatusTip("Follow the master robot")
+        self.action_Show_Supervisors.setStatusTip("Show/Hide the supervisors infos")
 
     def configureMenuBar(self, ):
         """Configure the menubar.
@@ -96,6 +97,7 @@ class Robotnik(QtGui.QMainWindow):
         view_menu.addAction(self.action_Sensors_Robot)
         view_menu.addAction(self.action_Tracks_Robot)
         view_menu.addAction(self.action_Ghost_Mode)
+        view_menu.addAction(self.action_Show_Supervisors)
 
         # Simu
         run_menu = self.menuBar.addMenu("&Simu")
@@ -146,6 +148,8 @@ class Robotnik(QtGui.QMainWindow):
         self.mainToolBar.addAction(self.action_Tracks_Robot)
         # Add ghost mode
         self.mainToolBar.addAction(self.action_Ghost_Mode)
+        # Add show supervisors infos
+        self.mainToolBar.addAction(self.action_Show_Supervisors)
 
         # Add separator
         self.mainToolBar.addSeparator()
@@ -242,6 +246,9 @@ class Robotnik(QtGui.QMainWindow):
 
         # Connect ghost mode enabling
         self.action_Ghost_Mode.triggered.connect(self.enableGhostMode)
+
+        # Connect show supervisors info
+        self.action_Show_Supervisors.triggered.connect(self.showSupervisors)
 
         # Connect exit
         self.action_Exit.triggered.connect(self.close)
@@ -391,7 +398,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def showProxSensors(self, ):
-        """Shows the robots proximity sensors
+        """Shows the robots proximity sensors.
         """
         # Toggle the robot sensors display
         self._world.toggleRobotSensors()
@@ -401,13 +408,13 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def showRobotTracks(self, ):
-        """Shows the robots tracks
+        """Shows the robots tracks.
         """
         # Toggle the robot tracks display
         self._world.toggleRobotTracks()
 
-        # Trigger a view update
-        self._worldView.update()
+        # Trigger an update of the scene
+        self._worldView.updateScene([self._worldView.sceneRect()])
 
     @QtCore.pyqtSlot()
     def enableGhostMode(self, ):
@@ -415,6 +422,16 @@ class Robotnik(QtGui.QMainWindow):
         """
         # Toggle the ghost mode enabling
         self._world.toggleGhostMode()
+
+    @QtCore.pyqtSlot()
+    def showSupervisors(self, ):
+        """Show the robots supervisors infos.
+        """
+        # Toggle the supervisors info display
+        self._world.toggleShowSupervisors()
+
+        # Trigger a view update
+        self._worldView.updateScene([self._world.sceneRect()])
 
     def center(self, ):
         """Centers the window on screen.

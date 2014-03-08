@@ -231,3 +231,6 @@ class Woggle(Robot):
         rwheelY = bodyH/2 - wheelH - wheelH/2
         rect = QtCore.QRectF(rwheelX, rwheelY, wheelW, wheelH)
         painter.drawRect(rect)
+
+        if self.showSupervisors():
+            self.supervisor().drawHeading(painter, option, widget)
