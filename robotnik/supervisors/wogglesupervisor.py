@@ -35,13 +35,14 @@ class WoggleSupervisor(Supervisor):
         self.info().goal.y = 1
         # Wheels
         self.info().wheels = Struct()
-        self.info().wheels.radius = 0.021
-        self.info().wheels.baseLength = 0.0885
+        self.info().wheels.radius = robotInfo_.wheels.radius
+        self.info().wheels.baseLength = robotInfo_.wheels.baseLength
         self.info().wheels.leftTicks = robotInfo_.wheels.leftTicks
         self.info().wheels.rightTicks = robotInfo_.wheels.rightTicks
         # Sensors
         self.info().sensors = Struct()
         self.info().sensors.insts = robotInfo_.sensors.insts
+        self.info().sensors.dist = self.getIRDistance(robotInfo_)
         self.info().sensors.rmin = robotInfo_.sensors.rmin
         self.info().sensors.rmax = robotInfo_.sensors.rmax
 
@@ -94,7 +95,7 @@ class WoggleSupervisor(Supervisor):
         return v, w
 
     def getIRDistance(self, robotInfo_):
-        """Converts the IR distance readings into a distance in meters
+        """Converts the IR distance readings into a distance in meters.
         """
         # Get the current parameters of the sensor
         readings = robotInfo_.sensors.readings

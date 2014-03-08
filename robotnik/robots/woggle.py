@@ -100,6 +100,8 @@ class Woggle(Robot):
         # -> Mostly needed to get the correct transformation matrix
         # to world/robot frame.
         self._info.sensors.insts = self._proxSensors
+        # Initialize the IR sensors readings
+        self._info.sensors.readings = [s.reading() for s in self._proxSensors]
 
         #------------------------------------------------------------------#
         # Dynamics and supervisor must be set after all robot configurations
@@ -111,7 +113,6 @@ class Woggle(Robot):
 
         # The supervisor is attached to the robot
         self.setSupervisor(supervisorClass_(pos_, self._info))
-
 
     def info(self):
         """Return the robot information structure.
