@@ -30,7 +30,7 @@ class DifferentialDrive(object):
         v, w = self.diff2Uni(vel_l, vel_r)
 
         # Current angle of the robot (rad)
-        theta = self._robot.getAngle()
+        theta = self._robot.angle()
 
         # Position of the robot in the scene referential
         x,y =  self._robot.pos().x(), self._robot.pos().y()

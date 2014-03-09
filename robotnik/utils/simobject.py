@@ -94,7 +94,7 @@ class SimObject(QtGui.QGraphicsItem):
         """
         return self._name
 
-    def getAngle(self, ):
+    def angle(self, ):
         """Return the current angle of the simObject in its own referential (in rad)
         """
         return self._angle

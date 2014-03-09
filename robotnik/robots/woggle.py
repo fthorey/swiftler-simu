@@ -82,13 +82,18 @@ class Woggle(Robot):
         # Position of the sharp sensors
         bl = self._info.wheels.baseLength/2 + 0.01
         self._proxSensorsPos = [
+            # front
             [bl*cos(0), sin(0), 0],
+            # front side
             [bl*cos(17*pi/120), bl*sin(17*pi/120), 17*pi/120],
             [bl*cos(-17*pi/120), bl*sin(-17*pi/120), -17*pi/120],
+            # front side - side
             [bl*cos(-9*pi/24), bl*sin(-9*pi/24), -9*pi/24],
             [bl*cos(9*pi/24), bl*sin(9*pi/24), 9*pi/24],
+            # back side
             [bl*cos(-pi/2-7*pi/24), bl*sin(-pi/2-7*pi/24), -pi/2-7*pi/24],
             [bl*cos(pi/2+7*pi/24), bl*sin(pi/2+7*pi/24), pi/2+7*pi/24],
+            # back
             [bl*cos(pi), bl*sin(pi), pi]]
 
         # Add the sensors to the robot
