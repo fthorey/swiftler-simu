@@ -48,6 +48,9 @@ class WoggleSupervisor(Supervisor):
         self.info().sensors.rmin = robotInfo_.sensors.rmin
         self.info().sensors.rmax = robotInfo_.sensors.rmax
 
+        # Follow wall important information
+        self.info().direction = 'left'
+
         # Create:
         # - a go-to-goal controller
         # - an avoid-obstacle controller
@@ -76,10 +79,32 @@ class WoggleSupervisor(Supervisor):
         """
         return self._toGoal < self.info().wheels.baseLength/2
 
-    def atObst(self):
+    def isAtWall(self):
         """Check if the distance to obstacle is small.
         """
-        return self._toObst < self.info().sensors.rmax/2
+        return self._toWall < self.info().sensors.rmax
+
+    def atWall(self, ):
+        """Check if the distance to wall is small and decide a direction.
+        """
+        wall_close = self.isAtWall()
+
+        # Find the closest detected point
+        if wall_close:
+            dmin = self.info().sensors.rmax/2
+            angle = 0
+            for i, d in enumerate(self.info().sensors.dist):
+                if d < dmin:
+                    dmin = d
+                    angle = self.info().sensors.insts[i].angle()
+
+            # Go that way
+            if angle > 0:
+                self.info().direction = 'left'
+            else:
+                self.info().direction = 'right'
+
+        return wall_close
 
     def execute(self, robotInfo_, dt_):
         """Selects and executes a controller.
@@ -87,8 +112,8 @@ class WoggleSupervisor(Supervisor):
         # 1 -> Update the estimation of the robot state
         self.updateStateEstimate(robotInfo_)
 
-        if self.atObst():
-            self._currController = self._controllers['avd']
+        if self.atWall():
+            self._currController = self._controllers['fow']
         elif self.atGoal():
             self._currController = self._controllers['hld']
         else:
@@ -156,7 +181,7 @@ class WoggleSupervisor(Supervisor):
                             (y_new - self.info().goal.y)**2)
 
         # Distance to the closest obstacle
-        self._toObst = min(self.info().sensors.dist)
+        self._toWall = min(self.info().sensors.dist)
 
     def drawHeading(self, painter, option=None, widget=None):
         """Draw the heading direction.
