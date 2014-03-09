@@ -16,11 +16,11 @@ class ProximitySensor(SimObject):
     def __init__(self, pos_, rmin_, rmax_, phi_):
 
         # Call parent constructor
-        super(ProximitySensor, self).__init__('sharp' + str(self.count),
+        super(ProximitySensor, self).__init__('sharp' + str(ProximitySensor.count),
                                               pos_, QtCore.Qt.NoBrush)
 
         # Increment by 1 the number of proximity sensors in the world
-        self.count = self.count + 1
+        ProximitySensor.count = ProximitySensor.count + 1
 
         # View angle (in rad)
         self._phi = phi_
