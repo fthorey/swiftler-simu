@@ -6,6 +6,8 @@ from math import degrees, sqrt, cos, sin, pi, log1p, tan
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
 from controllers.avoidobstacle import AvoidObstacle
+from controllers.followwall import FollowWall
+from controllers.hold import Hold
 from supervisors.supervisor import Supervisor
 import numpy as np
 
@@ -48,11 +50,15 @@ class WoggleSupervisor(Supervisor):
 
         # Create:
         # - a go-to-goal controller
-        # - an avoidobstacle controller
+        # - an avoid-obstacle controller
+        # - a follow-wall controller
+        # - a hold controller
         self._controllers = {'gtg': GoToGoal(self.info()),
-                             'avd': AvoidObstacle(self.info())}
+                             'avd': AvoidObstacle(self.info()),
+                             'fow': FollowWall(self.info()),
+                             'hld' : Hold(self.info())}
 
-        # Current controller
+        # Set current controller
         self._currController = self._controllers['gtg']
 
     def controller(self, ):
@@ -83,14 +89,13 @@ class WoggleSupervisor(Supervisor):
 
         if self.atObst():
             self._currController = self._controllers['avd']
+        elif self.atGoal():
+            self._currController = self._controllers['hld']
         else:
             self._currController = self._controllers['gtg']
 
         # 2 -> Execute the controller to obtain unicycle command (v, w) to apply
         v, w = self._currController.execute(self.info(), dt_)
-
-        if self.atGoal():
-            v, w = 0, 0
 
         return v, w
 
