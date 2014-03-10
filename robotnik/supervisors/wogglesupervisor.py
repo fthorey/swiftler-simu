@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from utils.struct import Struct
-from math import degrees, sqrt, cos, sin, pi, log1p, tan
+from math import degrees, sqrt, cos, sin, pi, log1p, tan, atan2
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
 from controllers.avoidobstacle import AvoidObstacle
@@ -28,8 +28,8 @@ class WoggleSupervisor(Supervisor):
         # Set some extra informations
         # PID parameters
         self.info().gains = Struct()
-        self.info().gains.Kp = 1.0
-        self.info().gains.Ki = 0.2
+        self.info().gains.Kp = 4.0
+        self.info().gains.Ki = 0.7
         self.info().gains.Kd = 0.01
         # Goal
         self.info().goal = Struct()
@@ -47,9 +47,13 @@ class WoggleSupervisor(Supervisor):
         self.info().sensors.dist = self.getIRDistance(robotInfo_)
         self.info().sensors.rmin = robotInfo_.sensors.rmin
         self.info().sensors.rmax = robotInfo_.sensors.rmax
+        self.info().sensors.toCenter = robotInfo_.wheels.baseLength/2 + 0.01
 
         # Follow wall important information
         self.info().direction = 'left'
+
+        # Distance from center of robot to extremity of a sensor beam
+        self.distMax = self.info().sensors.toCenter + robotInfo_.sensors.rmax
 
         # Create:
         # - a go-to-goal controller
@@ -82,7 +86,9 @@ class WoggleSupervisor(Supervisor):
     def isAtWall(self):
         """Check if the distance to obstacle is small.
         """
-        return self._toWall < self.info().sensors.rmax
+        # Detect a wall when it is at 80% of the distance
+        # from the center of the robot
+        return self._toWall < ((self.info().sensors.toCenter + self.info().sensors.rmax) * 0.8)
 
     def atWall(self, ):
         """Check if the distance to wall is small and decide a direction.
@@ -91,7 +97,7 @@ class WoggleSupervisor(Supervisor):
 
         # Find the closest detected point
         if wall_close:
-            dmin = self.info().sensors.rmax/2
+            dmin = self.info().sensors.toCenter + self.info().sensors.rmax
             angle = 0
             for i, d in enumerate(self.info().sensors.dist):
                 if d < dmin:
@@ -181,24 +187,36 @@ class WoggleSupervisor(Supervisor):
                             (y_new - self.info().goal.y)**2)
 
         # Distance to the closest obstacle
-        self._toWall = min(self.info().sensors.dist)
+        self._toWall = self.info().sensors.toCenter + min(self.info().sensors.dist)
 
     def drawHeading(self, painter, option=None, widget=None):
         """Draw the heading direction.
         """
-        def drawArrow(painter, color, x1, y1, x2, y2, angle=0.5, ratio=0.02):
+        def drawArrow(painter, color, x1, y1, x2, y2, angle=0.5, ratio=0.1):
             """Draw an arrow.
             """
-            line = QtCore.QLineF(x1, y1, x2, y2)
-            xe = arrow_l - ratio
+            # Save state
+            painter.save()
+
+            # Rotate and scale
+            painter.rotate(degrees(atan2(y2-y1,x2-x1)))
+            factor = sqrt((x1-x2)**2 + (y1-y2)**2)
+            painter.scale(factor, factor)
+
+            # Draw the arrow
+            line = QtCore.QLineF(0, 0, 1, 0)
+            xe = 1 - ratio
             ye = tan(angle) * ratio
-            line1 = QtCore.QLineF(x2, y2, xe, ye)
-            line2 = QtCore.QLineF(x2, y2, xe, -ye)
+            line1 = QtCore.QLineF(1, 0, xe, ye)
+            line2 = QtCore.QLineF(1, 0, xe, -ye)
             painter.setPen(QtCore.Qt.SolidLine)
             painter.setPen(QtGui.QColor(color))
             painter.drawLine(line)
             painter.drawLine(line1)
             painter.drawLine(line2)
+
+            # Restore state
+            painter.restore()
 
         # Go to Goal heading angle
         gtg_angle = self._controllers['gtg'].getHeadingAngle(self.info())
@@ -217,3 +235,16 @@ class WoggleSupervisor(Supervisor):
         painter.rotate(degrees(avd_angle))
         drawArrow(painter, "red", 0, 0, arrow_l, 0)
         painter.rotate(-degrees(avd_angle))
+
+        # FollowWall direction
+        along_wall = self._controllers['fow']._along_wall_vector
+        to_wall = self._controllers['fow']._to_wall_vector
+
+        if to_wall is not None:
+            to_angle = degrees(atan2(to_wall[1], to_wall[0]))
+            drawArrow(painter, "green", 0, 0, to_wall[0], to_wall[1])
+
+        if along_wall is not None:
+            along_angle = degrees(atan2(along_wall[1], along_wall[0]))
+            painter.translate(to_wall[0], to_wall[1])
+            drawArrow(painter, "purple", 0, 0, along_wall[0], along_wall[1])

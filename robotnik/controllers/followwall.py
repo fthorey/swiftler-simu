@@ -15,6 +15,9 @@ class FollowWall(PIDController):
         # Call PIDController constructor
         super(FollowWall, self).__init__(info_)
 
+        self._along_wall_vector = None
+        self._to_wall_vector = None
+
     def getHeading(self, info_):
         """Get the direction in which the controller wants to move the robot
         as a vector.
@@ -40,17 +43,24 @@ class FollowWall(PIDController):
 
         # Only one sensor detect a wall
         if len(sensors) == 1:
-            pass
+            sensor = sensors[0]
+            self._to_wall_vector = vectors[0]
+            if self._along_wall_vector is None:
+                # We've only started, it's a corner,
+                # go perpendicular to its vector
+                self._along_wall_vector = np.array([
+                            dirFactor*self._to_wall_vector[1],
+                            -dirFactor*self._to_wall_vector[0],
+                            1])
+                return self._along_wall_vector
 
         # More than one sensor detect the wall
         else:
             # Take the fist and the last
-            along_wall_vector = vectors[0] - vectors[-1]
-            return along_wall_vector
-
-            # a = self.vectors[-1]
-            # b = self.along_wall_vector
-            # dot = numpy.dot
-            # self.to_wall_vector = a - b*dot(a,b)/dot(b,b)
+            self._along_wall_vector = vectors[0] - vectors[-1]
+            a = vectors[-1]
+            b = self._along_wall_vector
+            self._to_wall_vector = a - b*np.dot(a,b)/np.dot(b,b)
+            return self._along_wall_vector
 
         return np.array([0, 0, 1])
