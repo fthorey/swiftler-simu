@@ -60,23 +60,65 @@ class WoggleSupervisor(Supervisor):
         # - an avoid-obstacle controller
         # - a follow-wall controller
         # - a hold controller
-        self._controllers = {'gtg': GoToGoal(self.info()),
-                             'avd': AvoidObstacle(self.info()),
-                             'fow': FollowWall(self.info()),
-                             'hld' : Hold(self.info())}
+        self._gtg = self.createController('gotogoal.GoToGoal', self.info())
+        self._avd = self.createController('avoidobstacle.AvoidObstacle', self.info())
+        self._hld = self.createController('hold.Hold', None)
+        self._fow = self.createController('followwall.FollowWall', self.info())
 
-        # Set current controller
-        self._currController = self._controllers['gtg']
+        # Set GoToGoal transition functions
+        self.addController(self._gtg,
+                           (self.atGoal, self._hld),
+                           (self.atWall, self._fow))
+        # Set AvoidObstacle transition functions
+        self.addController(self._avd,
+                           (self.atGoal, self._hld),
+                           (self.safe, self._fow))
+        # Set Hold transition functions
+        self.addController(self._hld,
+                           (lambda: not self.at_goal(), self._gtg))
+        # Set FollowWall transition functions
+        self.addController(self._fow,
+                           (self.atGoal, self._hld),
+                           (self.unsafe, self._avd),
+                           (self.wallCleared, self._gtg))
 
-    def controller(self, ):
-        """Return the current controller of the robot.
+        # Set current controller to GoToGoal
+        self._current = self._gtg
+
+    def wallCleared(self, ):
+        """Check if the robot should stop following the wall.
         """
-        return self._currController
+        # Did we make progress?
+        if self._toGoal >= self._bestDistance:
+            return False
 
-    def setController(self, controller_):
-        """Set the controller of the robot.
+        # Are we far enough from the wall,
+        # so that we don't switch back immediately
+        if self.isAtWall():
+            return False
+
+        # Check if we have a clear shot to the goal
+        theta_gtg = self._gtg.getHeadingAngle(self.info())
+        dtheta = self._fow.getHeadingAngle(self.info()) - theta_gtg
+
+        if self.info().direction == 'left':
+            dtheta = -dtheta
+
+        return sin(dtheta) <= 0 and cos(dtheta) >= 0
+
+    def safe(self, ):
+        """Check if the surrounding is safe (i.e. no obstacle too close).
         """
-        self._currController = controller_
+        wallFar = self._distMin > self._distMax*0.6
+        # Check which way to go
+        if wallFar:
+            self.atWall()
+        return wallFar
+
+    def unsafe(self, ):
+        """Check if the surrounding is unsage (i.e. obstacle too close).
+        """
+        return self._distMin < self._distMax*0.5
 
     def atGoal(self):
         """Check if the distance to goal is small.
@@ -88,7 +130,6 @@ class WoggleSupervisor(Supervisor):
         """
         # Detect a wall when it is at 80% of the distance
         # from the center of the robot
-        return self._toWall < ((self.info().sensors.toCenter + self.info().sensors.rmax) * 0.8)
         return self._toWall < (self._distMax * 0.8)
 
     def atWall(self, ):
@@ -98,7 +139,6 @@ class WoggleSupervisor(Supervisor):
 
         # Find the closest detected point
         if wall_close:
-            dmin = self.info().sensors.toCenter + self.info().sensors.rmax
             dmin = self._distMax
             angle = 0
             for i, d in enumerate(self.info().sensors.dist):
@@ -112,25 +152,10 @@ class WoggleSupervisor(Supervisor):
             else:
                 self.info().direction = 'right'
 
+        # Save the closest we've been to the goal
+        self._bestDistance = self._toGoal
+
         return wall_close
-
-    def execute(self, robotInfo_, dt_):
-        """Selects and executes a controller.
-        """
-        # 1 -> Update the estimation of the robot state
-        self.updateStateEstimate(robotInfo_)
-
-        if self.atWall():
-            self._currController = self._controllers['fow']
-        elif self.atGoal():
-            self._currController = self._controllers['hld']
-        else:
-            self._currController = self._controllers['gtg']
-
-        # 2 -> Execute the controller to obtain unicycle command (v, w) to apply
-        v, w = self._currController.execute(self.info(), dt_)
-
-        return v, w
 
     def getIRDistance(self, robotInfo_):
         """Converts the IR distance readings into a distance in meters.
@@ -144,8 +169,8 @@ class WoggleSupervisor(Supervisor):
         dists = [max( min( (log1p(3960) - log1p(r))/30 + rmin, rmax), rmin) for r in readings]
         return dists
 
-    def updateStateEstimate(self, robotInfo_):
-        """Update the current estimation of the robot state.
+    def processStateInfo(self, robotInfo_):
+        """Process the current estimation of the robot state.
         """
         # Get the number of ticks on each wheel since last call
         dtl = robotInfo_.wheels.leftTicks - self.info().wheels.leftTicks
@@ -178,11 +203,16 @@ class WoggleSupervisor(Supervisor):
         x_new = x + x_dt
         y_new = y + y_dt
 
-        # Update the state estimation
+        # Process the state estimation
         self.info().pos = (x_new, y_new, theta_new)
 
-        # Update the sensors readings
+        # Process the sensors readings
         self.info().sensors.dist = self.getIRDistance(robotInfo_)
+
+        # Smallest reading translated into distance from center of robot
+        vectors = np.array([s.mapToParent(d, 0) for s, d in zip(self.info().sensors.insts,
+                                                                self.info().sensors.dist)])
+        self._distMin = min((sqrt(a[0]**2 + a[1]**2) for a in vectors))
 
         # Distance to the goal
         self._toGoal = sqrt((x_new - self.info().goal.x)**2 +
@@ -221,8 +251,8 @@ class WoggleSupervisor(Supervisor):
             painter.restore()
 
         # Go to Goal heading angle
-        gtg_angle = self._controllers['gtg'].getHeadingAngle(self.info())
-        avd_angle = self._controllers['avd'].getHeadingAngle(self.info())
+        gtg_angle = self._gtg.getHeadingAngle(self.info())
+        avd_angle = self._avd.getHeadingAngle(self.info())
         arrow_l = self.info().wheels.baseLength * 2
 
         # Robot direction
@@ -239,8 +269,8 @@ class WoggleSupervisor(Supervisor):
         painter.rotate(-degrees(avd_angle))
 
         # FollowWall direction
-        along_wall = self._controllers['fow']._along_wall_vector
-        to_wall = self._controllers['fow']._to_wall_vector
+        along_wall = self._fow._along_wall_vector
+        to_wall = self._fow._to_wall_vector
 
         if to_wall is not None:
             to_angle = degrees(atan2(to_wall[1], to_wall[0]))
