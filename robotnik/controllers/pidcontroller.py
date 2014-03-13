@@ -23,9 +23,15 @@ class PIDController(Controller):
         self._Kd = info_.gains.Kd
 
         # Accumulated error
-        self._E_k = 0;
+        self._E_k = 0
         # error step k-1
-        self._e_k_1 = 0;
+        self._e_k_1 = 0
+
+    def restart(self, ):
+        """Restart the PID coefficients.
+        """
+        self._E_k = 0
+        self._e_k_1 = 0
 
     def getHeadingAngle(self, info_):
         """Return the heading as an angle"""

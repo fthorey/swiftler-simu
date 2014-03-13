@@ -12,3 +12,8 @@ class Controller(object):
         calculate and return robot motion parameters.
         """
         raise NotImplementedError("Controller.execute")
+
+    def restart(self):
+        """Reset the controller to the initial state.
+        """
+        raise NotImplementedError("Controller.restart")
