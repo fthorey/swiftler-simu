@@ -28,7 +28,7 @@ class WoggleSupervisor(Supervisor):
         # Set some extra informations
         # PID parameters
         self.info().gains = Struct()
-        self.info().gains.Kp = 4.0
+        self.info().gains.Kp = 3.0
         self.info().gains.Ki = 0.7
         self.info().gains.Kd = 0.01
         # Goal
@@ -47,13 +47,13 @@ class WoggleSupervisor(Supervisor):
         self.info().sensors.dist = self.getIRDistance(robotInfo_)
         self.info().sensors.rmin = robotInfo_.sensors.rmin
         self.info().sensors.rmax = robotInfo_.sensors.rmax
-        self.info().sensors.toCenter = robotInfo_.wheels.baseLength/2 + 0.01
+        self.info().sensors.toCenter = robotInfo_.sensors.toCenter
 
         # Follow wall important information
         self.info().direction = 'left'
 
         # Distance from center of robot to extremity of a sensor beam
-        self.distMax = self.info().sensors.toCenter + robotInfo_.sensors.rmax
+        self._distMax = self.info().sensors.toCenter + robotInfo_.sensors.rmax
 
         # Create:
         # - a go-to-goal controller
@@ -89,6 +89,7 @@ class WoggleSupervisor(Supervisor):
         # Detect a wall when it is at 80% of the distance
         # from the center of the robot
         return self._toWall < ((self.info().sensors.toCenter + self.info().sensors.rmax) * 0.8)
+        return self._toWall < (self._distMax * 0.8)
 
     def atWall(self, ):
         """Check if the distance to wall is small and decide a direction.
@@ -98,6 +99,7 @@ class WoggleSupervisor(Supervisor):
         # Find the closest detected point
         if wall_close:
             dmin = self.info().sensors.toCenter + self.info().sensors.rmax
+            dmin = self._distMax
             angle = 0
             for i, d in enumerate(self.info().sensors.dist):
                 if d < dmin:

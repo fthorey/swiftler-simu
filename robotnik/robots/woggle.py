@@ -27,11 +27,12 @@ class Woggle(Robot):
         self._info.wheels.ticksPerRev = 2764.8
         self._info.wheels.leftTicks = 0
         self._info.wheels.rightTicks = 0
-        # Proximyt sensors
+        # Proximity sensors
         self._info.sensors = Struct()
         self._info.sensors.rmin = 0.01
         self._info.sensors.rmax = 0.15
         self._info.sensors.phi = pi/10
+        self._info.sensors.toCenter = self._info.wheels.baseLength/2 + 0.01
 
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
@@ -80,7 +81,7 @@ class Woggle(Robot):
         self._shape.addPolygon(QtGui.QPolygonF(points))
 
         # Position of the sharp sensors
-        bl = self._info.wheels.baseLength/2 + 0.01
+        bl = self._info.sensors.toCenter
         self._proxSensorsPos = [
             # front
             [bl*cos(0), sin(0), 0],
