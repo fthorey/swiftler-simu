@@ -9,7 +9,6 @@ class Physics(QtCore.QObject):
     """
 
     def __init__(self, world_):
-
         # Set the world on which the physics apply
         self._world = world_
 
@@ -57,20 +56,12 @@ class Physics(QtCore.QObject):
         for robot in self._world.robots():
             # Loop over robot sensors
             for sensor in robot.proxSensors():
-                # Get all items in collision with the sensor
-                collItems = self._world.collidingItems(sensor)
-                # Recalculate the envelope of the sensor in the world
+                # Reset temporarly the range of sensors to max value
+                sensor.updateDistance()
+                # Update the world envelope
                 sensor.getWorldEnvelope(True)
-                # Check for a collision
-                if self.__isSensorColliding(sensor, collItems):
-                    # Update the sensor distance
-                    for item in collItems:
-                        sensor.updateDistance(item)
-                else:
-                    # Reset the sensor to its maximum range if not already
-                    # if not sensor.isAtMaxRange():
-                    sensor.updateDistance()
-
-                # Stop the robot if the minimum range has been reached
-                if sensor.isMinRangeReached():
-                    robot.stop()
+                # Get all items that are colliding
+                collItems = self._world.collidingItems(sensor)
+                # Update range according to potential detected obstacles
+                for item in collItems:
+                    sensor.updateDistance(item)
