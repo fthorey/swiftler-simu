@@ -104,7 +104,7 @@ class WoggleSupervisor(Supervisor):
         if self.info().direction == 'left':
             dtheta = -dtheta
 
-        return sin(dtheta) <= 0 and cos(dtheta) >= 0
+        return sin(dtheta) >= 0 and cos(dtheta) >= 0
 
     def safe(self, ):
         """Check if the surrounding is safe (i.e. no obstacle too close).
@@ -118,7 +118,7 @@ class WoggleSupervisor(Supervisor):
     def unsafe(self, ):
         """Check if the surrounding is unsage (i.e. obstacle too close).
         """
-        return self._distMin < self._distMax*0.5
+        return self._distMin < self._distMax * 0.5
 
     def atGoal(self):
         """Check if the distance to goal is small.
@@ -146,7 +146,8 @@ class WoggleSupervisor(Supervisor):
                     dmin = d
                     angle = self.info().sensors.insts[i].angle()
 
-            # Go that way
+            # Take the direction that follow the wall
+            # on the right side
             if angle > 0:
                 self.info().direction = 'left'
             else:
@@ -229,12 +230,10 @@ class WoggleSupervisor(Supervisor):
             """
             # Save state
             painter.save()
-
             # Rotate and scale
             painter.rotate(degrees(atan2(y2-y1,x2-x1)))
             factor = sqrt((x1-x2)**2 + (y1-y2)**2)
             painter.scale(factor, factor)
-
             # Draw the arrow
             line = QtCore.QLineF(0, 0, 1, 0)
             xe = 1 - ratio
@@ -246,37 +245,33 @@ class WoggleSupervisor(Supervisor):
             painter.drawLine(line)
             painter.drawLine(line1)
             painter.drawLine(line2)
-
             # Restore state
             painter.restore()
 
-        # Go to Goal heading angle
-        gtg_angle = self._gtg.getHeadingAngle(self.info())
-        avd_angle = self._avd.getHeadingAngle(self.info())
         arrow_l = self.info().wheels.baseLength * 2
 
-        # Robot direction
-        drawArrow(painter, "green", 0, 0, arrow_l, 0)
+        # # Draw Robot direction
+        # drawArrow(painter, "green", 0, 0, arrow_l, 0)
 
-        # GoToGoal direction
-        painter.rotate(degrees(gtg_angle))
-        drawArrow(painter, "blue", 0, 0, arrow_l, 0)
-        painter.rotate(-degrees(gtg_angle))
+        # Draw GoToGoal direction
+        if self.currentController() is self._gtg:
+            gtg_angle = self._gtg.getHeadingAngle(self.info())
+            drawArrow(painter, "blue", 0, 0, arrow_l, 0)
 
-        # AvoidObstacle direction
-        painter.rotate(degrees(avd_angle))
-        drawArrow(painter, "red", 0, 0, arrow_l, 0)
-        painter.rotate(-degrees(avd_angle))
+        # Draw AvoidObstacle direction
+        elif self.currentController() is self._avd:
+            avd_angle = self._avd.getHeadingAngle(self.info())
+            drawArrow(painter, "red", 0, 0, arrow_l, 0)
 
-        # FollowWall direction
-        along_wall = self._fow._along_wall_vector
-        to_wall = self._fow._to_wall_vector
+        # Draw FollowWall direction
+        elif self.currentController() is self._fow:
+            along_wall = self._fow._along_wall_vector
+            to_wall = self._fow._to_wall_vector
 
-        if to_wall is not None:
-            to_angle = degrees(atan2(to_wall[1], to_wall[0]))
-            drawArrow(painter, "green", 0, 0, to_wall[0], to_wall[1])
-
-        if along_wall is not None:
-            along_angle = degrees(atan2(along_wall[1], along_wall[0]))
-            painter.translate(to_wall[0], to_wall[1])
-            drawArrow(painter, "purple", 0, 0, along_wall[0], along_wall[1])
+            if to_wall is not None:
+                to_angle = degrees(atan2(to_wall[1], to_wall[0]))
+                drawArrow(painter, "green", 0, 0, to_wall[0], to_wall[1])
+            if along_wall is not None:
+                along_angle = degrees(atan2(along_wall[1], along_wall[0]))
+                painter.translate(to_wall[0], to_wall[1])
+                drawArrow(painter, "purple", 0, 0, along_wall[0], along_wall[1])

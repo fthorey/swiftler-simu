@@ -22,6 +22,11 @@ class Supervisor(object):
         # Dict controller -> (function, controller)
         self._states = {}
 
+    def currentController(self, ):
+        """Return the current controller.
+        """
+        return self._current
+
     def processStateInfo(self, ):
         """Process the current estimation of the state of the robot position.
         """
