@@ -91,6 +91,9 @@ class Woggle(Robot):
             # front side - side
             [bl*cos(-9*pi/24), bl*sin(-9*pi/24), -9*pi/24],
             [bl*cos(9*pi/24), bl*sin(9*pi/24), 9*pi/24],
+            # side
+            [bl*cos(pi/2), bl*sin(pi/2), pi/2],
+            [bl*cos(-pi/2), bl*sin(-pi/2), -pi/2],
             # back side
             [bl*cos(-pi/2-7*pi/24), bl*sin(-pi/2-7*pi/24), -pi/2-7*pi/24],
             [bl*cos(pi/2+7*pi/24), bl*sin(pi/2+7*pi/24), pi/2+7*pi/24],
