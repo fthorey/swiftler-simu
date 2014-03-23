@@ -15,3 +15,6 @@ class Hold(Controller):
 
     def execute(self, info_, dt_):
         return 0, 0
+
+    def restart(self, ):
+        pass

@@ -33,8 +33,8 @@ class WoggleSupervisor(Supervisor):
         self.info().gains.Kd = 0.01
         # Goal
         self.info().goal = Struct()
-        self.info().goal.x = -1
-        self.info().goal.y = 1
+        self.info().goal.x = -5
+        self.info().goal.y = -5
         # Wheels
         self.info().wheels = Struct()
         self.info().wheels.radius = robotInfo_.wheels.radius
@@ -54,6 +54,7 @@ class WoggleSupervisor(Supervisor):
 
         # Distance from center of robot to extremity of a sensor beam
         self._distMax = self.info().sensors.toCenter + robotInfo_.sensors.rmax
+        self._bestDistance = None
 
         # Create:
         # - a go-to-goal controller
@@ -75,7 +76,7 @@ class WoggleSupervisor(Supervisor):
                            (self.safe, self._fow))
         # Set Hold transition functions
         self.addController(self._hld,
-                           (lambda: not self.at_goal(), self._gtg))
+                           (lambda: not self.atGoal(), self._gtg))
         # Set FollowWall transition functions
         self.addController(self._fow,
                            (self.atGoal, self._hld),
@@ -101,7 +102,7 @@ class WoggleSupervisor(Supervisor):
         theta_gtg = self._gtg.getHeadingAngle(self.info())
         dtheta = self._fow.getHeadingAngle(self.info()) - theta_gtg
 
-        if self.info().direction == 'left':
+        if self.info().direction == 'right':
             dtheta = -dtheta
 
         return sin(dtheta) >= 0 and cos(dtheta) >= 0
@@ -148,13 +149,18 @@ class WoggleSupervisor(Supervisor):
 
             # Take the direction that follow the wall
             # on the right side
-            if angle > 0:
+            if angle >= 0:
                 self.info().direction = 'left'
             else:
                 self.info().direction = 'right'
 
         # Save the closest we've been to the goal
-        self._bestDistance = self._toGoal
+        if self._bestDistance is None:
+            self._bestDistance = self._toGoal
+
+        if self._toGoal < self._bestDistance:
+            self._bestDistance = self._toGoal
+
 
         return wall_close
 
