@@ -35,7 +35,7 @@ class FollowWall(PIDController):
             dirFactor = -1
 
         sensors = [(s, d) for s, d in zip(info_.sensors.insts, info_.sensors.dist)
-                   if (d < info_.sensors.rmax)]
+                   if (0 < s.angle() * dirFactor < pi) and (d < info_.sensors.rmax)]
 
         # Make sure sensors are sorted from front to back
         sensors = sorted(sensors, key = lambda (p, d): abs(p.angle()))
