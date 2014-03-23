@@ -52,42 +52,9 @@ class FollowWall(PIDController):
             sensor = sensors[0]
             reading = sensor[1]
             self._to_wall_vector = vectors[0]
-            if self._along_wall_vector is None:
-                # We've only started, it's a corner,
-                # go perpendicular to its vector
-                self._along_wall_vector = np.array([dirFactor * self._to_wall_vector[1],
-                                                    -dirFactor * self._to_wall_vector[0],
-                                                    1])
-
-                # Which direction to go?
-                # either away from this corner or directly to it.
-                # let's blend ahead with corner:
-                theta_h = sensor[0].angle() * reading/ info_.sensors.rmax
-                return np.array([reading * cos(theta_h),
-                                 reading * sin(theta_h),
-                                 1])
-
-            else:
-                # To minimize jittering, blend with the previous
-                # reading, and don't rotate more than 0.2 rad.
-                prev_theta = atan2(self._along_wall_vector[1],
-                                   self._along_wall_vector[0])
-
-                self._along_wall_vector = np.array([dirFactor * self._to_wall_vector[1],
-                                                    -dirFactor * self._to_wall_vector[0],
-                                                    1])
-
-                this_theta = atan2(self._along_wall_vector[1],
-                                   self._along_wall_vector[0])
-
-                dtheta = prev_theta - this_theta
-                if abs(dtheta) > 0.2:
-                    dtheta *= 0.2*abs(dtheta)
-
-                self._along_wall_vector = np.array([
-                            reading * cos(prev_theta - dtheta),
-                            reading * sin(prev_theta - dtheta),
-                            1])
+            self._along_wall_vector = np.array([dirFactor * self._to_wall_vector[1],
+                                                -dirFactor * self._to_wall_vector[0],
+                                                1])
 
         # More than one sensor detect the wall
         else:
