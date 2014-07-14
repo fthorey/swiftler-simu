@@ -20,10 +20,10 @@ Python 3 is not officially supported.
 - [Fast Forward](#fast-forward)
 - [Overview](#overview)
 - [Creating a new robot](#robot)
-- [Creating a new controller](#create-controller)
-- [Creating a new supervisor](#create-supervisor)
-- [Creating a new planner](#create-planner)
-- [Creating a new world](#create-world)
+- [Creating a new controller](#create-a-new-controller)
+- [Creating a new supervisor](#create-a-new-supervisor)
+- [Creating a new planner](#create-a-new-planner)
+- [Creating a new world](#create-a-new-world)
 
 # Fast Forward #
 
@@ -34,6 +34,11 @@ just type in your favorite shell the following command:
 ```python
 python robotnik.py
 ```
+
+# Overview #
+
+The **Robotnik** simulator is based on a **world** which is filled at start-up
+by reading a xml template file located into the **template** directory.
 
 # Creating a new robot #
 

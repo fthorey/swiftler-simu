@@ -5,6 +5,7 @@ import sys, os
 from world.world import World
 from utils import const
 import ui.icons
+import argparse
 
 # Handle Ctrl-C
 import signal
@@ -32,8 +33,19 @@ class Robotnik(QtGui.QMainWindow):
         # Create a timer to handle time
         self.timer = QtCore.QTimer(self)
 
-        # Default file name
-        self._filename = 'templates/labyrinth_small.xml'
+        # Create a command-line arguments parser
+        self.parser = argparse.ArgumentParser(description='Robotnik arguments parser')
+
+        # Add an option to set world path
+        self.parser.add_argument('--world-path', dest='filename',
+                                 help='path to world xml template file',
+                                 default='templates/labyrinth_small.xml')
+
+        # Parse arguments
+        args = self.parser.parse_args()
+
+        # Set file name
+        self._filename = args.filename
 
         # Configure
         # Status bar
