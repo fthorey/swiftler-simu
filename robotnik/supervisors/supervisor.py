@@ -4,6 +4,7 @@
 from math import degrees, sqrt
 from utils.struct import Struct
 from utils import helpers
+from planners.planner import Planner
 
 from PyQt4 import QtCore
 
@@ -18,6 +19,9 @@ class Supervisor(object):
 
         # Current controller
         self._current = None
+
+        # Current planner
+        self._planner = Planner()
 
         # Dict controller -> (function, controller)
         self._states = {}
@@ -49,6 +53,9 @@ class Supervisor(object):
         self._states[controller_] = args
 
     def execute(self, robotInfo_, dt_):
+        # Execute planner to update goal if necessary
+        self._planner.execute(robotInfo_, dt_)
+
         # Process state info
         self.processStateInfo(robotInfo_)
 

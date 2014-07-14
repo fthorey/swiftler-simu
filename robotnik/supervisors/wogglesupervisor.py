@@ -32,9 +32,7 @@ class WoggleSupervisor(Supervisor):
         self.info().gains.Ki = 0.7
         self.info().gains.Kd = 0.01
         # Goal
-        self.info().goal = Struct()
-        self.info().goal.x = -5
-        self.info().goal.y = -5
+        self.info().goal = self._planner.getGoal()
         # Wheels
         self.info().wheels = Struct()
         self.info().wheels.radius = robotInfo_.wheels.radius
@@ -220,6 +218,9 @@ class WoggleSupervisor(Supervisor):
         vectors = np.array([s.mapToParent(d, 0) for s, d in zip(self.info().sensors.insts,
                                                                 self.info().sensors.dist)])
         self._distMin = min((sqrt(a[0]**2 + a[1]**2) for a in vectors))
+
+        # Update goal
+        self.info().goal = self._planner.getGoal()
 
         # Distance to the goal
         self._toGoal = sqrt((x_new - self.info().goal.x)**2 +

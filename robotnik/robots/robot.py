@@ -146,15 +146,11 @@ class Robot(SimObject):
         rect.adjust(dx1, dy1, dx2, dy2)
         return rect
 
-    def advance(self, step_):
+    def advance(self, ):
         """Action to perform when the scene changes.
         """
-        # -> Do nothing on the 1st phase but move on 2nd phase
-        if (step_ == 0):
-            return
-
         # 1 -> Execute the supervisor to obtain unicycle command (v,w) to apply
-        v, w = self._supervisor.execute(self.info(), const.stepDuration)
+        v, w = self.supervisor().execute(self.info(), const.stepDuration)
         vel_l, vel_r = self.dynamics().uni2Diff(v, w)
 
         # 2 -> Apply current speed to wheels
