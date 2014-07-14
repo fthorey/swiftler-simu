@@ -228,9 +228,10 @@ class World(QtGui.QGraphicsScene):
 
         # Call parent advance method
         # -> Call all items currently in the world advance method
-        super(World, self).advance()
+        for robot in self.robots():
+            robot.advance()
 
-        # Apply physics
+        # Apply physics (collisions detection)
         self._physics.apply()
 
         # Update the views on the robot if necessary
