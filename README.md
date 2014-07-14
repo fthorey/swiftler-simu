@@ -167,6 +167,9 @@ An example of a supervisor's execute method:
 
 ```python
     def execute(self, robotInfo_, dt_):
+        # Execute planner to update goal if necessary
+        self._planner.execute(robotInfo_, dt_)
+
         # Process state info
         self.processStateInfo(robotInfo_)
 
