@@ -5,12 +5,13 @@ from utils.simobject import SimObject
 from PyQt4 import QtGui, QtCore
 from utils import const
 from utils.tracker import Tracker
+import json
 
 class Robot(SimObject):
-    """ The Robot class represents a generic class for robots.
+    """ The Robot class represents a generic object for robots.
     """
 
-    def __init__(self, name_, pos_, brush_):
+    def __init__(self, name_, pos_, brush_, infoFile_):
 
         # Call parent constructor
         super(Robot, self).__init__(name_, pos_, brush_)
@@ -31,22 +32,26 @@ class Robot(SimObject):
         # Tracker only manipulates (x,y)
         self._tracker = Tracker(pos_[:2])
 
+        # Show the supervisor information on screen
         self._showSupervisors = True
 
+        # Load the properties of the robot from file
+        self._info = json.loads(infoFile_)
+
     def showSupervisors(self, ):
-        """Return the status of the display of the supervisors infos
+        """Return the status of the display of the supervisors information.
         """
         return self._showSupervisors
 
     def toggleShowSupervisors(self, ):
-        """Toggle the display of the supervisors infos
+        """Toggle the display of the supervisors information.
         """
         self._showSupervisors = not self._showSupervisors
 
     def info():
         """Return the robot information structure.
         """
-        raise NotImplementedError("Robot.info")
+        return self._info
 
     def tracker(self, ):
         """Return the tracker of the robot.
@@ -157,7 +162,7 @@ class Robot(SimObject):
         self.setWheelSpeeds(vel_l, vel_r)
 
         # 3 -> Update the robot position using dynamic and current command
-        self._dynamics.update(const.stepDuration)
+        self.dynamics().update(const.stepDuration)
 
         # 4 -> Add the new position to the tracker
         self.tracker().addPosition((self.pos().x(), self.pos().y()))
