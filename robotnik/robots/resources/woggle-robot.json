@@ -1,0 +1,23 @@
+{
+    "wheels":
+    {
+        "radius": 0.021,
+        "baseLength": 0.0885
+    },
+    "encoders":
+    {
+        "ticksPerRev": 2764.8,
+        "leftTicks": 0,
+        "rightTicks": 0
+    },
+    "sensors":
+    {
+        "ir":
+        {
+            "rmin": 0.01,
+            "rmax": 0.15,
+            "phi": 0.3142,
+            "pos2center": 0.0543
+        }
+    }
+}
