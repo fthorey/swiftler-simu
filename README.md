@@ -13,7 +13,7 @@ To run the simulator in gui mode, you must have installed:
 * [PyQt](http://www.riverbankcomputing.com/software/pyqt/intro)
 * [Numpy](https://www.python.org/downloads/)
 
-Python 3 is not officially supported.
+Python 3 is not currently officially supported.
 
 **Table of Contents**
 
