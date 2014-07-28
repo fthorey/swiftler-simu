@@ -168,7 +168,8 @@ class World(QtGui.QGraphicsScene):
                     name = "{}{}".format(robot_class.__name__,
                                               len(self._robots))
                     brush = QtGui.QBrush(QtGui.QColor(robot_color))
-                    robot = robot_class(name, sup_class, robot_pos, brush)
+                    robot = robot_class(name, sup_class, robot_pos, brush,
+                                        './robots/resources/woggle-robot.json')
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:
                         robot.setMasterRobot()
