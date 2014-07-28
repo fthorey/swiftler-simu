@@ -18,21 +18,25 @@ class Woggle(Robot):
         # Call parent constructor
         super(Woggle, self).__init__(name_, pos_, brush_, infoFile_)
 
+        # TODO: REMOVE THIS
+        self._info2 = {}
+        self._info2.update(self._info)
+
         # Fill-in the state informations
         self._info = Struct()
         # Wheels
         self._info.wheels = Struct()
-        self._info.wheels.radius = 0.021
-        self._info.wheels.baseLength = 0.0885
-        self._info.wheels.ticksPerRev = 2764.8
+        self._info.wheels.radius = self._info2["wheels"]["radius"]
+        self._info.wheels.baseLength = self._info2["wheels"]["baseLength"]
+        self._info.wheels.ticksPerRev = self._info2["encoders"]["ticksPerRev"]
         self._info.wheels.leftTicks = 0
         self._info.wheels.rightTicks = 0
         # Proximity sensors
         self._info.sensors = Struct()
-        self._info.sensors.rmin = 0.01
-        self._info.sensors.rmax = 0.15
-        self._info.sensors.phi = pi/10
-        self._info.sensors.toCenter = self._info.wheels.baseLength/2 + 0.01
+        self._info.sensors.rmin = self._info2["sensors"]["ir"]["rmin"]
+        self._info.sensors.rmax = self._info2["sensors"]["ir"]["rmax"]
+        self._info.sensors.phi = self._info2["sensors"]["ir"]["phi"]
+        self._info.sensors.toCenter = self._info2["wheels"]["baseLength"]/2 + 0.01
 
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
@@ -43,33 +47,13 @@ class Woggle(Robot):
         self._rightRevolutions = 0
 
         # Add a wheel encoder to each wheel
-        self._leftWheelEncoder = WheelEncoder(self._info.wheels.ticksPerRev)
+        self._leftWheelEncoder = WheelEncoder(self._info2["encoders"]["ticksPerRev"])
 
         # Add a wheel encoder to each wheel
-        self._rightWheelEncoder = WheelEncoder(self._info.wheels.ticksPerRev)
+        self._rightWheelEncoder = WheelEncoder(self._info2["encoders"]["ticksPerRev"])
 
-        # Cache the envelope
-        bl = self._info.wheels.baseLength/2
-        self._envelope = [[bl * cos(pi/2 + pi/12), bl * sin(pi/2 + pi/12)],
-                          [bl * cos(pi/2 - pi/12), bl * sin(pi/2 - pi/12)],
-                          [bl * cos(pi/3), bl * sin(pi/3)],
-                          [bl * cos(pi/4), bl * sin(pi/4)],
-                          [bl * cos(pi/5), bl * sin(pi/5)],
-                          [bl * cos(pi/12), bl * sin(pi/12)],
-                          [bl * cos(-pi/12), bl * sin(-pi/12)],
-                          [bl * cos(-pi/5), bl * sin(-pi/5)],
-                          [bl * cos(-pi/4), bl * sin(-pi/4)],
-                          [bl * cos(-pi/3), bl * sin(-pi/3)],
-                          [bl * cos(-pi/2 + pi/12), bl * sin(-pi/2 + pi/12)],
-                          [bl * cos(-pi/2 - pi/12), bl * sin(-pi/2 - pi/12)],
-                          [bl * cos(pi + pi/3), bl * sin(pi + pi/3)],
-                          [bl * cos(pi + pi/4), bl * sin(pi + pi/4)],
-                          [bl * cos(pi + pi/5), bl * sin(pi + pi/5)],
-                          [bl * cos(pi + pi/12), bl * sin(pi + pi/12)],
-                          [bl * cos(pi - pi/12), bl * sin(pi - pi/12)],
-                          [bl * cos(pi - pi/5), bl * sin(pi - pi/5)],
-                          [bl * cos(pi - pi/4), bl * sin(pi - pi/4)],
-                          [bl * cos(pi - pi/3), bl * sin(pi - pi/3)]]
+        # Set envelope
+        self._envelope = self._info2["envelope"]
 
         # Cache the bounding rect
         xmin, ymin, xmax, ymax = self.getBounds()
@@ -81,27 +65,12 @@ class Woggle(Robot):
         self._shape.addPolygon(QtGui.QPolygonF(points))
 
         # Position of the sharp sensors
-        bl = self._info.sensors.toCenter
-        self._proxSensorsPos = [
-            # front
-            [bl*cos(0), sin(0), 0],
-            # front side
-            [bl*cos(17*pi/120), bl*sin(17*pi/120), 17*pi/120],
-            [bl*cos(-17*pi/120), bl*sin(-17*pi/120), -17*pi/120],
-            # front side - side
-            [bl*cos(-9*pi/24), bl*sin(-9*pi/24), -9*pi/24],
-            [bl*cos(9*pi/24), bl*sin(9*pi/24), 9*pi/24],
-            # side
-            [bl*cos(pi/2), bl*sin(pi/2), pi/2],
-            [bl*cos(-pi/2), bl*sin(-pi/2), -pi/2],
-            # back side
-            [bl*cos(-pi/2-7*pi/24), bl*sin(-pi/2-7*pi/24), -pi/2-7*pi/24],
-            [bl*cos(pi/2+7*pi/24), bl*sin(pi/2+7*pi/24), pi/2+7*pi/24],
-            # back
-            [bl*cos(pi), bl*sin(pi), pi]]
+        self._proxSensorsPos = self._info2["sensors"]["ir"]["positions"]
 
         # Add the sensors to the robot
-        rmin, rmax, phi = self._info.sensors.rmin, self._info.sensors.rmax, self._info.sensors.phi
+        rmin = self._info2["sensors"]["ir"]["rmin"]
+        rmax = self._info2["sensors"]["ir"]["rmax"]
+        phi = self._info2["sensors"]["ir"]["phi"]
         for p in self._proxSensorsPos:
             self.addProxSensor(WoggleIRSensor(p, rmin, rmax, phi))
 
