@@ -36,7 +36,7 @@ class Robot(SimObject):
         self._showSupervisors = True
 
         # Load the properties of the robot from file
-        self._info = json.loads(infoFile_)
+        self._info = json.loads(open(infoFile_, 'r').read())
 
     def showSupervisors(self, ):
         """Return the status of the display of the supervisors information.
