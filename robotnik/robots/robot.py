@@ -29,7 +29,7 @@ class Robot(SimObject):
         self._items = [self, ]
 
         # Associate a tracker to store the path (in m)
-        # Tracker only manipulates (x,y)
+        # Tracker only manipulates (x,y) coordinates
         self._tracker = Tracker(pos_[:2])
 
         # Show the supervisor information on screen
