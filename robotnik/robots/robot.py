@@ -8,7 +8,7 @@ from utils.tracker import Tracker
 import json
 
 class Robot(SimObject):
-    """ The Robot class represents a generic object for robots.
+    """ The Robot class represents a generic simulated robots.
     """
 
     def __init__(self, name_, pos_, brush_, infoFile_):
