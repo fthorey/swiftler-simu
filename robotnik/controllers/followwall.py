@@ -23,7 +23,7 @@ class FollowWall(PIDController):
         as a vector.
         """
         # Get heading direction
-        direction = info_.direction
+        direction = info_["direction"]
 
         # Angles are normalised to positive values:
         # heading to left, means a wall has been detected by a
@@ -34,8 +34,8 @@ class FollowWall(PIDController):
         if direction is 'right':
             dirFactor = -1
 
-        sensors = [(s, d) for s, d in zip(info_.sensors.insts, info_.sensors.dist)
-                   if (0 < s.angle() * dirFactor < pi) and (d < info_.sensors.rmax)]
+        sensors = [(s, d) for s, d in zip(info_["sensors"]["ir"]["insts"], info_["sensors"]["ir"]["dist"])
+                   if (0 < s.angle() * dirFactor < pi) and (d < info_["sensors"]["ir"]["rmax"])]
 
         # Make sure sensors are sorted from front to back
         sensors = sorted(sensors, key = lambda (p, d): abs(p.angle()))
@@ -61,7 +61,7 @@ class FollowWall(PIDController):
                 # Which direction to go?
                 # either away from this corner or directly to it.
                 # let's blend ahead with corner:
-                theta_h = sensor[0].angle() * reading / info_.sensors.rmax
+                theta_h = sensor[0].angle() * reading / info_["sensors"]["ir"]["rmax"]
 
                 return np.array([reading * cos(theta_h),
                                     reading * sin(theta_h),

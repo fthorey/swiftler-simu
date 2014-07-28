@@ -12,7 +12,7 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, pos_, robotInfo_):
+    def __init__(self, pos_, robotInfo_, infoFile_):
         # Store information about the robot
         self._info = Struct()
         self._info.pos = pos_
@@ -41,6 +41,11 @@ class Supervisor(object):
         """
         return self._info
 
+    def info2(self, ):
+        """Get the parameters that the current controller needs for s.
+        """
+        return self._info2
+
     def createController(self, moduleString_, info_):
         """Create and return a controller instance for a given controller class.
         """
@@ -52,12 +57,12 @@ class Supervisor(object):
         """
         self._states[controller_] = args
 
-    def execute(self, robotInfo_, dt_):
+    def execute(self, robotInfo_, robotInfo2_, dt_):
         # Execute planner to update goal if necessary
         self._planner.execute(robotInfo_, dt_)
 
         # Process state info
-        self.processStateInfo(robotInfo_)
+        self.processStateInfo(robotInfo_, robotInfo2_)
 
         # Switch:
         if self._current in self._states:
@@ -69,4 +74,4 @@ class Supervisor(object):
                     break
 
         #execute the current controller
-        return self._current.execute(self.info(), dt_)
+        return self._current.execute(self.info2(), dt_)

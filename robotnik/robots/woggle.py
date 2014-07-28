@@ -79,7 +79,8 @@ class Woggle(Robot):
         self.setDynamics(DifferentialDrive(self))
 
         # The supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(pos_, self._info))
+        self.setSupervisor(supervisorClass_(pos_, self._info, self._info2,
+                                            "supervisors/resources/woggle-supervisor.json"))
 
     def info(self):
         """Return the robot information structure.

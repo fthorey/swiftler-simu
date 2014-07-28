@@ -16,11 +16,11 @@ class PIDController(Controller):
 
         # PID gains
         # Proportional
-        self._Kp = info_.gains.Kp
+        self._Kp = info_["pid"]["gains"]["Kp"]
         # Integral
-        self._Ki = info_.gains.Ki
+        self._Ki = info_["pid"]["gains"]["Ki"]
         # Derivative
-        self._Kd = info_.gains.Kd
+        self._Kd = info_["pid"]["gains"]["Kd"]
 
         # Accumulated error
         self._E_k = 0

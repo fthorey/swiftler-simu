@@ -11,9 +11,9 @@ class Planner(object):
     def __init__(self, ):
         """
         """
-        self._goal = Struct()
-        self._goal.x = -5
-        self._goal.y = -5
+        self._goal = {}
+        self._goal["x"] = -5
+        self._goal["y"] = -5
 
     def getGoal(self, ):
         return self._goal

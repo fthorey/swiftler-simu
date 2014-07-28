@@ -20,10 +20,10 @@ class GoToGoal(PIDController):
         """Get the direction from the robot to the goal as a vector.
         """
         # The goal:
-        x_g, y_g = info_.goal.x, info_.goal.y
+        x_g, y_g = info_["goal"]["x"], info_["goal"]["y"]
 
         # The robot:
-        x_r, y_r, theta = info_.pos
+        x_r, y_r, theta = info_["pos"]
 
         # Heading angle:
         heading_angle = atan2((y_g - y_r), x_g - x_r) - theta
