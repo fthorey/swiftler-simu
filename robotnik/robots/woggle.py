@@ -48,21 +48,7 @@ class Woggle(Robot):
 
         # Add a wheel encoder to each wheel
         self._leftWheelEncoder = WheelEncoder(self._info2["encoders"]["ticksPerRev"])
-
-        # Add a wheel encoder to each wheel
         self._rightWheelEncoder = WheelEncoder(self._info2["encoders"]["ticksPerRev"])
-
-        # Set envelope
-        self._envelope = self._info2["envelope"]
-
-        # Cache the bounding rect
-        xmin, ymin, xmax, ymax = self.getBounds()
-        self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
-
-        # Cache the shape
-        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
-        self._shape = QtGui.QPainterPath()
-        self._shape.addPolygon(QtGui.QPolygonF(points))
 
         # Position of the sharp sensors
         self._proxSensorsPos = self._info2["sensors"]["ir"]["positions"]
@@ -160,20 +146,6 @@ class Woggle(Robot):
         """
         v, w = self.dynamics.diff2Uni(self._leftWheelSpeed, self._rightWheelSpeed)
         return v
-
-    def getEnvelope(self, ):
-        """Return the envelope of the robot.
-        """
-        return self._envelope
-    def boundingRect(self, ):
-        """Return the bounding rect of the robot.
-        """
-        return self._boundingRect
-
-    def shape(self, ):
-        """Return the shape of the robot.
-        """
-        return self._shape
 
     def paint(self, painter, option, widget):
         """Paint the robot on screen

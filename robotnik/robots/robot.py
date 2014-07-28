@@ -38,6 +38,33 @@ class Robot(SimObject):
         # Load the properties of the robot from file
         self._info = json.loads(open(infoFile_, 'r').read())
 
+        # Set envelope
+        self._envelope = self._info["envelope"]
+
+        # Cache the bounding rect
+        xmin, ymin, xmax, ymax = self.getBounds()
+        self._boundingRect = QtCore.QRectF(QtCore.QPointF(xmin, ymin), QtCore.QPointF(xmax, ymax))
+
+        # Cache the shape
+        points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
+        self._shape = QtGui.QPainterPath()
+        self._shape.addPolygon(QtGui.QPolygonF(points))
+
+    def getEnvelope(self, ):
+        """Return the envelope of the robot.
+        """
+        return self._envelope
+
+    def boundingRect(self, ):
+        """Return the bounding rect of the robot.
+        """
+        return self._boundingRect
+
+    def shape(self, ):
+        """Return the shape of the robot.
+        """
+        return self._shape
+
     def showSupervisors(self, ):
         """Return the status of the display of the supervisors information.
         """
