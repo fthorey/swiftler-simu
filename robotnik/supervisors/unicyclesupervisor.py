@@ -13,16 +13,16 @@ import json
 
 from PyQt4 import QtCore, QtGui
 
-class WoggleSupervisor(Supervisor):
-    """ WoggleSupervisor is a class that provides a way to control a Woggle robot.
-    The WoggleSupervisor does not move the robot directly. Instead, the supervisor
+class UnicycleSupervisor(Supervisor):
+    """ UnicycleSupervisor is a class that provides a way to control a Woggle robot.
+    The UnicycleSupervisor does not move the robot directly. Instead, the supervisor
     selects a controller to do the work and uses the controller outputs
     to generate the robot inputs.
     """
 
     def __init__(self, pos_, robotInfo_, infoFile_):
         # Call parent constructor
-        super(WoggleSupervisor, self,).__init__(pos_, infoFile_);
+        super(UnicycleSupervisor, self,).__init__(pos_, infoFile_);
 
         # Keep track of the old encoders values
         self._info["encoders"] = {}

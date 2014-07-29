@@ -3,19 +3,19 @@
 
 from math import pi, degrees, radians, cos, sin
 from robots.robot import Robot
-from sensors.woggleirsensor import WoggleIRSensor
+from sensors.irsensor import IRSensor
 from sensors.wheelencoder import WheelEncoder
-from supervisors.wogglesupervisor import WoggleSupervisor
+from supervisors.unicyclesupervisor import UnicycleSupervisor
 from dynamics.differential import DifferentialDrive
 from PyQt4 import QtGui, QtCore
 
-class Woggle(Robot):
-    """ The Woggle class handles a unicycle robot called Woggle
+class Unicycle(Robot):
+    """ The Unicycle class handles a unicycle robot called Unicycle
     """
 
     def __init__(self, name_, supervisorClass_, pos_, brush_, infoFile_):
         # Call parent constructor
-        super(Woggle, self).__init__(name_, pos_, brush_, infoFile_)
+        super(Unicycle, self).__init__(name_, pos_, brush_, infoFile_)
 
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
@@ -37,7 +37,7 @@ class Woggle(Robot):
         rmax = self._info["sensors"]["ir"]["rmax"]
         phi = self._info["sensors"]["ir"]["phi"]
         for p in self._proxSensorsPos:
-            self.addProxSensor(WoggleIRSensor(p, rmin, rmax, phi))
+            self.addProxSensor(IRSensor(p, rmin, rmax, phi))
 
         # Add sensors instance to the information
         # -> Mostly needed to get the correct transformation matrix
@@ -47,7 +47,7 @@ class Woggle(Robot):
         # Initialize the IR sensors readings
         self._info["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
 
-        # The Woggle robot follows the differential drive dynamic
+        # The Unicycle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
         # The supervisor is attached to the robot
