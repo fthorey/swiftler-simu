@@ -8,6 +8,7 @@ from physics import Physics
 from math import pi, degrees
 from utils.xmlreader import XMLReader
 from utils import helpers
+import json
 
 class World(QtGui.QGraphicsScene):
     """ World class provides access to all objects within the simulated environment.
@@ -141,6 +142,12 @@ class World(QtGui.QGraphicsScene):
                     view.focusOnRobot()
                 else:
                     view.focusOnWorld()
+
+    def autoConstructJson(self, ):
+        """ AutoconstructJson the world from informations provided into the xml
+        template files.
+        """
+
 
     def autoConstruct(self, ):
         """ Autoconstructs the world from informations provided into the xml
