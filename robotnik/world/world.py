@@ -9,6 +9,7 @@ from math import pi, degrees
 from utils.xmlreader import XMLReader
 from utils import helpers
 import json
+from pprint import pprint
 
 class World(QtGui.QGraphicsScene):
     """ World class provides access to all objects within the simulated environment.
@@ -128,13 +129,9 @@ class World(QtGui.QGraphicsScene):
         """Check the existence of the configuration file
         and create a specific XML reader to parse it. then call autoConstruct
         """
-        try:
-            self._xmlReader = XMLReader(filename_)
-        except Exception, e:
-            raise Exception('[World.checkConfigurationFile] Failed to parse ' + filename \
-                + ': ' + str(e))
-        else:
-            self.autoConstruct()
+
+        # Autoconstruct the world
+        self.autoConstructJson("./world/resources/empty.json")
 
         # Update the views on the robot
         for view in self.views():
@@ -143,11 +140,73 @@ class World(QtGui.QGraphicsScene):
                 else:
                     view.focusOnWorld()
 
-    def autoConstructJson(self, ):
-        """ AutoconstructJson the world from informations provided into the xml
+    def autoConstructJson(self, filename_):
+        """ Autoconstructs the world from informations provided into the json
         template files.
         """
+        # Start by erasing all current objects in the world
+        self.clear()
 
+        # Load the properties of the robot from file
+        try:
+            objects = json.loads(open(filename_, 'r').read())
+        except ValueError:
+            objects = {}
+
+        masterRobotSet = False
+        for key, value in objects["simulation"].items():
+            if key == 'robot':
+                robot_name = value['name']
+                robot_type = value['type']
+                robot_pos = (float(value['pose']['x']),
+                             float(value['pose']['y']),
+                             float(value['pose']['theta']))
+                robot_color = value['color']
+                supervisor_type = value['supervisor']["type"]
+                try:
+                    # Get robot class
+                    robot_class = helpers.load_by_name(str(robot_type), 'robots')
+                    # Get robot supervisor class
+                    sup_class = helpers.load_by_name(str(supervisor_type),'supervisors')
+                    # Generate a robot name
+                    brush = QtGui.QBrush(QtGui.QColor(str(robot_color)))
+                    robot = robot_class(robot_name, sup_class, robot_pos, brush,
+                                        './robots/resources/woggle-robot.json')
+                    # Set the 1st robot encountered the master robot
+                    if not masterRobotSet:
+                        robot.setMasterRobot()
+                        masterRobotSet = True
+                    # Add the robot to the world
+                    self.addItem(robot)
+                    # Add the robot to the robots list
+                    self._robots.append(robot)
+                except:
+                    print "[world.autoConstruct] Robot creation failed!"
+                    raise
+            elif key == 'obstacle':
+                # Get obstacle parameters
+                # Position are in m and rad
+                for obstacle in value:
+                    obstacle_pos = (float(obstacle['pose']['x']),
+                                    float(obstacle['pose']['y']),
+                                    float(obstacle['pose']['theta']))
+                    points = []
+                    for point in obstacle['geometry']['point']:
+                        points.append((float(point['x']), float(point['y'])))
+                    obstacle_color = obstacle['color']
+                    # Set a default color
+                    if obstacle_color is None:
+                        obstacle_color = 0xFF0000
+                    # Get obstacle attribute
+                    brush = QtGui.QBrush(QtGui.QColor(obstacle_color))
+                    obstacle = Polygon(obstacle_pos, points, brush)
+                    # Add the obstacle to the world
+                    self.addItem(obstacle)
+                    # Add the obstacle to obstacles list
+                    self._obstacles.append(obstacle)
+            else:
+                print "{world.autConstruct] Can't recognized the item!"
+                raise
 
     def autoConstruct(self, ):
         """ Autoconstructs the world from informations provided into the xml
