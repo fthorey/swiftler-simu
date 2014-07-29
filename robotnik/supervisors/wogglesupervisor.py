@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from utils.struct import Struct
 from math import degrees, sqrt, cos, sin, pi, log1p, tan, atan2
 from robots.robot import Robot
 from controllers.gotogoal import GoToGoal
@@ -11,61 +10,38 @@ from controllers.hold import Hold
 from supervisors.supervisor import Supervisor
 import numpy as np
 import json
-from pprint import pprint
 
 from PyQt4 import QtCore, QtGui
 
 class WoggleSupervisor(Supervisor):
     """ WoggleSupervisor is a class that provides a way to control a Woggle robot.
-
     The WoggleSupervisor does not move the robot directly. Instead, the supervisor
     selects a controller to do the work and uses the controller outputs
     to generate the robot inputs.
     """
 
-    def __init__(self, pos_, robotInfo_, robotInfo2_, infoFile_):
+    def __init__(self, pos_, robotInfo_, infoFile_):
         # Call parent constructor
-        super(WoggleSupervisor, self,).__init__(pos_, robotInfo_, infoFile_);
+        super(WoggleSupervisor, self,).__init__(pos_, infoFile_);
 
-        # Load the properties of the robot from file
-        # TODO: REMOVE THIS
-        self._info2 = json.loads(open(infoFile_, 'r').read())
-        self._info2["pos"] = pos_
-        self._info2["encoders"] = {}
-        self._info2["encoders"]["old_leftTicks"] = robotInfo2_["encoders"]["leftTicks"]
-        self._info2["encoders"]["old_rightTicks"] = robotInfo2_["encoders"]["rightTicks"]
-        self._info2["sensors"] = robotInfo2_["sensors"].copy()
+        # Keep track of the old encoders values
+        self.info()["encoders"] = {}
+        self.info()["encoders"]["old_leftTicks"] = robotInfo_["encoders"]["leftTicks"]
+        self.info()["encoders"]["old_rightTicks"] = robotInfo_["encoders"]["rightTicks"]
 
-        # Set some extra informations
-        # PID parameters
-        self.info().gains = Struct()
-        self.info().gains.Kp = self._info2["pid"]["gains"]["Kp"]
-        self.info().gains.Ki = self._info2["pid"]["gains"]["Ki"]
-        self.info().gains.Kd = self._info2["pid"]["gains"]["Kd"]
-        # Goal
-        self.info().goal = self._planner.getGoal()
-        # Wheels
-        self.info().wheels = Struct()
-        self.info().wheels.radius = robotInfo2_["wheels"]["radius"]
-        self.info().wheels.baseLength = robotInfo2_["wheels"]["baseLength"]
-        self.info().wheels.leftTicks = 0
-        self.info().wheels.rightTicks = 0
-        # Sensors
-        self.info().sensors = Struct()
-        self.info().sensors.insts = robotInfo2_["sensors"]["ir"]["insts"]
-        self.info().sensors.dist = self.getIRDistance(robotInfo2_)
-        self.info().sensors.rmin = robotInfo2_["sensors"]["ir"]["rmin"]
-        self.info().sensors.rmax = robotInfo2_["sensors"]["ir"]["rmax"]
-        self.info().sensors.toCenter = robotInfo_.sensors.toCenter
+        # Keep track of the wheels geometry values
+        self.info()["wheels"] = robotInfo_["wheels"].copy()
 
-        self.info2()["sensors"]["dist"] = self.getIRDistance(robotInfo2_)
+        # Keep track of the sensors informations
+        self.info()["sensors"] = robotInfo_["sensors"].copy()
+        self.info()["sensors"]["dist"] = self.getIRDistance(robotInfo_)
+        self.info()["sensors"]["toCenter"] = robotInfo_["sensors"]["ir"]["toCenter"]
 
         # Follow wall important information
-        self.info().direction = self._info2["direction"]
-        self._info2["goal"] = self._planner.getGoal()
+        self.info()["direction"] = "left"
 
         # Distance from center of robot to extremity of a sensor beam
-        self._distMax = robotInfo_.sensors.toCenter + robotInfo2_["sensors"]["ir"]["rmax"]
+        self._distMax = self.info()["sensors"]["toCenter"] + robotInfo_["sensors"]["ir"]["rmax"]
         self._bestDistance = None
 
         # Create:
@@ -73,10 +49,10 @@ class WoggleSupervisor(Supervisor):
         # - an avoid-obstacle controller
         # - a follow-wall controller
         # - a hold controller
-        self._gtg = self.createController('gotogoal.GoToGoal', self.info2())
-        self._avd = self.createController('avoidobstacle.AvoidObstacle', self.info2())
+        self._gtg = self.createController('gotogoal.GoToGoal', self.info())
+        self._avd = self.createController('avoidobstacle.AvoidObstacle', self.info())
         self._hld = self.createController('hold.Hold', None)
-        self._fow = self.createController('followwall.FollowWall', self.info2())
+        self._fow = self.createController('followwall.FollowWall', self.info())
 
         # Set GoToGoal transition functions
         self.addController(self._gtg,
@@ -111,10 +87,10 @@ class WoggleSupervisor(Supervisor):
             return False
 
         # Check if we have a clear shot to the goal
-        theta_gtg = self._gtg.getHeadingAngle(self.info2())
-        dtheta = self._fow.getHeadingAngle(self.info2()) - theta_gtg
+        theta_gtg = self._gtg.getHeadingAngle(self.info())
+        dtheta = self._fow.getHeadingAngle(self.info()) - theta_gtg
 
-        if self.info().direction == 'right':
+        if self.info()["direction"] == 'right':
             dtheta = -dtheta
 
         return sin(dtheta) >= 0 and cos(dtheta) >= 0
@@ -136,7 +112,7 @@ class WoggleSupervisor(Supervisor):
     def atGoal(self):
         """Check if the distance to goal is small.
         """
-        return self._toGoal < self.info().wheels.baseLength/2
+        return self._toGoal < self.info()["wheels"]["baseLength"]/2
 
     def isAtWall(self):
         """Check if the distance to obstacle is small.
@@ -154,17 +130,17 @@ class WoggleSupervisor(Supervisor):
         if wall_close:
             dmin = self._distMax
             angle = 0
-            for i, d in enumerate(self.info2()["sensors"]["ir"]["dist"]):
+            for i, d in enumerate(self.info()["sensors"]["ir"]["dist"]):
                 if d < dmin:
                     dmin = d
-                    angle = self.info2()["sensors"]["ir"]["insts"][i].angle()
+                    angle = self.info()["sensors"]["ir"]["insts"][i].angle()
 
             # Take the direction that follow the wall
             # on the right side
             if angle >= 0:
-                self.info().direction = 'left'
+                self.info()["direction"] = 'left'
             else:
-                self.info().direction = 'right'
+                self.info()["direction"] = 'right'
 
         # Save the closest we've been to the goal
         if self._bestDistance is None:
@@ -172,7 +148,6 @@ class WoggleSupervisor(Supervisor):
 
         if self._toGoal < self._bestDistance:
             self._bestDistance = self._toGoal
-
 
         return wall_close
 
@@ -188,25 +163,24 @@ class WoggleSupervisor(Supervisor):
         dists = [max( min( (log1p(3960) - log1p(r))/30 + rmin, rmax), rmin) for r in readings]
         return dists
 
-    def processStateInfo(self, robotInfo_, robotInfo2_):
+    def processStateInfo(self, robotInfo_):
         """Process the current estimation of the robot state.
         """
         # Get the number of ticks on each wheel since last call
-        dtl = robotInfo2_["encoders"]["leftTicks"] - self.info2()["encoders"]["old_leftTicks"]
-        dtr = robotInfo2_["encoders"]["rightTicks"] - self.info2()["encoders"]["old_rightTicks"]
+        dtl = robotInfo_["encoders"]["leftTicks"] - self.info()["encoders"]["old_leftTicks"]
+        dtr = robotInfo_["encoders"]["rightTicks"] - self.info()["encoders"]["old_rightTicks"]
 
         # Save the wheel encoder ticks for the next estimate
-        self.info2()["encoders"]["old_leftTicks"] += dtl
-        self.info2()["encoders"]["old_rightTicks"] += dtr
+        self.info()["encoders"]["old_leftTicks"] += dtl
+        self.info()["encoders"]["old_rightTicks"] += dtr
 
         # Get old state estimation (in m and rad)
-        x, y, theta = self.info().pos
-        x, y, theta = self.info2()["pos"]
+        x, y, theta = self.info()["pos"]
 
         # Get robot parameters (in m)
-        R = robotInfo2_["wheels"]["radius"]
-        L = robotInfo2_["wheels"]["baseLength"]
-        m_per_tick = (2*pi*R) / robotInfo2_["encoders"]["ticksPerRev"]
+        R = robotInfo_["wheels"]["radius"]
+        L = robotInfo_["wheels"]["baseLength"]
+        m_per_tick = (2*pi*R) / robotInfo_["encoders"]["ticksPerRev"]
 
         # distance travelled by left wheel
         dl = dtl*m_per_tick
@@ -224,28 +198,25 @@ class WoggleSupervisor(Supervisor):
         y_new = y + y_dt
 
         # Process the state estimation
-        self.info().pos = (x_new, y_new, theta_new)
-        self.info2()["pos"] = (x_new, y_new, theta_new)
+        self.info()["pos"] = (x_new, y_new, theta_new)
 
         # Process the sensors readings
-        self.info().sensors.dist = self.getIRDistance(robotInfo2_)
-        self.info2()["sensors"]["ir"]["dist"] = self.getIRDistance(robotInfo2_)
+        self.info()["sensors"]["ir"]["dist"] = self.getIRDistance(robotInfo_)
 
         # Smallest reading translated into distance from center of robot
-        vectors = np.array([s.mapToParent(d, 0) for s, d in zip(self.info().sensors.insts,
-                                                                self.info().sensors.dist)])
+        vectors = np.array([s.mapToParent(d, 0) for s, d in zip(self.info()["sensors"]["ir"]["insts"],
+                                                                self.info()["sensors"]["ir"]["dist"])])
         self._distMin = min((sqrt(a[0]**2 + a[1]**2) for a in vectors))
 
         # Update goal
-        self.info().goal = self._planner.getGoal()
-        self.info2()["goal"] = self._planner.getGoal()
+        self.info()["goal"] = self._planner.getGoal()
 
         # Distance to the goal
-        self._toGoal = sqrt((x_new - self.info().goal["x"])**2 +
-                            (y_new - self.info().goal["y"])**2)
+        self._toGoal = sqrt((x_new - self.info()["goal"]["x"])**2 +
+                            (y_new - self.info()["goal"]["y"])**2)
 
         # Distance to the closest obstacle
-        self._toWall = self.info().sensors.toCenter + min(self.info().sensors.dist)
+        self._toWall = self.info()["sensors"]["toCenter"] + min(self.info()["sensors"]["ir"]["dist"])
 
     def drawHeading(self, painter, option=None, widget=None):
         """Draw the heading direction.
@@ -273,19 +244,19 @@ class WoggleSupervisor(Supervisor):
             # Restore state
             painter.restore()
 
-        arrow_l = self.info().wheels.baseLength * 2
+        arrow_l = self.info()["wheels"]["baseLength"] * 2
 
         # # Draw Robot direction
         # drawArrow(painter, "green", 0, 0, arrow_l, 0)
 
         # Draw GoToGoal direction
         if self.currentController() is self._gtg:
-            gtg_angle = self._gtg.getHeadingAngle(self.info2())
+            gtg_angle = self._gtg.getHeadingAngle(self.info())
             drawArrow(painter, "blue", 0, 0, arrow_l, 0)
 
         # Draw AvoidObstacle direction
         elif self.currentController() is self._avd:
-            avd_angle = self._avd.getHeadingAngle(self.info2())
+            avd_angle = self._avd.getHeadingAngle(self.info())
             drawArrow(painter, "red", 0, 0, arrow_l, 0)
 
         # Draw FollowWall direction

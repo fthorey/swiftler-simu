@@ -2,9 +2,9 @@
 # coding: utf-8
 
 from math import degrees, sqrt
-from utils.struct import Struct
 from utils import helpers
 from planners.planner import Planner
+import json
 
 from PyQt4 import QtCore
 
@@ -12,11 +12,7 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, pos_, robotInfo_, infoFile_):
-        # Store information about the robot
-        self._info = Struct()
-        self._info.pos = pos_
-
+    def __init__(self, pos_, infoFile_):
         # Current controller
         self._current = None
 
@@ -25,6 +21,18 @@ class Supervisor(object):
 
         # Dict controller -> (function, controller)
         self._states = {}
+
+        # Load the properties of the robot from file
+        try:
+            self._info = json.loads(open(infoFile_, 'r').read())
+        except ValueError:
+            self._info = {}
+
+        # Set the goal
+        self._info["goal"] = self._planner.getGoal()
+
+        # Keep track of the current position of the robot
+        self._info["pos"] = pos_
 
     def currentController(self, ):
         """Return the current controller.
@@ -37,14 +45,9 @@ class Supervisor(object):
         raise NotImplementedError("Supervisor.processStateInfo")
 
     def info(self, ):
-        """Get the parameters that the current controller needs for s.
+        """Get the parameters that the current controller needs.
         """
         return self._info
-
-    def info2(self, ):
-        """Get the parameters that the current controller needs for s.
-        """
-        return self._info2
 
     def createController(self, moduleString_, info_):
         """Create and return a controller instance for a given controller class.
@@ -57,12 +60,12 @@ class Supervisor(object):
         """
         self._states[controller_] = args
 
-    def execute(self, robotInfo_, robotInfo2_, dt_):
+    def execute(self, robotInfo_, dt_):
         # Execute planner to update goal if necessary
         self._planner.execute(robotInfo_, dt_)
 
         # Process state info
-        self.processStateInfo(robotInfo_, robotInfo2_)
+        self.processStateInfo(robotInfo_)
 
         # Switch:
         if self._current in self._states:
@@ -74,4 +77,4 @@ class Supervisor(object):
                     break
 
         #execute the current controller
-        return self._current.execute(self.info2(), dt_)
+        return self._current.execute(self.info(), dt_)
