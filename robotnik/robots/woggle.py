@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from math import pi, degrees, radians, cos, sin
-from utils.struct import Struct
 from robots.robot import Robot
 from sensors.woggleirsensor import WoggleIRSensor
 from sensors.wheelencoder import WheelEncoder
@@ -18,26 +17,6 @@ class Woggle(Robot):
         # Call parent constructor
         super(Woggle, self).__init__(name_, pos_, brush_, infoFile_)
 
-        # TODO: REMOVE THIS
-        self._info2 = {}
-        self._info2.update(self._info)
-
-        # Fill-in the state informations
-        self._info = Struct()
-        # Wheels
-        self._info.wheels = Struct()
-        self._info.wheels.radius = self._info2["wheels"]["radius"]
-        self._info.wheels.baseLength = self._info2["wheels"]["baseLength"]
-        self._info.wheels.ticksPerRev = self._info2["encoders"]["ticksPerRev"]
-        self._info.wheels.leftTicks = self._info2["encoders"]["leftTicks"]
-        self._info.wheels.rightTicks = self._info2["encoders"]["rightTicks"]
-        # Proximity sensors
-        self._info.sensors = Struct()
-        self._info.sensors.rmin = self._info2["sensors"]["ir"]["rmin"]
-        self._info.sensors.rmax = self._info2["sensors"]["ir"]["rmax"]
-        self._info.sensors.phi = self._info2["sensors"]["ir"]["phi"]
-        self._info.sensors.toCenter = self._info2["wheels"]["baseLength"]/2 + 0.01
-
         # Current speed of each wheel (rad/s)
         self._leftWheelSpeed = 0
         self._rightWheelSpeed = 0
@@ -47,54 +26,39 @@ class Woggle(Robot):
         self._rightRevolutions = 0
 
         # Add a wheel encoder to each wheel
-        self._leftWheelEncoder = WheelEncoder(self._info2["encoders"]["ticksPerRev"])
-        self._rightWheelEncoder = WheelEncoder(self._info2["encoders"]["ticksPerRev"])
+        self._leftWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
+        self._rightWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
 
         # Position of the sharp sensors
-        self._proxSensorsPos = self._info2["sensors"]["ir"]["positions"]
+        self._proxSensorsPos = self._info["sensors"]["ir"]["positions"]
 
         # Add the sensors to the robot
-        rmin = self._info2["sensors"]["ir"]["rmin"]
-        rmax = self._info2["sensors"]["ir"]["rmax"]
-        phi = self._info2["sensors"]["ir"]["phi"]
+        rmin = self._info["sensors"]["ir"]["rmin"]
+        rmax = self._info["sensors"]["ir"]["rmax"]
+        phi = self._info["sensors"]["ir"]["phi"]
         for p in self._proxSensorsPos:
             self.addProxSensor(WoggleIRSensor(p, rmin, rmax, phi))
 
         # Add sensors instance to the information
         # -> Mostly needed to get the correct transformation matrix
         # to world/robot frame.
-        self._info2["sensors"]["ir"]["insts"] = self._proxSensors
-        self._info.sensors.insts = self._info2["sensors"]["ir"]["insts"]
+        self._info["sensors"]["ir"]["insts"] = self._proxSensors
 
         # Initialize the IR sensors readings
-        self._info2["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
-        self._info.sensors.readings = self._info2["sensors"]["ir"]["readings"]
-
-        #------------------------------------------------------------------#
-        # Dynamics and supervisor must be set after all robot configurations
-        # and structures are well known
-        #------------------------------------------------------------------#
+        self._info["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
 
         # The Woggle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
         # The supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(pos_, self._info2,
+        self.setSupervisor(supervisorClass_(pos_, self._info,
                                             "supervisors/resources/woggle-supervisor.json"))
 
     def info(self):
         """Return the robot information structure.
         """
-        # Measures current reading of the sensors
-        self._info2["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
-        self._info.sensors.readings = self._info2["sensors"]["ir"]["readings"]
+        self._info["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
         return self._info
-
-    def info2(self):
-        """Return the robot information structure.
-        """
-        self._info2["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
-        return self._info2
 
     def leftRevolutions(self, ):
         """Return the number of revolutions of the left wheel.
@@ -167,10 +131,10 @@ class Woggle(Robot):
         points = [QtCore.QPointF(p[0], p[1]) for p in self._envelope]
         painter.drawPolygon(QtGui.QPolygonF(points))
 
-        bodyX = (-self._info2["wheels"]["baseLength"]/2)
-        bodyY = (-self._info2["wheels"]["baseLength"]/2)
-        bodyW = self._info2["wheels"]["baseLength"]
-        bodyH = self._info2["wheels"]["baseLength"]
+        bodyX = (-self.info()["wheels"]["baseLength"]/2)
+        bodyY = (-self.info()["wheels"]["baseLength"]/2)
+        bodyW = self.info()["wheels"]["baseLength"]
+        bodyH = self.info()["wheels"]["baseLength"]
 
         # Paint identifier
         painter.setBrush(self.brush())

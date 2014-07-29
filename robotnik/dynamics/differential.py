@@ -19,8 +19,8 @@ class DifferentialDrive(object):
         """
 
         # Make shortcuts for wheel radius and base length (m)
-        R = self._robot.info2()["wheels"]["radius"]
-        L = self._robot.info2()["wheels"]["baseLength"]
+        R = self._robot.info()["wheels"]["radius"]
+        L = self._robot.info()["wheels"]["baseLength"]
 
         # Make shortcuts for wheels velocity (rad/s)
         vel_l = self._robot.getLeftWheelSpeed()
@@ -53,10 +53,10 @@ class DifferentialDrive(object):
         self._robot.setLeftRevolutions(l_rev)
         self._robot.setRightRevolutions(r_rev)
 
-        ticksPerRev = self._robot.info2()["encoders"]["ticksPerRev"]
+        ticksPerRev = self._robot.info()["encoders"]["ticksPerRev"]
 
-        self._robot.info2()["encoders"]["leftTicks"] = int(l_rev * ticksPerRev)
-        self._robot.info2()["encoders"]["rightTicks"] = int(r_rev * ticksPerRev)
+        self._robot.info()["encoders"]["leftTicks"] = int(l_rev * ticksPerRev)
+        self._robot.info()["encoders"]["rightTicks"] = int(r_rev * ticksPerRev)
 
         self._robot.setPos(QtCore.QPointF(x, y))
         self._robot.setAngle((theta + pi)%(2*pi) - pi)
@@ -65,8 +65,8 @@ class DifferentialDrive(object):
         """Convert heading velocity and angular velocity (in m/s & rad/s)
         to left wheel angular velocity and right wheel angular velocity (in rad/s).
         """
-        R = self._robot.info2()["wheels"]["radius"] # in m
-        L = self._robot.info2()["wheels"]["baseLength"] # in m
+        R = self._robot.info()["wheels"]["radius"] # in m
+        L = self._robot.info()["wheels"]["baseLength"] # in m
 
         summ = 2*v/R
         diff = L*w/R
@@ -80,8 +80,8 @@ class DifferentialDrive(object):
         """Convert left wheel angular velocity and right wheel angular velocity to
         heading velocity and angular velocity (in m/s & rad/s).
         """
-        R = self._robot.info2()["wheels"]["radius"] # in m
-        L = self._robot.info2()["wheels"]["baseLength"] # in m
+        R = self._robot.info()["wheels"]["radius"] # in m
+        L = self._robot.info()["wheels"]["baseLength"] # in m
 
         v = R/2*(vel_l+vel_r) # in m/s
         w = R/L*(vel_l-vel_r) # in rad/s

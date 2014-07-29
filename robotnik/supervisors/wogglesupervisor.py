@@ -25,23 +25,23 @@ class WoggleSupervisor(Supervisor):
         super(WoggleSupervisor, self,).__init__(pos_, infoFile_);
 
         # Keep track of the old encoders values
-        self.info()["encoders"] = {}
-        self.info()["encoders"]["old_leftTicks"] = robotInfo_["encoders"]["leftTicks"]
-        self.info()["encoders"]["old_rightTicks"] = robotInfo_["encoders"]["rightTicks"]
+        self._info["encoders"] = {}
+        self._info["encoders"]["old_leftTicks"] = robotInfo_["encoders"]["leftTicks"]
+        self._info["encoders"]["old_rightTicks"] = robotInfo_["encoders"]["rightTicks"]
 
         # Keep track of the wheels geometry values
-        self.info()["wheels"] = robotInfo_["wheels"].copy()
+        self._info["wheels"] = robotInfo_["wheels"].copy()
 
         # Keep track of the sensors informations
-        self.info()["sensors"] = robotInfo_["sensors"].copy()
-        self.info()["sensors"]["dist"] = self.getIRDistance(robotInfo_)
-        self.info()["sensors"]["toCenter"] = robotInfo_["sensors"]["ir"]["toCenter"]
+        self._info["sensors"] = robotInfo_["sensors"].copy()
+        self._info["sensors"]["dist"] = self.getIRDistance(robotInfo_)
+        self._info["sensors"]["toCenter"] = robotInfo_["sensors"]["ir"]["toCenter"]
 
         # Follow wall important information
-        self.info()["direction"] = "left"
+        self._info["direction"] = "left"
 
         # Distance from center of robot to extremity of a sensor beam
-        self._distMax = self.info()["sensors"]["toCenter"] + robotInfo_["sensors"]["ir"]["rmax"]
+        self._distMax = self._info["sensors"]["toCenter"] + robotInfo_["sensors"]["ir"]["rmax"]
         self._bestDistance = None
 
         # Create:
@@ -49,10 +49,10 @@ class WoggleSupervisor(Supervisor):
         # - an avoid-obstacle controller
         # - a follow-wall controller
         # - a hold controller
-        self._gtg = self.createController('gotogoal.GoToGoal', self.info())
-        self._avd = self.createController('avoidobstacle.AvoidObstacle', self.info())
+        self._gtg = self.createController('gotogoal.GoToGoal', self._info)
+        self._avd = self.createController('avoidobstacle.AvoidObstacle', self._info)
         self._hld = self.createController('hold.Hold', None)
-        self._fow = self.createController('followwall.FollowWall', self.info())
+        self._fow = self.createController('followwall.FollowWall', self._info)
 
         # Set GoToGoal transition functions
         self.addController(self._gtg,

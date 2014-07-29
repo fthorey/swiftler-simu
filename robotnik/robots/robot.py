@@ -36,7 +36,10 @@ class Robot(SimObject):
         self._showSupervisors = True
 
         # Load the properties of the robot from file
-        self._info = json.loads(open(infoFile_, 'r').read())
+        try:
+            self._info = json.loads(open(infoFile_, 'r').read())
+        except ValueError:
+            self._info = {}
 
         # Set envelope
         self._envelope = self._info["envelope"]
@@ -182,7 +185,7 @@ class Robot(SimObject):
         """Action to perform when the scene changes.
         """
         # 1 -> Execute the supervisor to obtain unicycle command (v,w) to apply
-        v, w = self.supervisor().execute(self.info2(), const.stepDuration)
+        v, w = self.supervisor().execute(self.info(), const.stepDuration)
         vel_l, vel_r = self.dynamics().uni2Diff(v, w)
 
         # 2 -> Apply current speed to wheels
