@@ -11,6 +11,7 @@ from controllers.hold import Hold
 from supervisors.supervisor import Supervisor
 import numpy as np
 import json
+from pprint import pprint
 
 from PyQt4 import QtCore, QtGui
 
@@ -29,8 +30,11 @@ class WoggleSupervisor(Supervisor):
         # Load the properties of the robot from file
         # TODO: REMOVE THIS
         self._info2 = json.loads(open(infoFile_, 'r').read())
-        self._info2.update(robotInfo2_)
         self._info2["pos"] = pos_
+        self._info2["encoders"] = {}
+        self._info2["encoders"]["old_leftTicks"] = robotInfo2_["encoders"]["leftTicks"]
+        self._info2["encoders"]["old_rightTicks"] = robotInfo2_["encoders"]["rightTicks"]
+        self._info2["sensors"] = robotInfo2_["sensors"].copy()
 
         # Set some extra informations
         # PID parameters
@@ -44,8 +48,8 @@ class WoggleSupervisor(Supervisor):
         self.info().wheels = Struct()
         self.info().wheels.radius = robotInfo2_["wheels"]["radius"]
         self.info().wheels.baseLength = robotInfo2_["wheels"]["baseLength"]
-        self.info().wheels.leftTicks = robotInfo2_["encoders"]["leftTicks"]
-        self.info().wheels.rightTicks = robotInfo2_["encoders"]["rightTicks"]
+        self.info().wheels.leftTicks = 0
+        self.info().wheels.rightTicks = 0
         # Sensors
         self.info().sensors = Struct()
         self.info().sensors.insts = robotInfo2_["sensors"]["ir"]["insts"]
@@ -54,9 +58,10 @@ class WoggleSupervisor(Supervisor):
         self.info().sensors.rmax = robotInfo2_["sensors"]["ir"]["rmax"]
         self.info().sensors.toCenter = robotInfo_.sensors.toCenter
 
+        self.info2()["sensors"]["dist"] = self.getIRDistance(robotInfo2_)
+
         # Follow wall important information
         self.info().direction = self._info2["direction"]
-
         self._info2["goal"] = self._planner.getGoal()
 
         # Distance from center of robot to extremity of a sensor beam
@@ -149,10 +154,10 @@ class WoggleSupervisor(Supervisor):
         if wall_close:
             dmin = self._distMax
             angle = 0
-            for i, d in enumerate(self.info().sensors.dist):
+            for i, d in enumerate(self.info2()["sensors"]["ir"]["dist"]):
                 if d < dmin:
                     dmin = d
-                    angle = self.info().sensors.insts[i].angle()
+                    angle = self.info2()["sensors"]["ir"]["insts"][i].angle()
 
             # Take the direction that follow the wall
             # on the right side
@@ -187,19 +192,12 @@ class WoggleSupervisor(Supervisor):
         """Process the current estimation of the robot state.
         """
         # Get the number of ticks on each wheel since last call
-        dtl = robotInfo_.wheels.leftTicks - self.info().wheels.leftTicks
-        dtr = robotInfo_.wheels.rightTicks - self.info().wheels.rightTicks
+        dtl = robotInfo2_["encoders"]["leftTicks"] - self.info2()["encoders"]["old_leftTicks"]
+        dtr = robotInfo2_["encoders"]["rightTicks"] - self.info2()["encoders"]["old_rightTicks"]
 
         # Save the wheel encoder ticks for the next estimate
-        self.info().wheels.leftTicks += dtl
-        self.info().wheels.rightTicks += dtr
-
-        dtl2 = robotInfo2_["encoders"]["leftTicks"] - self.info2()["encoders"]["leftTicks"]
-        dtr2 = robotInfo2_["encoders"]["rightTicks"] - self.info2()["encoders"]["rightTicks"]
-
-        # Save the wheel encoder ticks for the next estimate
-        self.info2()["encoders"]["leftTicks"] += dtl2
-        self.info2()["encoders"]["rightTicks"] += dtr2
+        self.info2()["encoders"]["old_leftTicks"] += dtl
+        self.info2()["encoders"]["old_rightTicks"] += dtr
 
         # Get old state estimation (in m and rad)
         x, y, theta = self.info().pos
