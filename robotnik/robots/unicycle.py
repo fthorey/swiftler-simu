@@ -39,6 +39,9 @@ class Unicycle(Robot):
         for p in self._proxSensorsPos:
             self.addProxSensor(IRSensor(p, rmin, rmax, phi))
 
+        # Keep track of the initial position
+        self._info["pos"] = pos_
+
         # Add sensors instance to the information
         # -> Mostly needed to get the correct transformation matrix
         # to world/robot frame.
@@ -51,7 +54,7 @@ class Unicycle(Robot):
         self.setDynamics(DifferentialDrive(self))
 
         # The supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(pos_, self._info,
+        self.setSupervisor(supervisorClass_(self._info,
                                             "supervisors/resources/woggle-supervisor.json"))
 
     def info(self):

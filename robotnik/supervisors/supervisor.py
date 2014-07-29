@@ -12,7 +12,7 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, pos_, infoFile_):
+    def __init__(self, infoFile_):
         # Current controller
         self._current = None
 
@@ -30,9 +30,6 @@ class Supervisor(object):
 
         # Set the goal
         self._info["goal"] = self._planner.getGoal()
-
-        # Keep track of the current position of the robot
-        self._info["pos"] = pos_
 
     def currentController(self, ):
         """Return the current controller.

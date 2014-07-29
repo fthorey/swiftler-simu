@@ -20,9 +20,12 @@ class UnicycleSupervisor(Supervisor):
     to generate the robot inputs.
     """
 
-    def __init__(self, pos_, robotInfo_, infoFile_):
+    def __init__(self, robotInfo_, infoFile_):
         # Call parent constructor
-        super(UnicycleSupervisor, self,).__init__(pos_, infoFile_);
+        super(UnicycleSupervisor, self,).__init__(infoFile_);
+
+        # Keep track of the position of the robot
+        self._info["pos"] = robotInfo_["pos"]
 
         # Keep track of the old encoders values
         self._info["encoders"] = {}
