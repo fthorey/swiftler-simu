@@ -33,17 +33,14 @@ class Unicycle(Robot):
         self._proxSensorsPos = self._info["sensors"]["ir"]["positions"]
 
         # Add the sensors to the robot
-        rmin = self._info["sensors"]["ir"]["rmin"]
-        rmax = self._info["sensors"]["ir"]["rmax"]
-        phi = self._info["sensors"]["ir"]["phi"]
         for p in self._proxSensorsPos:
-            self.addProxSensor(IRSensor(p, rmin, rmax, phi))
+            self.addProxSensor(IRSensor(p,
+                                        self._info["sensors"]["ir"]["rmin"],
+                                        self._info["sensors"]["ir"]["rmax"],
+                                        self._info["sensors"]["ir"]["phi"]))
 
         # Keep track of the initial position
         self._info["pos"] = pos_
-
-        # Initialize the IR sensors readings
-        self._info["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
 
         # The Unicycle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
