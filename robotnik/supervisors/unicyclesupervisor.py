@@ -8,6 +8,7 @@ from controllers.avoidobstacle import AvoidObstacle
 from controllers.followwall import FollowWall
 from controllers.hold import Hold
 from supervisors.supervisor import Supervisor
+from utils.matrix import transformationMatrix
 import numpy as np
 import json
 
@@ -76,17 +77,6 @@ class UnicycleSupervisor(Supervisor):
 
         # Set current controller to GoToGoal
         self._current = self._gtg
-
-    def transformationMatrix(self, dx_, dy_, theta_):
-        """Return the 3x3 transformation matrix allowing to convert
-        from sensors coordinates to robot coordinates
-        """
-        #Z-axis ccw rotation transformation matrix
-        T = np.array([\
-                      [np.cos(theta_), -np.sin(theta_), dx_],\
-                      [np.sin(theta_), np.cos(theta_), dy_],\
-                      [0, 0, 1.0]])
-        return T
 
     def wallCleared(self, ):
         """Check if the robot should stop following the wall.
@@ -217,8 +207,9 @@ class UnicycleSupervisor(Supervisor):
         # Process the sensors readings
         self.info()["sensors"]["ir"]["dist"] = self.getIRDistance(robotInfo_)
 
+        # Calculate the distance from every sensors in the robot frame
         vectors = np.array(
-            [np.dot(self.transformationMatrix(p.pos().x(), p.pos().y(), p.angle()),
+            [np.dot(transformationMatrix(p.pos().x(), p.pos().y(), p.angle()),
                        np.array([d,0,1]))
              for p, d in zip(self.info()["sensors"]["ir"]["insts"],
                              self.info()["sensors"]["ir"]["dist"])])

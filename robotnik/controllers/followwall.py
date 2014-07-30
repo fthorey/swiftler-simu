@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from controllers.pidcontroller import PIDController
+from utils.matrix import transformationMatrix
 import numpy as np
 from math import pi, atan2, cos, sin, sqrt
 
@@ -44,8 +45,11 @@ class FollowWall(PIDController):
         if len(sensors) == 0:
             return np.array([0.8, dirFactor * 0.6, 1])
 
-        # Calculate vectors for each detecting sensors
-        vectors = np.array([s.mapToParent(d, 0) for s, d in sensors])
+        # Calculate the distance from every sensors in the robot frame
+        vectors = np.array(
+            [np.dot(transformationMatrix(p.pos().x(), p.pos().y(), p.angle()),
+                       np.array([d,0,1]))
+             for p, d in sensors])
 
         # Only one sensor detect a wall
         if len(sensors) == 1:
