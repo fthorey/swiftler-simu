@@ -4,11 +4,6 @@
       "name": "Woggle1",
       "type": "Unicycle",
       "color": "#4169E1",
-      "pose": {
-        "theta": "1.57079629346",
-        "x": "1.0",
-        "y": "-5.6000016"
-      },
       "supervisor": { "type": "UnicycleSupervisor" }
     },
     "obstacle": [

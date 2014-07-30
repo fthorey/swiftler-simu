@@ -11,10 +11,16 @@ class Robot(SimObject):
     """ The Robot class represents a generic simulated robots.
     """
 
-    def __init__(self, name_, pos_, brush_, infoFile_):
+    def __init__(self, name_, brush_, infoFile_):
+
+        # Load the properties of the robot from file
+        try:
+            self._info = json.loads(open(infoFile_, 'r').read())
+        except ValueError:
+            self._info = {}
 
         # Call parent constructor
-        super(Robot, self).__init__(name_, pos_, brush_)
+        super(Robot, self).__init__(name_=name_, pos_=self._info["pos"], brush_=brush_)
 
         # Is the robot stopped
         self._stopped = False
@@ -30,16 +36,10 @@ class Robot(SimObject):
 
         # Associate a tracker to store the path (in m)
         # Tracker only manipulates (x,y) coordinates
-        self._tracker = Tracker(pos_[:2])
+        self._tracker = Tracker(self._info["pos"][:2])
 
         # Show the supervisor information on screen
         self._showSupervisors = True
-
-        # Load the properties of the robot from file
-        try:
-            self._info = json.loads(open(infoFile_, 'r').read())
-        except ValueError:
-            self._info = {}
 
         # Set envelope
         self._envelope = self._info["envelope"]

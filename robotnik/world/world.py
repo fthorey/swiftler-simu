@@ -176,9 +176,6 @@ class World(QtGui.QGraphicsScene):
             if key == 'robot':
                 robot_name = value['name']
                 robot_type = value['type']
-                robot_pos = (float(value['pose']['x']),
-                             float(value['pose']['y']),
-                             float(value['pose']['theta']))
                 try:
                     robot_color = self.parseColor(value['color'])
                 except KeyError:
@@ -191,7 +188,7 @@ class World(QtGui.QGraphicsScene):
                     sup_class = helpers.load_by_name(str(supervisor_type),'supervisors')
                     # Generate a robot name
                     brush = QtGui.QBrush(QtGui.QColor(str(robot_color)))
-                    robot = robot_class(robot_name, sup_class, robot_pos, brush,
+                    robot = robot_class(robot_name, sup_class, brush,
                                         './robots/resources/woggle-robot.json')
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:

@@ -3,11 +3,6 @@
     "robot": {
       "name": "Woggle1",
       "type": "Unicycle",
-      "pose": {
-        "theta": "-1.57079632679",
-        "x": "0.0",
-        "y": "2.5"
-      },
       "supervisor": { "type": "UnicycleSupervisor" }
     },
     "obstacle": [

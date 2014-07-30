@@ -13,9 +13,9 @@ class Unicycle(Robot):
     """ The Unicycle class handles a unicycle robot called Unicycle
     """
 
-    def __init__(self, name_, supervisorClass_, pos_, brush_, infoFile_):
+    def __init__(self, name_, supervisorClass_, brush_, infoFile_):
         # Call parent constructor
-        super(Unicycle, self).__init__(name_, pos_, brush_, infoFile_)
+        super(Unicycle, self).__init__(name_=name_, brush_=brush_, infoFile_=infoFile_)
 
         # Add a wheel encoder to each wheel
         self._leftWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
@@ -28,9 +28,6 @@ class Unicycle(Robot):
                                         self._info["sensors"]["ir"]["rmin"],
                                         self._info["sensors"]["ir"]["rmax"],
                                         self._info["sensors"]["ir"]["phi"]))
-
-        # Keep track of the initial position
-        self._info["pos"] = pos_
 
         # The Unicycle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
