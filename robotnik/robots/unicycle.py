@@ -17,22 +17,12 @@ class Unicycle(Robot):
         # Call parent constructor
         super(Unicycle, self).__init__(name_, pos_, brush_, infoFile_)
 
-        # Current speed of each wheel (rad/s)
-        self._leftWheelSpeed = 0
-        self._rightWheelSpeed = 0
-
-        # Current number of revolution of each wheel
-        self._leftRevolutions = 0
-        self._rightRevolutions = 0
-
         # Add a wheel encoder to each wheel
         self._leftWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
         self._rightWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
 
-        # Position of the sharp sensors
+        # Add sharp sensors on the robot
         self._proxSensorsPos = self._info["sensors"]["ir"]["positions"]
-
-        # Add the sensors to the robot
         for p in self._proxSensorsPos:
             self.addProxSensor(IRSensor(p,
                                         self._info["sensors"]["ir"]["rmin"],
@@ -58,22 +48,22 @@ class Unicycle(Robot):
     def leftRevolutions(self, ):
         """Return the number of revolutions of the left wheel.
         """
-        return self._leftRevolutions
+        return self.info()["wheels"]["left"]["rev"]
 
     def rightRevolutions(self, ):
         """Return the number of revolutions of the right wheel.
         """
-        return self._rightRevolutions
+        return self.info()["wheels"]["right"]["rev"]
 
     def setLeftRevolutions(self, rev_):
         """Set the number of revolutions of the left wheel.
         """
-        self._leftRevolutions = rev_
+        self.info()["wheels"]["left"]["rev"] = rev_
 
     def setRightRevolutions(self, rev_):
         """Set the number of revolutions of the right wheel.
         """
-        self._rightRevolutions = rev_
+        self.info()["wheels"]["right"]["rev"] = rev_
 
     def leftWheelEncoder(self, ):
         """Return the left wheel encoder.
@@ -88,33 +78,34 @@ class Unicycle(Robot):
     def setLeftWheelSpeed(self, speed_):
         """Set the current left wheel speed (in m/s).
         """
-        self._leftWheelSpeed = speed_
+        self.info()["wheels"]["left"]["speed"] = speed_
 
     def setRightWheelSpeed(self, speed_):
         """Set the current right wheel speed (in m/s).
         """
-        self._rightWheelSpeed = speed_
+        self.info()["wheels"]["right"]["speed"] = speed_
 
     def getLeftWheelSpeed(self, ):
         """Return the current left wheel speed (in m/s).
         """
-        return self._leftWheelSpeed
+        return self.info()["wheels"]["left"]["speed"]
 
     def getRightWheelSpeed(self, ):
         """Return the current right wheel speed (in m/s).
         """
-        return self._rightWheelSpeed
+        return self.info()["wheels"]["right"]["speed"]
 
     def setWheelSpeeds(self, vel_l, vel_r):
         """Set the speed of both wheels (in m/s).
         """
-        self._leftWheelSpeed = vel_l
-        self._rightWheelSpeed = vel_r
+        self.info()["wheels"]["left"]["speed"] = vel_l
+        self.info()["wheels"]["right"]["speed"] = vel_r
 
     def getSpeed(self, ):
         """Get current speed (in m/s).
         """
-        v, w = self.dynamics.diff2Uni(self._leftWheelSpeed, self._rightWheelSpeed)
+        v, w = self.dynamics.diff2Uni(self.info()["wheels"]["left"]["speed"],
+                                      self.info()["wheels"]["right"]["speed"])
         return v
 
     def paint(self, painter, option, widget):
