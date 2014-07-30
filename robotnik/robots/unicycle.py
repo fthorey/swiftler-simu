@@ -13,32 +13,30 @@ class Unicycle(Robot):
     """ The Unicycle class handles a unicycle robot called Unicycle
     """
 
-    def __init__(self, name_, supervisorClass_, brush_, infoFile_):
+    def __init__(self, name_, supClass_, supInfoFile_, planClass_, planInfoFile_, brush_, infoFile_):
         # Call parent constructor
         super(Unicycle, self).__init__(name_=name_, brush_=brush_, infoFile_=infoFile_)
 
-        # Add a wheel encoder to each wheel
+        # Add an encoder to each wheel
         self._leftWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
         self._rightWheelEncoder = WheelEncoder(self._info["encoders"]["ticksPerRev"])
 
         # Add sharp sensors on the robot
-        self._proxSensorsPos = self._info["sensors"]["ir"]["positions"]
-        for p in self._proxSensorsPos:
-            self.addProxSensor(IRSensor(p,
-                                        self._info["sensors"]["ir"]["rmin"],
+        for p in self._info["sensors"]["ir"]["positions"]:
+            self.addProxSensor(IRSensor(p, self._info["sensors"]["ir"]["rmin"],
                                         self._info["sensors"]["ir"]["rmax"],
                                         self._info["sensors"]["ir"]["phi"]))
 
-        # The Unicycle robot follows the differential drive dynamic
+        # The unicycle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
         # The supervisor is attached to the robot
-        self.setSupervisor(supervisorClass_(self._info,
-                                            "supervisors/resources/woggle-supervisor.json"))
+        self.setSupervisor(supClass_(self._info, supInfoFile_, planClass_, planInfoFile_))
 
     def info(self):
         """Return the robot information structure.
         """
+        # Update readings from sensors
         self._info["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
         return self._info
 

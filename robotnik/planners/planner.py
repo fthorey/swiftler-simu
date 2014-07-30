@@ -1,22 +1,29 @@
 #!/USSR/bin/python
 # coding: utf-8
 
-from utils.struct import Struct
+import json
 
 class Planner(object):
     """The planner class provides goal point to the supervisor which
     oversees the control of a single robot.
     """
 
-    def __init__(self, ):
+    def __init__(self, infoFile_):
         """
         """
-        self._goal = {}
-        self._goal["x"] = -5
-        self._goal["y"] = -5
+        # Load the properties of the robot from file
+        try:
+            self._info = json.loads(open(infoFile_, 'r').read())
+        except ValueError:
+            self._info = {}
+
+    def info(self, ):
+        """Get the parameters that the current controller needs.
+        """
+        return self._info
 
     def getGoal(self, ):
-        return self._goal
+        return self.info()["goal"]
 
     def execute(self, robotInfo_, dt_):
         """

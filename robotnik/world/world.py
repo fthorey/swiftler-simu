@@ -181,15 +181,23 @@ class World(QtGui.QGraphicsScene):
                 except KeyError:
                     robot_color = self.parseColor(None)
                 supervisor_type = value['supervisor']["type"]
+                planner_type = value['planner']["type"]
                 try:
                     # Get robot class
                     robot_class = helpers.load_by_name(str(robot_type), 'robots')
                     # Get robot supervisor class
                     sup_class = helpers.load_by_name(str(supervisor_type),'supervisors')
-                    # Generate a robot name
+                    # Get supervisor configuration file
+                    sup_conf = value["supervisor"]["conf-file"]
+                    # Get robot planner class
+                    plan_class = helpers.load_by_name(str(planner_type),'planners')
+                    # Get planner configuration file
+                    plan_conf = value["planner"]["conf-file"]
+                    # Get robot configuration file
+                    robot_conf = value["conf-file"]
                     brush = QtGui.QBrush(QtGui.QColor(str(robot_color)))
-                    robot = robot_class(robot_name, sup_class, brush,
-                                        './robots/resources/woggle-robot.json')
+                    robot = robot_class(robot_name, sup_class, sup_conf,
+                                        plan_class, plan_conf, brush, robot_conf)
                     # Set the 1st robot encountered the master robot
                     if not masterRobotSet:
                         robot.setMasterRobot()

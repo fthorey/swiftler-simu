@@ -12,12 +12,12 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, infoFile_):
+    def __init__(self, planClass_, planInfoFile_, infoFile_):
         # Current controller
         self._current = None
 
-        # Current planner
-        self._planner = Planner()
+        # Set current planner
+        self._planner = planClass_(planInfoFile_)
 
         # Dict controller -> (function, controller)
         self._states = {}
@@ -30,6 +30,16 @@ class Supervisor(object):
 
         # Set the goal
         self._info["goal"] = self._planner.getGoal()
+
+    def setPlanner(self, planner_):
+        """Set the planner that run the robot.
+        """
+        self._planner = planner_
+
+    def planner(self, ):
+        """Get the planner of the robot.
+        """
+        return self._planner
 
     def currentController(self, ):
         """Return the current controller.

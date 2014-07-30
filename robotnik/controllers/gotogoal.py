@@ -20,7 +20,7 @@ class GoToGoal(PIDController):
         """Get the direction from the robot to the goal as a vector.
         """
         # The goal:
-        x_g, y_g = info_["goal"]["x"], info_["goal"]["y"]
+        x_g, y_g = info_["goal"]
 
         # The robot:
         x_r, y_r, theta = info_["pos"]

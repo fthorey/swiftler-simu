@@ -21,9 +21,9 @@ class UnicycleSupervisor(Supervisor):
     to generate the robot inputs.
     """
 
-    def __init__(self, robotInfo_, infoFile_):
+    def __init__(self, robotInfo_, infoFile_, planClass_, planInfoFile_):
         # Call parent constructor
-        super(UnicycleSupervisor, self,).__init__(infoFile_);
+        super(UnicycleSupervisor, self,).__init__(planClass_, planInfoFile_, infoFile_);
 
         # Keep track of the position of the robot
         self._info["pos"] = robotInfo_["pos"]
@@ -220,8 +220,8 @@ class UnicycleSupervisor(Supervisor):
         self.info()["goal"] = self._planner.getGoal()
 
         # Distance to the goal
-        self._toGoal = sqrt((x_new - self.info()["goal"]["x"])**2 +
-                            (y_new - self.info()["goal"]["y"])**2)
+        self._toGoal = sqrt((x_new - self.info()["goal"][0])**2 +
+                            (y_new - self.info()["goal"][1])**2)
 
         # Distance to the closest obstacle
         self._toWall = self.info()["sensors"]["toCenter"] + min(self.info()["sensors"]["ir"]["dist"])
