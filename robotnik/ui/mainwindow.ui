@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1230</width>
-     <height>20</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -164,7 +164,7 @@
      <normaloff>:/new/myRessources/icons/silk/folder_explore.png</normaloff>:/new/myRessources/icons/silk/folder_explore.png</iconset>
    </property>
    <property name="text">
-    <string>Open an XML World</string>
+    <string>Open a World</string>
    </property>
    <property name="toolTip">
     <string>Open World</string>

@@ -38,7 +38,7 @@ class Robotnik(QtGui.QMainWindow):
 
         # Add an option to set world path
         self.parser.add_argument('--world-path', dest='filename',
-                                 help='path to world xml template file',
+                                 help='path to world json template file',
                                  default='world/resources/labyrinth_small.json')
 
         # Parse arguments
@@ -66,12 +66,12 @@ class Robotnik(QtGui.QMainWindow):
         # Slots
         self.connectSlots()
 
-        # Create XML file dialog
+        # Create json file dialog
         self._worldDialog = QtGui.QFileDialog(self,
                                               "Select World File",
                                               "worlds",
-                                              "WorldFile (*.xml)")
-        self._worldDialog.setDirectory(QtCore.QDir.currentPath() + os.sep + 'templates')
+                                              "WorldFile (*.json)")
+        self._worldDialog.setDirectory(QtCore.QDir.currentPath() + os.sep + 'world/resources')
         self._worldDialog.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
         self._worldDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
 
@@ -281,7 +281,7 @@ class Robotnik(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def onOpenWorld(self, ):
-        """Action to perform when the XML world file dialog is invocated.
+        """Action to perform when the json world file dialog is invocated.
         """
         # First, if the simulation is running, stop it
         if self._world.isRunning():
@@ -457,7 +457,7 @@ class Robotnik(QtGui.QMainWindow):
         self.move(qr.topLeft())
 
     def loadWorld(self,filename_):
-        """Load a new world according to an existing XML file.
+        """Load a new world according to an existing json file.
         """
         # Check the existence of the file
         if not os.path.exists(filename_):
