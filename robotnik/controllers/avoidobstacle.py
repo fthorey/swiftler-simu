@@ -25,10 +25,11 @@ class AvoidObstacle(PIDController):
         """
         # Map the sensors distance to the robot's frame of reference
         end_w = np.array(
-            [np.dot(transformationMatrix(p.pos().x(), p.pos().y(), p.angle()),
+            [np.dot(transformationMatrix(p[0], p[1], p[2]),
                        np.array([d,0,1]))
-             for p, d in zip(info_["sensors"]["ir"]["insts"],
+             for p, d in zip(info_["sensors"]["ir"]["positions"],
                              info_["sensors"]["ir"]["dist"])])
+
 
         # Get the resulting vector in the robot's frame of reference
         sum_w = np.sum(end_w, axis=0)

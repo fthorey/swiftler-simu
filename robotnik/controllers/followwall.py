@@ -12,7 +12,6 @@ class FollowWall(PIDController):
     """
 
     def __init__(self, info_):
-
         # Call PIDController constructor
         super(FollowWall, self).__init__(info_)
 
@@ -35,11 +34,12 @@ class FollowWall(PIDController):
         if direction is 'right':
             dirFactor = -1
 
-        sensors = [(s, d) for s, d in zip(info_["sensors"]["ir"]["insts"], info_["sensors"]["ir"]["dist"])
-                   if (0 < s.angle() * dirFactor < pi) and (d < info_["sensors"]["ir"]["rmax"])]
+        sensors = [(s, d) for s, d in zip(info_["sensors"]["ir"]["positions"],
+                                          info_["sensors"]["ir"]["dist"])
+                   if (0 < s[2] * dirFactor < pi) and (d < info_["sensors"]["ir"]["rmax"])]
 
         # Make sure sensors are sorted from front to back
-        sensors = sorted(sensors, key = lambda (p, d): abs(p.angle()))
+        sensors = sorted(sensors, key = lambda (p, d): abs(p[2]))
 
         # No wall - drive a bit to the wall
         if len(sensors) == 0:
@@ -47,7 +47,7 @@ class FollowWall(PIDController):
 
         # Calculate the distance from every sensors in the robot frame
         vectors = np.array(
-            [np.dot(transformationMatrix(p.pos().x(), p.pos().y(), p.angle()),
+            [np.dot(transformationMatrix(p[0], p[1], p[2]),
                        np.array([d,0,1]))
              for p, d in sensors])
 
@@ -65,7 +65,7 @@ class FollowWall(PIDController):
                 # Which direction to go?
                 # either away from this corner or directly to it.
                 # let's blend ahead with corner:
-                theta_h = sensor[0].angle() * reading / info_["sensors"]["ir"]["rmax"]
+                theta_h = sensor[0][2] * reading / info_["sensors"]["ir"]["rmax"]
 
                 return np.array([reading * cos(theta_h),
                                     reading * sin(theta_h),

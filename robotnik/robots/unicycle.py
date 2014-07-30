@@ -42,11 +42,6 @@ class Unicycle(Robot):
         # Keep track of the initial position
         self._info["pos"] = pos_
 
-        # Add sensors instance to the information
-        # -> Mostly needed to get the correct transformation matrix
-        # to world/robot frame.
-        self._info["sensors"]["ir"]["insts"] = self._proxSensors
-
         # Initialize the IR sensors readings
         self._info["sensors"]["ir"]["readings"] = [s.reading() for s in self._proxSensors]
 

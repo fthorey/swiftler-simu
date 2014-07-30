@@ -137,7 +137,7 @@ class UnicycleSupervisor(Supervisor):
             for i, d in enumerate(self.info()["sensors"]["ir"]["dist"]):
                 if d < dmin:
                     dmin = d
-                    angle = self.info()["sensors"]["ir"]["insts"][i].angle()
+                    angle = self.info()["sensors"]["ir"]["positions"][i][2]
 
             # Take the direction that follow the wall
             # on the right side
@@ -209,9 +209,9 @@ class UnicycleSupervisor(Supervisor):
 
         # Calculate the distance from every sensors in the robot frame
         vectors = np.array(
-            [np.dot(transformationMatrix(p.pos().x(), p.pos().y(), p.angle()),
+            [np.dot(transformationMatrix(p[0], p[1], p[2]),
                        np.array([d,0,1]))
-             for p, d in zip(self.info()["sensors"]["ir"]["insts"],
+             for p, d in zip(self.info()["sensors"]["ir"]["positions"],
                              self.info()["sensors"]["ir"]["dist"])])
 
         self._distMin = min((sqrt(a[0]**2 + a[1]**2) for a in vectors))
