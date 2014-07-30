@@ -39,7 +39,7 @@ class Robotnik(QtGui.QMainWindow):
         # Add an option to set world path
         self.parser.add_argument('--world-path', dest='filename',
                                  help='path to world xml template file',
-                                 default='templates/labyrinth_small.xml')
+                                 default='world/resources/labyrinth_small.json')
 
         # Parse arguments
         args = self.parser.parse_args()

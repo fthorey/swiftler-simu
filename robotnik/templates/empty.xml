@@ -1,8 +1,0 @@
-<simulation>
-
-    <robot type="Unicycle">
-        <pose theta="0" x="0" y="0"/>
-        <supervisor type="UnicycleSupervisor"/>
-    </robot>
-
-</simulation>
