@@ -42,6 +42,7 @@ python robotnik.py
 
 The main component of the **robotnik** simulator is the **world**,
 built at start-up, in which every items evolve.
+
 The world is populated during the initialization by reading a json template
 file located into the **world/resources** directory.
 
