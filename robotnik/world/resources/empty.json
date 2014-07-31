@@ -5,10 +5,6 @@
             "type": "Unicycle",
             "color": "#4169E1",
             "conf-file": "robots/resources/woggle-robot.json"
-            "supervisor": { "type": "UnicycleSupervisor",
-                            "conf-file": "supervisors/resources/woggle-supervisor.json"},
-            "planner": { "type": "Planner",
-                         "conf-file": "planners/resources/woggle-planner.json"}
         }
     }
 }
