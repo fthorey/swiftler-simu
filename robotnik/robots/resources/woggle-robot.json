@@ -1,4 +1,8 @@
 {
+  "supervisor": { "type": "UnicycleSupervisor",
+                  "conf-file": "supervisors/resources/woggle-supervisor.json"},
+  "planner": { "type": "Planner",
+               "conf-file": "planners/resources/woggle-planner.json"},
   "pos": [1.0, -5.6, 1.5707],
   "wheels":
   {
