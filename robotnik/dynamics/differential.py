@@ -50,14 +50,11 @@ class DifferentialDrive(object):
         l_rev = self._robot.leftRevolutions() + vel_l*dt_/2/pi
         r_rev = self._robot.rightRevolutions() + vel_r*dt_/2/pi
 
+        # Set revolutions
         self._robot.setLeftRevolutions(l_rev)
         self._robot.setRightRevolutions(r_rev)
 
-        ticksPerRev = self._robot.info()["encoders"]["ticksPerRev"]
-
-        self._robot.info()["encoders"]["leftTicks"] = int(l_rev * ticksPerRev)
-        self._robot.info()["encoders"]["rightTicks"] = int(r_rev * ticksPerRev)
-
+        # Set new robot positions
         self._robot.setPos(QtCore.QPointF(x, y))
         self._robot.setAngle((theta + pi)%(2*pi) - pi)
 

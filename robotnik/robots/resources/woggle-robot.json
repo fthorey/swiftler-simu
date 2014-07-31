@@ -7,17 +7,7 @@
   "wheels":
   {
       "radius": 0.021,
-      "baseLength": 0.0885,
-      "left":
-      {
-        "rev": 0,
-        "speed": 0.0
-      },
-      "right":
-      {
-        "rev": 0,
-        "speed": 0.0
-      }
+      "baseLength": 0.0885
   },
   "encoders":
   {
