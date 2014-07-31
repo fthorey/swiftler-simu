@@ -189,9 +189,9 @@ class Robot(SimObject):
 
         # 1 -> Execute the supervisor to obtain unicycle command (v,w) to apply
         v, w = self.supervisor().execute(info, const.stepDuration)
-        vel_l, vel_r = self.dynamics().uni2Diff(v, w)
 
         # 2 -> Apply current speed to wheels
+        vel_l, vel_r = self.dynamics().uni2Diff(v, w)
         self.setWheelSpeeds(vel_l, vel_r)
 
         # 3 -> Update the robot position using dynamic and current command
