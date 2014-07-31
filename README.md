@@ -3,10 +3,7 @@ Robotnik
 
 A robot simulator build upon the pyQt framework and inspired
 by Jean-Pierre de la Croix’s Matlab [+simiam](https://github.com/jdelacroix/simiam) project.
-The main gui has been designed using [+QtCreator](http://qt-project.org/wiki/Category:Tools::QtCreator)
-and is partly inspired by the gui of the
-[+pySimiam](http://sourceforge.net/projects/pysimiam/) project, especially
-some icons have been taken directly from it.
+The main gui has been designed using [QtCreator](http://qt-project.org/wiki/Category:Tools::QtCreator)
 
 To run the simulator in gui mode, you must have installed:
 * [Python2.7](http://www.python.org/getit/)
@@ -44,7 +41,7 @@ python robotnik.py
 ## Start-up ##
 
 The **robotnik** simulator is based on a **world** which is filled at start-up
-by reading a xml template file located into the **template** directory.
+by reading a json template file located into the **world/resources** directory.
 
 ```python
     def configureWorld(self, ):
@@ -58,13 +55,13 @@ by reading a xml template file located into the **template** directory.
 
 The **world** template file contains information about the configuration of
 the world, such as the position and the size of every obstacles, but also the
-number and type of robots.
+number and types of robots.
 
 It's also possible to specify a specific world template to load when running the
 **robotnik** simulator by typing the following command:
 
 ```python
-python robotnik.py --world-path=path/to/template.xml
+python robotnik.py --world-path=path/to/template.json
 ```
 
 ## Simulation basics ##
