@@ -21,9 +21,15 @@ class UnicycleSupervisor(Supervisor):
     to generate the robot inputs.
     """
 
-    def __init__(self, robotInfo_, infoFile_, planClass_, planInfoFile_):
+    def __init__(self, robotInfoFile_, supervisorInfoFile_, planClass_, planInfoFile_):
         # Call parent constructor
-        super(UnicycleSupervisor, self,).__init__(planClass_, planInfoFile_, infoFile_);
+        super(UnicycleSupervisor, self,).__init__(planClass_, planInfoFile_, supervisorInfoFile_);
+
+        # Load the properties of the robot from file
+        try:
+            robotInfo_ = json.loads(open(robotInfoFile_, 'r').read())
+        except ValueError:
+            robotInfo_ = {}
 
         # Keep track of the position of the robot
         self._info["pos"] = robotInfo_["pos"]

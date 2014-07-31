@@ -12,21 +12,21 @@ class Supervisor(object):
     """The supervisor class oversees the control of a single robot.
     """
 
-    def __init__(self, planClass_, planInfoFile_, infoFile_):
+    def __init__(self, planClass_, planInfoFile_, supervisorInfoFile_):
         # Current controller
         self._current = None
+
+        # Load the properties of the robot from file
+        try:
+            self._info = json.loads(open(supervisorInfoFile_, 'r').read())
+        except ValueError:
+            self._info = {}
 
         # Set current planner
         self._planner = planClass_(planInfoFile_)
 
         # Dict controller -> (function, controller)
         self._states = {}
-
-        # Load the properties of the robot from file
-        try:
-            self._info = json.loads(open(infoFile_, 'r').read())
-        except ValueError:
-            self._info = {}
 
         # Set the goal
         self._info["goal"] = self._planner.getGoal()

@@ -7,13 +7,14 @@ from sensors.irsensor import IRSensor
 from sensors.wheelencoder import WheelEncoder
 from supervisors.unicyclesupervisor import UnicycleSupervisor
 from dynamics.differential import DifferentialDrive
+from utils import helpers
 from PyQt4 import QtGui, QtCore
 
 class Unicycle(Robot):
     """ The Unicycle class handles a unicycle robot called Unicycle
     """
 
-    def __init__(self, name_, supClass_, supInfoFile_, planClass_, planInfoFile_, brush_, infoFile_):
+    def __init__(self, name_, brush_, infoFile_):
         # Call parent constructor
         super(Unicycle, self).__init__(name_=name_, brush_=brush_, infoFile_=infoFile_)
 
@@ -30,8 +31,19 @@ class Unicycle(Robot):
         # The unicycle robot follows the differential drive dynamic
         self.setDynamics(DifferentialDrive(self))
 
+        # Retrieve info about supervisor and planner
+        supervisor_type = self._info['supervisor']["type"]
+        planner_type = self._info['planner']["type"]
+        sup_class = helpers.load_by_name(str(supervisor_type),'supervisors')
+        # Get supervisor configuration file
+        sup_conf = self._info["supervisor"]["conf-file"]
+        # Get robot planner class
+        plan_class = helpers.load_by_name(str(planner_type),'planners')
+        # Get planner configuration file
+        plan_conf = self._info["planner"]["conf-file"]
+
         # The supervisor is attached to the robot
-        self.setSupervisor(supClass_(self._info, supInfoFile_, planClass_, planInfoFile_))
+        self.setSupervisor(sup_class(infoFile_, sup_conf, plan_class, plan_conf))
 
     def info(self):
         """Return the robot information structure.
