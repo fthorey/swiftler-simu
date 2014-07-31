@@ -1,5 +1,5 @@
 {
-  "supervisor": { "type": "UnicycleSupervisor",
+  "supervisor": { "type": "QtUnicycleSupervisor",
                   "conf-file": "supervisors/resources/woggle-supervisor.json"},
   "planner": { "type": "Planner",
                "conf-file": "planners/resources/woggle-planner.json"},
