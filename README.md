@@ -40,8 +40,10 @@ python robotnik.py
 
 ## Start-up ##
 
-The **robotnik** simulator is based on a **world** which is filled at start-up
-by reading a json template file located into the **world/resources** directory.
+The main component of the **robotnik** simulator is the **world**,
+build at start-up, in which every items evolve.
+The world is populated during the initialization by reading a json template
+file located into the **world/resources** directory.
 
 ```python
     def configureWorld(self, ):
@@ -53,16 +55,20 @@ by reading a json template file located into the **world/resources** directory.
         self._world.readConfigurationFile(self._filename)
 ```
 
-The **world** template file contains information about the configuration of
-the world, such as the position and the size of every obstacles, but also the
-number and types of robots.
+The **world** template file contains a lot of information about
+the state of the world, such as:
+* the position size and color of every obstacles
+* the number and types of robots
 
-It's also possible to specify a specific world template to load when running the
+Alternatively, it's also possible to specify a specific world template to load when running the
 **robotnik** simulator by typing the following command:
 
 ```python
 python robotnik.py --world-path=path/to/template.json
 ```
+
+Using the gui, it's also possible to load a new world at any time by clicking
+on the **Open World** menu item.
 
 ## Simulation basics ##
 
