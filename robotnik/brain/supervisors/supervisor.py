@@ -3,7 +3,7 @@
 
 from math import degrees, sqrt
 from utils import helpers
-from planners.planner import Planner
+from brain.planners.planner import Planner
 import json
 
 from PyQt4 import QtCore
@@ -59,7 +59,7 @@ class Supervisor(object):
     def createController(self, moduleString_, info_):
         """Create and return a controller instance for a given controller class.
         """
-        controllerClass = helpers.load_by_name(moduleString_, 'controllers')
+        controllerClass = helpers.load_by_name(moduleString_, 'brain.controllers')
         return controllerClass(info_)
 
     def addController(self, controller_, *args):

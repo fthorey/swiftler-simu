@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from controllers.controller import Controller
+from brain.controllers.controller import Controller
 import numpy as np
 
 class Hold(Controller):

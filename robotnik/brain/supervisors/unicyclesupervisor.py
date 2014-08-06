@@ -3,11 +3,11 @@
 
 from math import degrees, sqrt, cos, sin, pi, log1p, tan, atan2
 from robots.robot import Robot
-from controllers.gotogoal import GoToGoal
-from controllers.avoidobstacle import AvoidObstacle
-from controllers.followwall import FollowWall
-from controllers.hold import Hold
-from supervisors.supervisor import Supervisor
+from brain.controllers.gotogoal import GoToGoal
+from brain.controllers.avoidobstacle import AvoidObstacle
+from brain.controllers.followwall import FollowWall
+from brain.controllers.hold import Hold
+from brain.supervisors.supervisor import Supervisor
 from utils.matrix import transformationMatrix
 import numpy as np
 import json

@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from math import atan2, fabs, log, sin, cos, degrees, pi, log1p
-from controllers.pidcontroller import PIDController
+from brain.controllers.pidcontroller import PIDController
 from utils.matrix import transformationMatrix
 import numpy as np
 from PyQt4 import QtGui, QtCore

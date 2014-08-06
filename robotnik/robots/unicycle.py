@@ -5,7 +5,7 @@ from math import pi, degrees, radians, cos, sin
 from robots.robot import Robot
 from sensors.irsensor import IRSensor
 from sensors.wheelencoder import WheelEncoder
-from supervisors.unicyclesupervisor import UnicycleSupervisor
+from brain.supervisors.unicyclesupervisor import UnicycleSupervisor
 from dynamics.differential import DifferentialDrive
 from utils import helpers
 from PyQt4 import QtGui, QtCore
@@ -42,11 +42,11 @@ class Unicycle(Robot):
         # Retrieve info about supervisor and planner
         supervisor_type = self._info['supervisor']["type"]
         planner_type = self._info['planner']["type"]
-        sup_class = helpers.load_by_name(str(supervisor_type),'supervisors')
+        sup_class = helpers.load_by_name(str(supervisor_type),'brain.supervisors')
         # Get supervisor configuration file
         sup_conf = self._info["supervisor"]["conf-file"]
         # Get robot planner class
-        plan_class = helpers.load_by_name(str(planner_type),'planners')
+        plan_class = helpers.load_by_name(str(planner_type),'brain.planners')
         # Get planner configuration file
         plan_conf = self._info["planner"]["conf-file"]
 

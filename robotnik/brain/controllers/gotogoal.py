@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from math import atan2, fabs, log, sin, cos, degrees, pi
-from controllers.pidcontroller import PIDController
+from brain.controllers.pidcontroller import PIDController
 import numpy as np
 
 

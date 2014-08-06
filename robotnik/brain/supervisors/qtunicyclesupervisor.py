@@ -1,4 +1,4 @@
-from supervisors.unicyclesupervisor import UnicycleSupervisor
+from brain.supervisors.unicyclesupervisor import UnicycleSupervisor
 from math import degrees, sqrt, cos, sin, pi, log1p, tan, atan2
 
 from PyQt4 import QtCore, QtGui

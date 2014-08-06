@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from controllers.pidcontroller import PIDController
+from brain.controllers.pidcontroller import PIDController
 from utils.matrix import transformationMatrix
 import numpy as np
 from math import pi, atan2, cos, sin, sqrt

@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from math import atan2, fabs, log, sin, cos, degrees, pi
-from controllers.controller import Controller
+from brain.controllers.controller import Controller
 
 class PIDController(Controller):
     """The PIDControlller class implements a PID based control to steer the robot to
