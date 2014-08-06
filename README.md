@@ -1,4 +1,4 @@
-Robotnik
+Switfler-simu
 ========
 
 A robot simulator build upon the pyQt framework and inspired
@@ -29,18 +29,18 @@ Python 3 is not currently officially supported.
 # Fast Forward #
 
 Assuming you're using an Unix-like OS (`*BSD`, `GNU/Linux`, `OS X`, `Solaris`,
-etc) and that **pyQt** is installed, go to the root directory **robotnik** and
+etc) and that **pyQt** is installed, go to the root directory **switfler-simu** and
 just type in your favorite shell the following command:
 
 ```python
-python robotnik.py
+python swiftler-simu.py
 ```
 
 # Overview #
 
 ## Start-up ##
 
-The main component of the **robotnik** simulator is the **world**,
+The main component of the **swiftler-simu** simulator is the **world**,
 built at start-up, in which every items evolve.
 
 The world is populated during the initialization by reading a **json** template
@@ -62,10 +62,10 @@ the state of the world, such as:
 * the number and types of robots
 
 Alternatively, it's also possible to specify a specific world template to load when running the
-**robotnik** simulator by typing the following command:
+**swiftler-simu** simulator by typing the following command:
 
 ```python
-python robotnik.py --world-path=path/to/template.json
+python swiftler-simu.py --world-path=path/to/template.json
 ```
 
 Using the gui, it's also possible to load a new world at any time by clicking
@@ -75,7 +75,7 @@ on the **Open World** menu item.
 
 The evolution of the world follows basics of software simulation.
 
-The **robotnik** simulator class implements a timer which is configured
+The **swiftler-simu** simulator class implements a timer which is configured
 to trig periodically with specific step duration configured by the
 `stepDuration` class attribute. By default it's set to 20ms. The minimum
 value is 10ms. There is no maximum value, but the higher the value the
