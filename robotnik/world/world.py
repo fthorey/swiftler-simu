@@ -3,7 +3,7 @@
 
 from utils.polygon import Polygon
 from utils import const
-from physics import Physics
+from physics.physics import Physics
 from math import pi, degrees
 from utils import helpers
 import json
